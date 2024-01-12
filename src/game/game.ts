@@ -1,6 +1,8 @@
 import { Button } from "./button";
 import { Point } from "./engine/point";
 import { Asset, GameMode, GameState, MouseButtons } from "./enums";
+import { Field } from "./field";
+import { ImageObject } from "./image";
 import { AssetsManager } from "./managers/assetsManager";
 import { MineField } from "./mineField";
 import { MineFieldBuilder } from "./mineFiledBuilder";
@@ -21,6 +23,7 @@ export class Game {
     private _easyModeBtn: Button;
     private _mediumModeBtn: Button;
     private _difficultModeBtn: Button;
+    private _faceIndicatorImage: ImageObject;
 
     constructor() {
         this._assetsManager = new AssetsManager();
@@ -29,7 +32,7 @@ export class Game {
             .loadAll()
             .then(() => {
                 const pixelCodeFont = this._assetsManager.getFont(Asset.PixelCodeFont);
-                document.fonts.add(pixelCodeFont);
+                (document as any).fonts.add(pixelCodeFont);
                 pixelCodeFont.load().then(() => this.initialize());
             })
             .catch((error: Error) => {
@@ -48,6 +51,7 @@ export class Game {
         this._gameState = GameState.Started;
         this.createMineField();
         this.createMenu();
+        this.createStatusBar();
         
         this.animate();
     }
@@ -75,10 +79,14 @@ export class Game {
         this._difficultModeBtn.onClick = this.changeGameMode.bind(this, GameMode.Difficult);
     }
 
+    private createStatusBar(): void {
+        this._faceIndicatorImage = new ImageObject(this._context, this._assetsManager, new Point(Game.width / 2 - 20, Field.marginTop - 62));
+    }
+
     private createMineField(): void {
         this._mineField = new MineFieldBuilder(this._context, this._assetsManager)
             .setDifficulty(this._gameMode)
-            .setFiledChangedHandler(this.checkGameState.bind(this))
+            .setFiledChangedHandler(this.setGameState.bind(this))
             .Build();
     }
 
@@ -91,18 +99,16 @@ export class Game {
         this._easyModeBtn.draw();
         this._mediumModeBtn.draw();
         this._difficultModeBtn.draw();
+        this._faceIndicatorImage.draw();
     }
 
-    private checkGameState(state: GameState): void {
+    private setGameState(state: GameState): void {
         this._gameState = state;
-
-        if (this._gameState === GameState.Lost) {
-
-        }
+        this._faceIndicatorImage.gameState = this._gameState;
     }
 
     private newGame(): void {
-        this._gameState = GameState.Started;
+        this.setGameState(GameState.Started);
         this.createMineField();
     }
 
@@ -160,6 +166,6 @@ export class Game {
 
     private addAssets(): void {
         this._assetsManager.addFontAsset(Asset.PixelCodeFont, `${AssetsManager.Path}assets/fonts/pixelCode.woff`);
-        this._assetsManager.addImageAsset(Asset.FieldsImg, `${AssetsManager.Path}assets/images/sprites.png`);
+        this._assetsManager.addImageAsset(Asset.SpritesImg, `${AssetsManager.Path}assets/images/sprites.png`);
     }
 }

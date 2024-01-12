@@ -22,7 +22,7 @@ export enum GameMode {
 }
 
 export enum Asset {
-    FieldsImg = 'fieldsIsmg',
+    SpritesImg = 'spritesIsmg',
     PixelCodeFont = 'pixelCodeFont'
 }
 
@@ -38,6 +38,7 @@ export enum Colors {
     Gray = 'rgb(130, 130, 130)',
     LightGray = 'rgb(225, 225, 225)',
     DarkGrey = 'rgb(74, 82, 92)',
+    VeryDarkGrey = 'rgb(45, 45, 47)',
     White = 'rgb(255, 255, 255)'
 }
 
@@ -54,5 +55,7 @@ export enum Sprite {
     Danger = 4,
     Mine = 5,
     Flagged = 6,
-    Missed = 7
+    Missed = 7,
+    Win = 8,
+    Lost = 9
 }

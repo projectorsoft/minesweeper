@@ -14,8 +14,9 @@ export class MineField {
     private _ySize: number;
     private _minesNumber: number[] = [10, 40, 99];
     private _mines: Map<string, Point> = new Map<string, Point>();
-    private _flagsNumber: number;
     private _flaggedFields: Map<string, Point> = new Map<string, Point>();
+    private _flagsNumber: number;
+    private _uncoveredFieldsLeft: number;
     private _time: number;
     private _timerId: number = 0;
     private _marginLeft: number;
@@ -50,6 +51,7 @@ export class MineField {
         if (this._marginLeft <= 0)
             this._marginLeft = MineField.minMarginLeft;
 
+        this._uncoveredFieldsLeft = this._xSize * this._ySize;
         this._fields = [];
 
         //create mine field array
@@ -75,12 +77,14 @@ export class MineField {
     }
 
     private drawClocks(): void {
-        this.drawText(this._flagsNumber.toString(), 42, new Point(10, -40), 'rgb(255, 0, 0)', true, 'left');
+        this.drawText(this._flagsNumber.toString(), 42, new Point(-15, -40), 'rgb(255, 0, 0)', true, 'left');
+
+        const zeroPad = (num, places) => String(num).padStart(places, '0');
 
         if (this._time < 1000)
-            this.drawText(this._time.toString(), 42, new Point(Field.fieldSize * this.xSize - 15, -40), 'rgb(255, 0, 0)', true, 'right');
+            this.drawText(zeroPad(this._time, 3), 42, new Point(Field.fieldSize * this.xSize + 15, -40), 'rgb(255, 0, 0)', true, 'right');
         else
-            this.drawText('999', 42, new Point(Field.fieldSize * this.xSize - 15, -40), 'rgb(255, 0, 0)', true, 'right');
+            this.drawText('999', 42, new Point(Field.fieldSize * this.xSize, -40), 'rgb(255, 0, 0)', true, 'right');
     }
 
     private drawFrame(): void {
@@ -162,6 +166,40 @@ export class MineField {
             this._fields[x + 1][y + 1].minesNumber++;
     }
 
+    private checkWinningCondition(): void {
+        //all empty fields have been revealed and all flags set on mines
+        if (this._uncoveredFieldsLeft === 0) {
+            this.stopTimer();
+            if (this.onFieldChanged)
+                this.onFieldChanged(GameState.Won);
+        }
+    }
+
+    private isLostCondition(coordinates: Point): boolean {
+        if (!this._fields[coordinates.x][coordinates.y].hasMine)
+            return false;
+
+        //mine has been clicked
+        this.stopTimer();
+
+        //'blow' other mines
+        this._mines.forEach(mine => {
+            if (this._fields[mine.x][mine.y].fieldType !== FieldType.Tentative)
+                this._fields[mine.x][mine.y].onLeftClick(coordinates.x, coordinates.y);
+        });
+
+        //reveal flag if mine is not on the field
+        this._flaggedFields.forEach(flagged => {
+            if (!this._fields[flagged.x][flagged.y].hasMine)
+                this._fields[flagged.x][flagged.y].revealFlag();
+        });
+
+        if (this.onFieldChanged)
+            this.onFieldChanged(GameState.Lost);
+
+        return true;
+    }
+
     public onLeftButtonClick(mouseX: number, mouseY: number): void {
         const coordinates = this.getFieldCoordinates(mouseX, mouseY);
 
@@ -173,36 +211,20 @@ export class MineField {
             this.createTimer();
 
         this._fields[coordinates.x][coordinates.y].onLeftClick(coordinates.x, coordinates.y);
+        this._uncoveredFieldsLeft--;
 
         //can't click on flagged field
         if (this._fields[coordinates.x][coordinates.y].fieldType === FieldType.Flagged)
             return;
 
-        //mine has been clicked
-        if (this._fields[coordinates.x][coordinates.y].hasMine) {
-            this.stopTimer();
-
-            //'blow' other mines
-            this._mines.forEach(mine => {
-                if (this._fields[mine.x][mine.y].fieldType !== FieldType.Tentative)
-                    this._fields[mine.x][mine.y].onLeftClick(coordinates.x, coordinates.y);
-            });
-
-            //reveal flag if mine is not on the field
-            this._flaggedFields.forEach(flagged => {
-                if (!this._fields[flagged.x][flagged.y].hasMine)
-                    this._fields[flagged.x][flagged.y].revealFlag();
-            });
-
-            if (this.onFieldChanged)
-                this.onFieldChanged(GameState.Lost);
-
+        if (this.isLostCondition(coordinates))
             return;
-        }
 
         //uncover all empty neighbors
         if (this._fields[coordinates.x][coordinates.y].minesNumber === 0)
             this.uncover(coordinates.x, coordinates.y);
+
+        this.checkWinningCondition();
     }
 
     public onRightButtonClick(mouseX: number, mouseY: number): void {
@@ -223,13 +245,21 @@ export class MineField {
         if (this._fields[coordinates.x][coordinates.y].fieldType === FieldType.Flagged) {
             this._flagsNumber--;
             this._flaggedFields.set(`${coordinates.x},${coordinates.y}`, new Point(coordinates.x, coordinates.y));
+
+            if (this._fields[coordinates.x][coordinates.y].hasMine)
+                this._uncoveredFieldsLeft--;
         }
         else {
-            if (this._flaggedFields.has(`${coordinates.x},${coordinates.y}`))
+            if (this._flaggedFields.has(`${coordinates.x},${coordinates.y}`)) {
                 this._flaggedFields.delete(`${coordinates.x},${coordinates.y}`);
-            
-            this._flagsNumber++;
+                this._flagsNumber++;
+
+                if (this._fields[coordinates.x][coordinates.y].hasMine)
+                    this._uncoveredFieldsLeft++;
+            }
         }
+
+        this.checkWinningCondition();
     }
 
     private getFieldCoordinates(mouseX: number, mouseY: number): Point | null {
@@ -268,6 +298,7 @@ export class MineField {
     private uncoverField(stack: Field[], x: number, y: number): void {
         if (this.canUncoverField(x, y)) {
             this._fields[x][y].onLeftClick(x, y);
+            this._uncoveredFieldsLeft--;
 
             if (this._fields[x][y].minesNumber === 0)
                 stack.push(this._fields[x][y]);

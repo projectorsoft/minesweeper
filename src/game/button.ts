@@ -46,17 +46,9 @@ export class Button {
     }
 
     public onMouseMove(point: Point): void {
-        //console.log(this.position, point)
         this._isHighlited = !(point.x < this.position.x ||
             point.x > this.position.x + this.width ||
             point.y < this.position.y ||
             point.y > this.position.y + this.height)
     }
-
-    /* private checkPosition(point: Point): boolean {
-        return point.x >= this.position.x ||
-            point.x <= this.position.x + this.width ||
-            point.y >= this.position.y ||
-            point.y <= this.position.y + this.height;
-    } */
 }

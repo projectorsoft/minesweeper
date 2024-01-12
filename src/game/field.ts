@@ -17,10 +17,11 @@ export class Field {
         Colors.Gray
     ];
 
+    private readonly _spriteSize: number = 108;
+    
     private _context!: CanvasRenderingContext2D;
     private _image: CanvasImageSource;
     private _imageIndex: number;
-    private _spriteSize: number = 108;
     private _hasMine: boolean;
     private _minesNumber: number;
     private _marginLeft: number;
@@ -57,7 +58,7 @@ export class Field {
             this.fieldState = FieldState.Covered;
             this._minesNumber = 0;
             this._hasMine = false;
-            this._image = assetsManager.getImage(Asset.FieldsImg);
+            this._image = assetsManager.getImage(Asset.SpritesImg);
             this.setImageIndex();
     }
 
@@ -148,8 +149,6 @@ export class Field {
     public revealFlag(): void {
         this._imageIndex = Sprite.Missed;
         this.fieldType = FieldType.Blank;
-        //this.fieldState = FieldState.Uncovered;
-        //this._hasMine = true;
     }
 
     public onLeftClick(x: number, y: number): void {
