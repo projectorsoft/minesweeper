@@ -3,11 +3,11 @@ import { GameMode, GameState } from "./enums";
 import { AssetsManager } from "./managers/assetsManager";
 import { MineField } from "./mineField";
 
-/* export interface ICustomModeOptions {
+export interface ICustomModeOptions {
     xSize: number;
     ySize: number;
     mines: number;
-} */
+}
 
 export class MineFieldBuilder {
     private _context!: CanvasRenderingContext2D;
@@ -21,7 +21,7 @@ export class MineFieldBuilder {
         this._assetsManager = assetsManager;
     }
 
-    public setDifficulty(mode: GameMode, customOptions?: {xSize: number, ySize: number, mines: number}): MineFieldBuilder {
+    public setDifficulty(mode: GameMode, customOptions?: ICustomModeOptions): MineFieldBuilder {
         let size = mode === GameMode.Custom ? new Point(customOptions.xSize, customOptions.ySize) : MineFieldBuilder.getBoardSize(mode);
         let minesNumber = mode === GameMode.Custom ? customOptions.mines : this._minesNumber[mode];
 

@@ -3,6 +3,7 @@ import { InputNumber } from "./engine/inputs/inputNumber";
 import { Label } from "./engine/inputs/label";
 import { Point } from "./engine/point";
 import { Popup } from "./engine/popup";
+import { ICustomModeOptions } from "./mineFiledBuilder";
 
 export class CustomBoardSizePopup extends Popup {
     private _xValueInput!: InputNumber;
@@ -66,7 +67,7 @@ export class CustomBoardSizePopup extends Popup {
 
     private save(): void {
         if (this.onSave)
-            this.onSave(this._xValueInput.value, this._yValueInput.value, this._minesValueInput.value);
+            this.onSave({ xSize: this._xValueInput.value, ySize: this._yValueInput.value, mines: this._minesValueInput.value } as ICustomModeOptions);
     }
 
     protected drawInternal(): void {

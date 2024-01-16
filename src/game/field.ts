@@ -70,11 +70,6 @@ export class Field {
     private drawField(): void {
         this.drawImage(this._imageIndex);
 
-        /* if (this.fieldType === FieldType.Flagged && this._hasMine && this.fieldState === FieldState.Uncovered) {
-            this.drawImage(Sprite.Danger);
-            return;
-        } */
-
         if (this.fieldState === FieldState.Covered) {
             if (this.fieldType === FieldType.Flagged) {
                 this.drawImage(Sprite.Flagged);

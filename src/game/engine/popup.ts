@@ -39,10 +39,10 @@ export abstract class Popup {
 
     private drawTransparentBox(): void {
         this._context.save();
-        this._context.globalAlpha = 0.45;
+        this._context.globalAlpha = 0.4;
         this._context.beginPath();
         this._context.rect(0, 0, Game.getWidth(), Game.getHeight());
-        this._context.fillStyle = Colors.White;
+        this._context.fillStyle = Colors.LightGray;
         this._context.fill();
         this._context.closePath();
         this._context.restore();
@@ -53,12 +53,12 @@ export abstract class Popup {
         this._context.beginPath();
         this._context.roundRect(this.position.x, this.position.y, this.width, this.height, [Popup.cornerRadius]);
         this._context.shadowColor = Colors.DarkGrey;
-        this._context.shadowBlur = 20;
-        this._context.shadowOffsetX = 10;
-        this._context.shadowOffsetY = 10;
+        this._context.shadowBlur = 25;
+        this._context.shadowOffsetX = 15;
+        this._context.shadowOffsetY = 15;
         this._context.strokeStyle = Colors.Black;
         this._context.stroke();
-        this._context.fillStyle = Colors.White;
+        this._context.fillStyle = Colors.LightGray;
         this._context.fill();
         this._context.closePath();
         this._context.restore();

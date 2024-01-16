@@ -7,7 +7,7 @@ import { ImageObject } from "./image";
 import { AssetsManager } from "./managers/assetsManager";
 import { MenuBar } from "./menuBar";
 import { MineField } from "./mineField";
-import { MineFieldBuilder } from "./mineFiledBuilder";
+import { ICustomModeOptions, MineFieldBuilder } from "./mineFiledBuilder";
 import { StatisticsPopup } from "./statisticsPopup";
 
 export class Game {
@@ -19,6 +19,7 @@ export class Game {
     private _gameState: GameState = GameState.Started;
     private _gameMode: GameMode = GameMode.Easy;
     private _currentGameMode: GameMode = GameMode.Easy;
+    private _customModeOptions: ICustomModeOptions | null;
     private _assetsManager!: AssetsManager;
 
     private _mineField!: MineField;
@@ -82,7 +83,7 @@ export class Game {
         this._faceIndicatorImage = new ImageObject(this._context, this._assetsManager, new Point(Game.minWidth / 2 - 20, Field.marginTop - 62));
     }
 
-    private createMineField(customOptions?: {xSize: number, ySize: number, mines: number}): void {
+    private createMineField(customOptions?: ICustomModeOptions): void {
         this._mineField = new MineFieldBuilder(this._context, this._assetsManager)
             .setDifficulty(this._gameMode, customOptions)
             .setFiledChangedHandler(this.setGameState.bind(this))
@@ -102,11 +103,12 @@ export class Game {
 
         this._customBoardSizePopup = new CustomBoardSizePopup(this._context);
         this._customBoardSizePopup.title = "Custom board settings";
-        this._customBoardSizePopup.onSave = (xSize: number, ySize: number, mines: number) => {
-            this.setCanvasSize(Field.fieldSize * xSize + 30, Field.fieldSize * ySize + 125);
+        this._customBoardSizePopup.onSave = (options: ICustomModeOptions) => {
+            this._customModeOptions = options;
+            this.setCanvasSize(Field.fieldSize * options.xSize + 30, Field.fieldSize * options.ySize + 125);
             this._customBoardSizePopup = null; 
             this.setEnabled(true); 
-            this.newGame({xSize, ySize, mines}); //TODO: interface for options, add private field 
+            this.newGame();
         };
 
         this._customBoardSizePopup.onCancel = () => { 
@@ -137,13 +139,13 @@ export class Game {
         this._faceIndicatorImage.position.x = Game.getWidth() / 2 - 20;
     }
 
-    private newGame(customOptions?: {xSize: number, ySize: number, mines: number}): void {
+    private newGame(): void {
         if (this._gameMode !== GameMode.Custom)
             this.setCanvasSize(Game.minWidth, Game.minHeight);
 
         this.adjustComponentsWidth();
         this.setGameState(GameState.Started);
-        this.createMineField(customOptions);
+        this.createMineField(this._customModeOptions);
     }
 
     private changeMode(mode: GameMode): void {
