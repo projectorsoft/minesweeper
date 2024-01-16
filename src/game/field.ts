@@ -1,3 +1,4 @@
+import { Label } from "./engine/inputs/label";
 import { Point } from "./engine/point";
 import { Asset, Colors, FieldState, FieldType, Sprite } from "./enums";
 import { AssetsManager } from "./managers/assetsManager";
@@ -79,10 +80,14 @@ export class Field {
                 this.drawImage(Sprite.Flagged);
             } else
                 if (this.fieldType === FieldType.Tentative) {
-                    this.drawText('?',
-                        new Point(this.position.x * Field.fieldSize + Field.fieldSize / 2, this.position.y * Field.fieldSize + Field.fieldSize / 2 + 8), 
-                        Colors.Black,
-                        true);
+                        Label.drawText(this._context, 
+                            '?', this.position.x * Field.fieldSize + Field.fieldSize / 2 + this._marginLeft, this.position.y * Field.fieldSize + Field.fieldSize / 2 + Field.marginTop + 1, { 
+                            size: 24,
+                            family: 'pixelCode',
+                            bold: true,
+                            align: 'center',
+                            color: Colors.Black
+                        });
             }
 
             return;
@@ -93,10 +98,14 @@ export class Field {
         }
         else {
             if (this._minesNumber > 0) {
-                this.drawText(this._minesNumber.toString(),
-                    new Point(this.position.x * Field.fieldSize + Field.fieldSize / 2, this.position.y * Field.fieldSize + Field.fieldSize / 2 + 8), 
-                    this._colors[this._minesNumber - 1],
-                    true);
+                    Label.drawText(this._context, 
+                        this._minesNumber.toString(), this.position.x * Field.fieldSize + Field.fieldSize / 2 + this._marginLeft, this.position.y * Field.fieldSize + Field.fieldSize / 2 + Field.marginTop + 1, { 
+                        size: 24,
+                        family: 'pixelCode',
+                        bold: true,
+                        align: 'center',
+                        color: this._colors[this._minesNumber - 1]
+                    });
             }
         }
     }
@@ -112,17 +121,6 @@ export class Field {
             Field.fieldSize, 
             Field.fieldSize
         );
-    }
-
-    private drawText(text: string, position: Point, 
-            color: string = 'white',
-            bold: boolean = false, 
-            align: CanvasTextAlign = 'center'
-        ): void {
-        this._context.font = `${bold ? 'bold' : ''} 24px PixelCode`;
-        this._context.fillStyle = color;
-        this._context.textAlign = align;
-        this._context.fillText(text, position.x + this._marginLeft, position.y + Field.marginTop - 7);
     }
 
     private setImageIndex(): void {

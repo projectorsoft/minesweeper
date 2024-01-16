@@ -1,3 +1,4 @@
+import { Label } from "./engine/inputs/label";
 import { Point } from "./engine/point";
 import { Colors, FieldState, FieldType, GameMode, GameState } from "./enums";
 import { Field } from "./field";
@@ -12,7 +13,6 @@ export class MineField {
     private _fields: Field[][];
     private _xSize: number;
     private _ySize: number;
-    private _minesNumber: number[] = [10, 40, 99];
     private _mines: Map<string, Point> = new Map<string, Point>();
     private _flaggedFields: Map<string, Point> = new Map<string, Point>();
     private _flagsNumber: number = 0;
@@ -53,7 +53,7 @@ export class MineField {
         this._context = context;
         this._xSize = xSize;
         this._ySize = ySize;
-        this._marginLeft = Math.floor((Game.width - Field.fieldSize * this.xSize) / 2);
+        this._marginLeft = Math.floor((Game.minWidth - Field.fieldSize * this.xSize) / 2);
 
         if (this._marginLeft <= 0)
             this._marginLeft = MineField.minMarginLeft;
@@ -89,7 +89,7 @@ export class MineField {
 
         const zeroPad = (num: number, places: number) => String(num).padStart(places, '0');
 
-        if (this._time < 1000)
+        if (this._time < 1000) //TODO: format time from miliseconds to full seconds
             this.drawText(zeroPad(this._time, 3), 42, new Point(Field.fieldSize * this.xSize + 15, -40), 'rgb(255, 0, 0)', true, 'right');
         else
             this.drawText('999', 42, new Point(Field.fieldSize * this.xSize, -40), 'rgb(255, 0, 0)', true, 'right');
@@ -113,8 +113,7 @@ export class MineField {
         this._context.closePath();
     }
 
-    public createMineField(mode: GameMode): void {
-        const minesNumber = this._minesNumber[mode];
+    public createMineField(mode: GameMode, minesNumber: number): void {
         this._flagsNumber = minesNumber;
         this._time = 0;
 
@@ -334,14 +333,18 @@ export class MineField {
         bold: boolean = false, 
         align: CanvasTextAlign = 'center'
     ): void {
-        this._context.font = `${bold ? 'bold' : ''} ${size}px PixelCode`;
-        this._context.fillStyle = color;
-        this._context.textAlign = align;
-        this._context.fillText(text, position.x + this._marginLeft, position.y + Field.marginTop);
+        Label.drawText(this._context, 
+            text, position.x + this._marginLeft, position.y + Field.marginTop, { 
+            size: size,
+            family: 'pixelCode',
+            bold: bold,
+            align: align,
+            color: color
+        });
     }
 
     private createTimer(): void {
-        this._timerId = window.setInterval(() => this._time++, 1000);
+        this._timerId = window.setInterval(() => this._time++, 1000); //TODO: timer in miliseconds
     }
 
     private stopTimer(): void {

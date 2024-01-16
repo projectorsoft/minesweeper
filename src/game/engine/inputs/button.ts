@@ -1,6 +1,7 @@
-import { EventBus } from "./engine/eventBus";
-import { Point } from "./engine/point";
-import { Colors, Event } from "./enums";
+import { EventBus } from "../events/eventBus";
+import { Point } from "../point";
+import { Colors, Event } from "../../enums";
+import { Label } from "./label";
 
 export class Button {
     private _context: CanvasRenderingContext2D;
@@ -30,19 +31,19 @@ export class Button {
 
             EventBus.getInstance().subscribe(Event.OnClick, (point: Point) => this.isClicked(point));
             EventBus.getInstance().subscribe(Event.OnMouseMove, (point: Point) => this.onMouseMove(point));
-        }
+    }
 
     public draw(): void {
         // Button background
         this._context.fillStyle = this._isHighlited || this.checked ? Colors.LightBlue : Colors.DarkGrey;
         this._context.fillRect(this.position.x, this.position.y, this.width, this.height);
 
-        // Button text
-        this._context.font = this.font;
-        this._context.textAlign = "center";
-        this._context.textBaseline = "middle";
-        this._context.fillStyle = Colors.White;
-        this._context.fillText(this.text, this.position.x + this.width / 2, this.position.y + this.height / 2);
+        Label.drawText(this._context, 
+            this.text, this.position.x + this.width / 2, this.position.y + this.height / 2, { 
+            size: 15,
+            align: 'center',
+            color: Colors.White
+        });
     }
 
     public isClicked(point: Point): boolean {

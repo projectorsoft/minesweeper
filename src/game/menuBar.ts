@@ -1,4 +1,4 @@
-import { Button } from "./button";
+import { Button } from "./engine/inputs/button";
 import { Point } from "./engine/point";
 import { Colors, GameMode } from "./enums";
 
@@ -10,6 +10,7 @@ export class MenuBar {
     private _easyModeBtn!: Button;
     private _mediumModeBtn!: Button;
     private _difficultModeBtn!: Button;
+    private _customModeBtn!: Button;
     private _statisticsBtn!: Button;
 
     public width: number = 1000;
@@ -25,11 +26,12 @@ export class MenuBar {
     public set enabled(value: boolean) {
         this._enabled = value;
 
-        this._newGameBtn.enabled = this.enabled;
-        this._easyModeBtn.enabled = this.enabled;
-        this._mediumModeBtn.enabled = this.enabled;
-        this._difficultModeBtn.enabled = this.enabled;
-        this._statisticsBtn.enabled = this.enabled;
+        this._newGameBtn.enabled = value;
+        this._easyModeBtn.enabled = value;
+        this._mediumModeBtn.enabled = value;
+        this._difficultModeBtn.enabled = value;
+        this._customModeBtn.enabled = value;
+        this._statisticsBtn.enabled = value;
     }
 
     public constructor(context: CanvasRenderingContext2D) {
@@ -52,6 +54,7 @@ export class MenuBar {
         this._easyModeBtn.draw();
         this._mediumModeBtn.draw();
         this._difficultModeBtn.draw();
+        this._customModeBtn.draw();
         this._statisticsBtn.draw();
     }
 
@@ -81,7 +84,13 @@ export class MenuBar {
         this._difficultModeBtn.width = 70;
         this._difficultModeBtn.onClick = this.changeGameMode.bind(this, GameMode.Difficult);
 
-        this._statisticsBtn = new Button(this._context, new Point(310, 0));
+        this._customModeBtn = new Button(this._context, new Point(300, 0));
+        this._customModeBtn.text = "Custom";
+        this._customModeBtn.font = "bold 15px sans-serif";
+        this._customModeBtn.width = 70;
+        this._customModeBtn.onClick = this.changeGameMode.bind(this, GameMode.Custom);
+
+        this._statisticsBtn = new Button(this._context, new Point(380, 0));
         this._statisticsBtn.text = "Statistics";
         this._statisticsBtn.font = "bold 15px sans-serif";
         this._statisticsBtn.width = 70;
@@ -95,7 +104,7 @@ export class MenuBar {
         this.onNewGameClick();
     }
 
-    private changeGameMode(mode: GameMode): void {
+    public changeGameMode(mode: GameMode): void {
         if (!this.onModeChange)
             return;
 
@@ -104,16 +113,25 @@ export class MenuBar {
                 this._easyModeBtn.checked = true;
                 this._mediumModeBtn.checked = false;
                 this._difficultModeBtn.checked = false;
+                this._customModeBtn.checked = false;
                 break;
             case GameMode.Medium:
                 this._easyModeBtn.checked = false;
                 this._mediumModeBtn.checked = true;
                 this._difficultModeBtn.checked = false;
+                this._customModeBtn.checked = false;
                 break;
             case GameMode.Difficult:
                 this._easyModeBtn.checked = false;
                 this._mediumModeBtn.checked = false;
                 this._difficultModeBtn.checked = true;
+                this._customModeBtn.checked = false;
+                break;
+            case GameMode.Custom:
+                this._easyModeBtn.checked = false;
+                this._mediumModeBtn.checked = false;
+                this._difficultModeBtn.checked = false;
+                this._customModeBtn.checked = true;
                 break;
         }
 

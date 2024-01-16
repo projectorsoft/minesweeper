@@ -18,7 +18,6 @@ export default defineComponent({
 
 <template>
   <canvas id="canvas" width="960" height="610"></canvas>
-  <!-- <canvas id="menu" width="840" height="840"></canvas> -->
 </template>
 
 <style scoped>

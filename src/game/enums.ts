@@ -18,7 +18,8 @@ export enum GameState {
 export enum GameMode {
     Easy = 0,
     Medium = 1,
-    Difficult = 2
+    Difficult = 2,
+    Custom = 3
 }
 
 export enum Asset {
@@ -63,4 +64,9 @@ export enum Sprite {
 export enum Event {
     OnClick = 'onClick',
     OnMouseMove = 'onMouseMove'
+}
+
+export enum FontFamily {
+    SansSerif = 'sans-serif',
+    PixelCode = 'pixelCode'
 }

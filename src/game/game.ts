@@ -1,4 +1,5 @@
-import { EventBus } from "./engine/eventBus";
+import { CustomBoardSizePopup } from "./customBoardSizePopup";
+import { EventBus } from "./engine/events/eventBus";
 import { Point } from "./engine/point";
 import { Asset, Event, GameMode, GameState, MouseButtons } from "./enums";
 import { Field } from "./field";
@@ -10,19 +11,20 @@ import { MineFieldBuilder } from "./mineFiledBuilder";
 import { StatisticsPopup } from "./statisticsPopup";
 
 export class Game {
-    public static readonly width: number = 960;
-    public static readonly height: number = 610;
+    public static readonly minWidth: number = 960;
+    public static readonly minHeight: number = 610;
 
     private _canvas!: HTMLCanvasElement;
     private _context!: CanvasRenderingContext2D;
     private _gameState: GameState = GameState.Started;
     private _gameMode: GameMode = GameMode.Easy;
-    private _enabled: boolean = true;
+    private _currentGameMode: GameMode = GameMode.Easy;
     private _assetsManager!: AssetsManager;
 
     private _mineField!: MineField;
     private _menuBar!: MenuBar;
     private _statisticsPopup!: StatisticsPopup | null;
+    private _customBoardSizePopup!: CustomBoardSizePopup | null;
     private _faceIndicatorImage!: ImageObject;
 
     constructor() {
@@ -44,14 +46,11 @@ export class Game {
         this._canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this._context = this._canvas.getContext('2d') as CanvasRenderingContext2D;
 
-        const size = MineFieldBuilder.getBoardSize(this._gameMode);
-
         this._canvas.oncontextmenu = (e) => e.preventDefault();
   
         this.createMenuBar();
         this.createStatusBar();
         this.createMineField();
-        //this.createStatisticsPopup();
 
         this._canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event));
         this._canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event));
@@ -60,7 +59,7 @@ export class Game {
     }
 
     private animate(): void {
-        requestAnimationFrame(() => this.animate());
+        setTimeout(() => requestAnimationFrame(() => this.animate()), 1000 / 10);
         this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
         this._menuBar.draw();
@@ -68,6 +67,7 @@ export class Game {
         this._faceIndicatorImage.draw();
 
         this._statisticsPopup?.draw();
+        this._customBoardSizePopup?.draw();
     }
 
     private createMenuBar(): void {
@@ -79,12 +79,12 @@ export class Game {
     }
 
     private createStatusBar(): void {
-        this._faceIndicatorImage = new ImageObject(this._context, this._assetsManager, new Point(Game.width / 2 - 20, Field.marginTop - 62));
+        this._faceIndicatorImage = new ImageObject(this._context, this._assetsManager, new Point(Game.minWidth / 2 - 20, Field.marginTop - 62));
     }
 
-    private createMineField(): void {
+    private createMineField(customOptions?: {xSize: number, ySize: number, mines: number}): void {
         this._mineField = new MineFieldBuilder(this._context, this._assetsManager)
-            .setDifficulty(this._gameMode)
+            .setDifficulty(this._gameMode, customOptions)
             .setFiledChangedHandler(this.setGameState.bind(this))
             .Build();
     }
@@ -93,14 +93,36 @@ export class Game {
         this.setEnabled(false);
 
         this._statisticsPopup = new StatisticsPopup(this._context);
-        this._statisticsPopup.title = "Select board size";
-        this._statisticsPopup.onCancel = () => { this._statisticsPopup = null; this.setEnabled(true); };
-        this._statisticsPopup.onSave = () => { this._statisticsPopup = null; this.setEnabled(true); };
+        this._statisticsPopup.title = "Player's statistics";
+        this._statisticsPopup.onClose = () => { this._statisticsPopup = null; this.setEnabled(true); };
+    }
+
+    private createCustomBoardSizePopup(): void {
+        this.setEnabled(false);
+
+        this._customBoardSizePopup = new CustomBoardSizePopup(this._context);
+        this._customBoardSizePopup.title = "Custom board settings";
+        this._customBoardSizePopup.onSave = (xSize: number, ySize: number, mines: number) => {
+            this.setCanvasSize(Field.fieldSize * xSize + 30, Field.fieldSize * ySize + 125);
+            this._customBoardSizePopup = null; 
+            this.setEnabled(true); 
+            this.newGame({xSize, ySize, mines}); //TODO: interface for options, add private field 
+        };
+
+        this._customBoardSizePopup.onCancel = () => { 
+            this._gameMode = this._currentGameMode;
+            this._menuBar.changeGameMode(this._currentGameMode);
+            this._customBoardSizePopup = null; 
+            this.setEnabled(true); 
+        };
+    }
+
+    private setCanvasSize(width: number, height: number): void {
+        this._canvas.width = width;
+        this._canvas.height = height;
     }
 
     private setEnabled(value: boolean): void {
-        this._enabled = value;
-
         this._menuBar.enabled = value;
         this._mineField.enabled = value;
     }
@@ -110,13 +132,27 @@ export class Game {
         this._faceIndicatorImage.gameState = this._gameState;
     }
 
-    private newGame(): void {
+    private adjustComponentsWidth(): void {
+        this._menuBar.width = this._canvas.width;
+        this._faceIndicatorImage.position.x = Game.getWidth() / 2 - 20;
+    }
+
+    private newGame(customOptions?: {xSize: number, ySize: number, mines: number}): void {
+        if (this._gameMode !== GameMode.Custom)
+            this.setCanvasSize(Game.minWidth, Game.minHeight);
+
+        this.adjustComponentsWidth();
         this.setGameState(GameState.Started);
-        this.createMineField();
+        this.createMineField(customOptions);
     }
 
     private changeMode(mode: GameMode): void {
-        this._gameMode = mode
+        this._currentGameMode = this._gameMode;
+        this._gameMode = mode;
+
+        if (mode === GameMode.Custom) {
+            this.createCustomBoardSizePopup();
+        }
     }
 
     private onMouseDown(event: MouseEvent): void {
@@ -144,5 +180,13 @@ export class Game {
     private addAssets(): void {
         this._assetsManager.addFontAsset(Asset.PixelCodeFont, `${AssetsManager.Path}assets/fonts/pixelCode.woff`);
         this._assetsManager.addImageAsset(Asset.SpritesImg, `${AssetsManager.Path}assets/images/sprites.png`);
+    }
+
+    public static getWidth(): number {
+        return (document.getElementById('canvas') as HTMLCanvasElement).width;
+    }
+
+    public static getHeight(): number {
+        return (document.getElementById('canvas') as HTMLCanvasElement).height;
     }
 }

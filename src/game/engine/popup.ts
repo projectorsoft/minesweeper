@@ -1,11 +1,12 @@
 import { Colors } from "../enums";
 import { Game } from "../game";
+import { Label } from "./inputs/label";
 import { Point } from "./point";
 
 export abstract class Popup {
     protected static readonly cornerRadius = 10;
 
-    protected _context!: CanvasRenderingContext2D;
+    protected _context: CanvasRenderingContext2D;
 
     public title: string = 'Popup';
     public position: Point = new Point(0, 0);
@@ -15,8 +16,8 @@ export abstract class Popup {
     public constructor(context: CanvasRenderingContext2D) {
         this._context = context;
 
-        this.position.x = Game.width / 2 - this.width / 2;
-        this.position.y = Game.height / 2 - this.height / 2;
+        this.position.x = Game.getWidth() / 2 - this.width / 2;
+        this.position.y = window.innerHeight / 2 - this.height;
     }
 
     protected abstract drawInternal(): void;
@@ -24,7 +25,14 @@ export abstract class Popup {
     public draw(): void {
         this.drawTransparentBox();
         this.drawPopup();
-        this.drawText(this.title, this.position.x + Popup.cornerRadius, this.position.y + Popup.cornerRadius * 2, Colors.DarkGrey);
+
+        Label.drawText(this._context, 
+            this.title, this.position.x + 20, this.position.y + 20, { 
+            size: 20,
+            align: 'left',
+            bold: true,
+            color: Colors.DarkGrey
+        });
 
         this.drawInternal();
     }
@@ -33,7 +41,7 @@ export abstract class Popup {
         this._context.save();
         this._context.globalAlpha = 0.45;
         this._context.beginPath();
-        this._context.rect(0, 0, Game.width, Game.height);
+        this._context.rect(0, 0, Game.getWidth(), Game.getHeight());
         this._context.fillStyle = Colors.White;
         this._context.fill();
         this._context.closePath();
@@ -54,12 +62,5 @@ export abstract class Popup {
         this._context.fill();
         this._context.closePath();
         this._context.restore();
-    }
-
-    protected drawText(text: string, x: number, y: number, color: Colors): void {
-        this._context.font = "bold 20px sans-serif";
-        this._context.textAlign = "left";
-        this._context.fillStyle = color;
-        this._context.fillText(text, x, y);
     }
 }
