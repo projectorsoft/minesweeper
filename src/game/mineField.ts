@@ -15,11 +15,12 @@ export class MineField {
     private _minesNumber: number[] = [10, 40, 99];
     private _mines: Map<string, Point> = new Map<string, Point>();
     private _flaggedFields: Map<string, Point> = new Map<string, Point>();
-    private _flagsNumber: number;
+    private _flagsNumber: number = 0;
     private _uncoveredFieldsLeft: number;
-    private _time: number;
+    private _time: number = 0;
     private _timerId: number = 0;
     private _marginLeft: number;
+    private _enabled: boolean = true;
 
     public onFieldChanged: (state: GameState) => void;
 
@@ -37,6 +38,12 @@ export class MineField {
     }
     public get marginLeft(): number {
         return this._marginLeft;
+    }
+    public get enabled(): boolean {
+        return this._enabled;
+    }
+    public set enabled(value: boolean) {
+        this._enabled = value;
     }
 
     public constructor(context: CanvasRenderingContext2D,
@@ -62,10 +69,11 @@ export class MineField {
                 this._fields[x][y].marginLeft = this._marginLeft;
             }
         }
+
+        this.onFieldChanged = () => null;
     }
 
     public draw(): void {
-        this.drawMenuBar();
         this.drawFrame();
         this.drawClocks();
 
@@ -79,7 +87,7 @@ export class MineField {
     private drawClocks(): void {
         this.drawText(this._flagsNumber.toString(), 42, new Point(-15, -40), 'rgb(255, 0, 0)', true, 'left');
 
-        const zeroPad = (num, places) => String(num).padStart(places, '0');
+        const zeroPad = (num: number, places: number) => String(num).padStart(places, '0');
 
         if (this._time < 1000)
             this.drawText(zeroPad(this._time, 3), 42, new Point(Field.fieldSize * this.xSize + 15, -40), 'rgb(255, 0, 0)', true, 'right');
@@ -101,14 +109,6 @@ export class MineField {
         this._context.fillStyle = Colors.LightGray;
         this._context.roundRect(this._marginLeft - 12, Field.marginTop - 12, Field.fieldSize * this.xSize + 24, Field.fieldSize * this.ySize + 24, [40]);
         this._context.stroke();
-        this._context.fill();
-        this._context.closePath();
-    }
-
-    private drawMenuBar(): void {
-        this._context.beginPath();
-        this._context.fillStyle = Colors.DarkGrey;
-        this._context.rect(this._marginLeft - 15, 0, Field.fieldSize * this.xSize + 30, 40);
         this._context.fill();
         this._context.closePath();
     }
@@ -201,6 +201,9 @@ export class MineField {
     }
 
     public onLeftButtonClick(mouseX: number, mouseY: number): void {
+        if (!this._enabled)
+            return;
+
         const coordinates = this.getFieldCoordinates(mouseX, mouseY);
 
         if (!coordinates)
@@ -228,6 +231,9 @@ export class MineField {
     }
 
     public onRightButtonClick(mouseX: number, mouseY: number): void {
+        if (!this._enabled)
+            return;
+        
         const coordinates = this.getFieldCoordinates(mouseX, mouseY);
 
         if (!coordinates)
@@ -277,12 +283,15 @@ export class MineField {
 
     public uncover(x: number, y: number): void {
         const stack: Field[] = [];
-        let currentField: Field;
+        let currentField: Field | undefined;
 
         stack.push(this._fields[x][y]);
 
         while(stack.length > 0) {
             currentField = stack.pop();
+
+            if (!currentField)
+                break;
 
             this.uncoverField(stack, currentField.position.x - 1, currentField.position.y - 1);
             this.uncoverField(stack, currentField.position.x, currentField.position.y - 1);
@@ -337,6 +346,5 @@ export class MineField {
 
     private stopTimer(): void {
         window.clearInterval(this._timerId);
-        this._timerId = undefined;
     }
 }

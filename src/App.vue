@@ -5,7 +5,7 @@ import { Game } from "./game/game";
 export default defineComponent({
   data() {
     return {
-      game: Game
+      game: {}
     }
   },
   mounted() {

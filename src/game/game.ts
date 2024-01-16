@@ -1,11 +1,13 @@
-import { Button } from "./button";
+import { EventBus } from "./engine/eventBus";
 import { Point } from "./engine/point";
-import { Asset, GameMode, GameState, MouseButtons } from "./enums";
+import { Asset, Event, GameMode, GameState, MouseButtons } from "./enums";
 import { Field } from "./field";
 import { ImageObject } from "./image";
 import { AssetsManager } from "./managers/assetsManager";
+import { MenuBar } from "./menuBar";
 import { MineField } from "./mineField";
 import { MineFieldBuilder } from "./mineFiledBuilder";
+import { StatisticsPopup } from "./statisticsPopup";
 
 export class Game {
     public static readonly width: number = 960;
@@ -13,17 +15,15 @@ export class Game {
 
     private _canvas!: HTMLCanvasElement;
     private _context!: CanvasRenderingContext2D;
-    private _animationHandlerId: number;
-    private _mineField: MineField;
-    private _gameState: GameState;
+    private _gameState: GameState = GameState.Started;
     private _gameMode: GameMode = GameMode.Easy;
+    private _enabled: boolean = true;
     private _assetsManager!: AssetsManager;
 
-    private _newGameBtn: Button;
-    private _easyModeBtn: Button;
-    private _mediumModeBtn: Button;
-    private _difficultModeBtn: Button;
-    private _faceIndicatorImage: ImageObject;
+    private _mineField!: MineField;
+    private _menuBar!: MenuBar;
+    private _statisticsPopup!: StatisticsPopup | null;
+    private _faceIndicatorImage!: ImageObject;
 
     constructor() {
         this._assetsManager = new AssetsManager();
@@ -44,39 +44,38 @@ export class Game {
         this._canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this._context = this._canvas.getContext('2d') as CanvasRenderingContext2D;
 
+        const size = MineFieldBuilder.getBoardSize(this._gameMode);
+
         this._canvas.oncontextmenu = (e) => e.preventDefault();
+  
+        this.createMenuBar();
+        this.createStatusBar();
+        this.createMineField();
+        //this.createStatisticsPopup();
+
         this._canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event));
         this._canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event));
-        
-        this._gameState = GameState.Started;
-        this.createMineField();
-        this.createMenu();
-        this.createStatusBar();
         
         this.animate();
     }
 
-    private createMenu(): void {
-        this._newGameBtn = new Button(this._context, new Point(this._mineField.marginLeft - 15, 0));
-        this._newGameBtn.text = "New game";
-        this._newGameBtn.width = 80;
-        this._newGameBtn.onClick = this.newGame.bind(this);
+    private animate(): void {
+        requestAnimationFrame(() => this.animate());
+        this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
-        this._easyModeBtn = new Button(this._context, new Point(this._mineField.marginLeft - 15 + 90, 0));
-        this._easyModeBtn.text = "Easy";
-        this._easyModeBtn.width = 70;
-        this._easyModeBtn.checked = true;
-        this._easyModeBtn.onClick = this.changeGameMode.bind(this, GameMode.Easy);
+        this._menuBar.draw();
+        this._mineField.draw();
+        this._faceIndicatorImage.draw();
 
-        this._mediumModeBtn = new Button(this._context, new Point(this._mineField.marginLeft - 15 + 160, 0));
-        this._mediumModeBtn.text = "Medium";
-        this._mediumModeBtn.width = 70;
-        this._mediumModeBtn.onClick = this.changeGameMode.bind(this, GameMode.Medium);
+        this._statisticsPopup?.draw();
+    }
 
-        this._difficultModeBtn = new Button(this._context, new Point(this._mineField.marginLeft - 15 + 230, 0));
-        this._difficultModeBtn.text = "Difficult";
-        this._difficultModeBtn.width = 70;
-        this._difficultModeBtn.onClick = this.changeGameMode.bind(this, GameMode.Difficult);
+    private createMenuBar(): void {
+        this._menuBar = new MenuBar(this._context);
+        this._menuBar.width = this._canvas.width;
+        this._menuBar.onModeChange = (mode: GameMode) => { this.changeMode(mode) };
+        this._menuBar.onNewGameClick = this.newGame.bind(this);
+        this._menuBar.onShowStatisticsClick = this.createStatisticsPopup.bind(this);
     }
 
     private createStatusBar(): void {
@@ -90,16 +89,20 @@ export class Game {
             .Build();
     }
 
-    private animate(): void {
-        this._animationHandlerId = requestAnimationFrame(() => this.animate());
-        this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
+    private createStatisticsPopup(): void {
+        this.setEnabled(false);
 
-        this._mineField.draw();
-        this._newGameBtn.draw();
-        this._easyModeBtn.draw();
-        this._mediumModeBtn.draw();
-        this._difficultModeBtn.draw();
-        this._faceIndicatorImage.draw();
+        this._statisticsPopup = new StatisticsPopup(this._context);
+        this._statisticsPopup.title = "Select board size";
+        this._statisticsPopup.onCancel = () => { this._statisticsPopup = null; this.setEnabled(true); };
+        this._statisticsPopup.onSave = () => { this._statisticsPopup = null; this.setEnabled(true); };
+    }
+
+    private setEnabled(value: boolean): void {
+        this._enabled = value;
+
+        this._menuBar.enabled = value;
+        this._mineField.enabled = value;
     }
 
     private setGameState(state: GameState): void {
@@ -112,56 +115,30 @@ export class Game {
         this.createMineField();
     }
 
-    private changeGameMode(mode: GameMode): void {
-        this._gameMode = mode;
-
-        switch(mode) {
-            case GameMode.Easy:
-                this._easyModeBtn.checked = true;
-                this._mediumModeBtn.checked = false;
-                this._difficultModeBtn.checked = false;
-                break;
-            case GameMode.Medium:
-                this._easyModeBtn.checked = false;
-                this._mediumModeBtn.checked = true;
-                this._difficultModeBtn.checked = false;
-                break;
-            case GameMode.Difficult:
-                this._easyModeBtn.checked = false;
-                this._mediumModeBtn.checked = false;
-                this._difficultModeBtn.checked = true;
-                break;
-        }
-
-        //this.newGame();
+    private changeMode(mode: GameMode): void {
+        this._gameMode = mode
     }
 
     private onMouseDown(event: MouseEvent): void {
         const x = Math.floor(event.pageX - this._canvas.offsetLeft);
         const y = Math.floor(event.pageY - this._canvas.offsetTop);
-        this._newGameBtn.isClicked(new Point(x, y));
-        this._easyModeBtn.isClicked(new Point(x, y));
-        this._mediumModeBtn.isClicked(new Point(x, y));
-        this._difficultModeBtn.isClicked(new Point(x, y));
 
-        if (this._gameState !== GameState.Started)
-            return;
+        if (this._gameState == GameState.Started) {
+            if (event.button === MouseButtons.Left)
+                this._mineField.onLeftButtonClick(x, y);
+            else
+            if (event.button === MouseButtons.Right)
+                this._mineField.onRightButtonClick(x, y);
+        }
 
-        if (event.button === MouseButtons.Left)
-            this._mineField.onLeftButtonClick(x, y);
-        else
-        if (event.button === MouseButtons.Right)
-            this._mineField.onRightButtonClick(x, y);
+        EventBus.getInstance().emit(Event.OnClick, new Point(x, y));
     }
 
     private onMouseMove(event: MouseEvent): void {
         const x = Math.floor(event.pageX - this._canvas.offsetLeft);
         const y = Math.floor(event.pageY - this._canvas.offsetTop);
 
-        this._newGameBtn.onMouseMove(new Point(x, y));
-        this._easyModeBtn.onMouseMove(new Point(x, y));
-        this._mediumModeBtn.onMouseMove(new Point(x, y));
-        this._difficultModeBtn.onMouseMove(new Point(x, y));
+        EventBus.getInstance().emit(Event.OnMouseMove, new Point(x, y));
     }
 
     private addAssets(): void {

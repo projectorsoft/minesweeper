@@ -59,3 +59,8 @@ export enum Sprite {
     Win = 8,
     Lost = 9
 }
+
+export enum Event {
+    OnClick = 'onClick',
+    OnMouseMove = 'onMouseMove'
+}

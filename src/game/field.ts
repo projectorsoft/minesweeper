@@ -18,13 +18,13 @@ export class Field {
     ];
 
     private readonly _spriteSize: number = 108;
-    
+
     private _context!: CanvasRenderingContext2D;
     private _image: CanvasImageSource;
-    private _imageIndex: number;
+    private _imageIndex: number = 0;
     private _hasMine: boolean;
     private _minesNumber: number;
-    private _marginLeft: number;
+    private _marginLeft: number = 0;
     
     public fieldType: FieldType;
     public fieldState: FieldState;

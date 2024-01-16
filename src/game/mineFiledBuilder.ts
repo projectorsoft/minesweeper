@@ -6,7 +6,7 @@ import { MineField } from "./mineField";
 export class MineFieldBuilder {
     private _context!: CanvasRenderingContext2D;
     private _assetsManager: AssetsManager;
-    private _mineField: MineField;
+    private _mineField!: MineField;
     
     public constructor(context: CanvasRenderingContext2D,
         assetsManager: AssetsManager) {
@@ -15,7 +15,7 @@ export class MineFieldBuilder {
     }
 
     public setDifficulty(mode: GameMode): MineFieldBuilder {
-        const size = this.getBoardSize(mode);
+        const size = MineFieldBuilder.getBoardSize(mode);
         this._mineField = new MineField(this._context, this._assetsManager, size.x, size.y);
         this._mineField.createMineField(mode);
 
@@ -27,7 +27,7 @@ export class MineFieldBuilder {
         return this;
     }
 
-    private getBoardSize(mode: GameMode): Point {
+    public static getBoardSize(mode: GameMode): Point {
         switch (mode) {
             case GameMode.Easy:
                 return new Point(9, 9);
