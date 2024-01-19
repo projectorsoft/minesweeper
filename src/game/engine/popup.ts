@@ -7,6 +7,7 @@ export abstract class Popup {
     protected static readonly cornerRadius = 10;
 
     protected _context: CanvasRenderingContext2D;
+    protected _visible: boolean = false;
 
     public title: string = 'Popup';
     public position: Point = new Point(0, 0);
@@ -40,6 +41,9 @@ export abstract class Popup {
     protected abstract drawInternal(): void;
 
     public draw(): void {
+        if (!this._visible)
+            return;
+
         this.drawTransparentBox();
         this.drawPopup();
 

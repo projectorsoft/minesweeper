@@ -16,6 +16,15 @@ export class CustomBoardSizePopup extends Popup {
     public onCancel!: Function;
     public onSave!: Function;
 
+    public get visible(): boolean {
+        return this._visible;
+    }
+    public set visible(value: boolean) {
+        this._visible = value;
+        this._cancelBtn.enabled = value;
+        this._saveBtn.enabled = value;
+    }
+
     public constructor(context: CanvasRenderingContext2D) {
         super(context);
 

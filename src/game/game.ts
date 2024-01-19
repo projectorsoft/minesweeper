@@ -62,6 +62,9 @@ export class Game {
         this.createMenuBar();
         this.createStatusBar();
         this.createMineField();
+
+        this._customBoardSizePopup = new CustomBoardSizePopup(this._context);
+        this._statisticsPopup = new StatisticsPopup(this._context, this._statisticsService);
         
         this.animate();
     }
@@ -74,8 +77,8 @@ export class Game {
         this._mineField.draw();
         this._faceIndicatorImage.draw();
 
-        this._statisticsPopup?.draw();
-        this._customBoardSizePopup?.draw();
+        this._statisticsPopup.draw();
+        this._customBoardSizePopup.draw();
     }
 
     private createMenuBar(): void {
@@ -98,35 +101,32 @@ export class Game {
     }
 
     private createStatisticsPopup(): void {
-        this.setEnabled(false);
+        this.setComponentsEnabled(false);
+        this._statisticsPopup.visible = true;
 
-        this._statisticsPopup = new StatisticsPopup(this._context, this._statisticsService);
         this._statisticsPopup.height = 300;
         this._statisticsPopup.title = "Player's statistics";
-        this._statisticsPopup.onClose = () => { this._statisticsPopup = null; this.setEnabled(true); };
+        this._statisticsPopup.onClose = () => { this._statisticsPopup.visible = false; this.setComponentsEnabled(true); };
     }
 
-    //TODOD: board cleard when custom game saved!!!
     private createCustomBoardSizePopup(): void {
-        this.setEnabled(false);
-
-        //if (!this._customBoardSizePopup)
-            this._customBoardSizePopup = new CustomBoardSizePopup(this._context);
+        this.setComponentsEnabled(false);
+        this._customBoardSizePopup.visible = true;
 
         this._customBoardSizePopup.title = "Custom board settings";
         this._customBoardSizePopup.onSave = (options: ICustomModeOptions) => {
             this._customModeOptions = options;
-            this._customBoardSizePopup = null; 
-            this.setEnabled(true); 
-            //console.log('custom popup')
+            this.setComponentsEnabled(true); 
+            this._customBoardSizePopup.visible = false;
+            console.log('custom popup')
             this.newGame();
         };
 
         this._customBoardSizePopup.onCancel = () => { 
             this._gameMode = this._previousGameMode;
             this._menuBar.changeGameMode(this._previousGameMode);
-            this._customBoardSizePopup = null; 
-            this.setEnabled(true); 
+            this._customBoardSizePopup.visible = false;
+            this.setComponentsEnabled(true); 
         };
     }
 
@@ -135,7 +135,7 @@ export class Game {
         this._canvas.height = height;
     }
 
-    private setEnabled(value: boolean): void {
+    private setComponentsEnabled(value: boolean): void {
         this._menuBar.enabled = value;
         this._mineField.enabled = value;
     }

@@ -13,6 +13,14 @@ export class StatisticsPopup extends Popup {
 
     public onClose!: Function;
 
+    public get visible(): boolean {
+        return this._visible;
+    }
+    public set visible(value: boolean) {
+        this._visible = value;
+        this._closeBtn.enabled = value;
+    }
+
     public constructor(context: CanvasRenderingContext2D,
         statisticsService: StatisticsService) {
         super(context);
