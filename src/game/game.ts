@@ -1,14 +1,17 @@
-import { CustomBoardSizePopup } from "./customBoardSizePopup";
 import { EventBus } from "./engine/events/eventBus";
+import { AssetsManager } from "./engine/managers/assetsManager";
+import { StorageService } from "./engine/managers/storageService";
 import { Point } from "./engine/point";
 import { Asset, Event, GameMode, GameState, MouseButtons } from "./enums";
+import { FaceIndicator } from "./faceIndicator";
 import { Field } from "./field";
-import { ImageObject } from "./image";
-import { AssetsManager } from "./managers/assetsManager";
 import { MenuBar } from "./menuBar";
 import { MineField } from "./mineField";
 import { ICustomModeOptions, MineFieldBuilder } from "./mineFiledBuilder";
-import { StatisticsPopup } from "./statisticsPopup";
+import { CustomBoardSizePopup } from "./popups/customBoardSizePopup";
+import { StatisticsPopup } from "./popups/statisticsPopup";
+import { Statistics } from "./services/statistics";
+import { StatisticsService } from "./services/statisticsService";
 
 export class Game {
     public static readonly minWidth: number = 960;
@@ -18,18 +21,23 @@ export class Game {
     private _context!: CanvasRenderingContext2D;
     private _gameState: GameState = GameState.Started;
     private _gameMode: GameMode = GameMode.Easy;
-    private _currentGameMode: GameMode = GameMode.Easy;
+    private _previousGameMode: GameMode = GameMode.Easy;
     private _customModeOptions: ICustomModeOptions | null;
     private _assetsManager!: AssetsManager;
+    private _statisticsService!: StatisticsService;
+    private _storageService!: StorageService<Statistics>;
 
     private _mineField!: MineField;
     private _menuBar!: MenuBar;
     private _statisticsPopup!: StatisticsPopup | null;
     private _customBoardSizePopup!: CustomBoardSizePopup | null;
-    private _faceIndicatorImage!: ImageObject;
+    private _faceIndicatorImage!: FaceIndicator;
 
     constructor() {
+        this._storageService = new StorageService();
+        this._statisticsService = new StatisticsService(this._storageService);
         this._assetsManager = new AssetsManager();
+
         this.addAssets();
         this._assetsManager
             .loadAll()
@@ -39,7 +47,7 @@ export class Game {
                 pixelCodeFont.load().then(() => this.initialize());
             })
             .catch((error: Error) => {
-                alert(error.message); //TODO: show more sophisticated/user friendly message
+                alert(error); //TODO: show more sophisticated/user friendly message
             });
     }
 
@@ -48,13 +56,12 @@ export class Game {
         this._context = this._canvas.getContext('2d') as CanvasRenderingContext2D;
 
         this._canvas.oncontextmenu = (e) => e.preventDefault();
-  
+        this._canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event));
+        this._canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event));
+
         this.createMenuBar();
         this.createStatusBar();
         this.createMineField();
-
-        this._canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event));
-        this._canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event));
         
         this.animate();
     }
@@ -75,16 +82,16 @@ export class Game {
         this._menuBar = new MenuBar(this._context);
         this._menuBar.width = this._canvas.width;
         this._menuBar.onModeChange = (mode: GameMode) => { this.changeMode(mode) };
-        this._menuBar.onNewGameClick = this.newGame.bind(this);
-        this._menuBar.onShowStatisticsClick = this.createStatisticsPopup.bind(this);
+        this._menuBar.onNewGameClick = () => { this.newGame() };
+        this._menuBar.onShowStatisticsClick = () => { this.createStatisticsPopup() };
     }
 
     private createStatusBar(): void {
-        this._faceIndicatorImage = new ImageObject(this._context, this._assetsManager, new Point(Game.minWidth / 2 - 20, Field.marginTop - 62));
+        this._faceIndicatorImage = new FaceIndicator(this._context, this._assetsManager, new Point(Game.minWidth / 2 - 20, Field.marginTop - 62));
     }
 
     private createMineField(customOptions?: ICustomModeOptions): void {
-        this._mineField = new MineFieldBuilder(this._context, this._assetsManager)
+        this._mineField = new MineFieldBuilder(this._context, this._assetsManager, this._statisticsService)
             .setDifficulty(this._gameMode, customOptions)
             .setFiledChangedHandler(this.setGameState.bind(this))
             .Build();
@@ -93,27 +100,31 @@ export class Game {
     private createStatisticsPopup(): void {
         this.setEnabled(false);
 
-        this._statisticsPopup = new StatisticsPopup(this._context);
+        this._statisticsPopup = new StatisticsPopup(this._context, this._statisticsService);
+        this._statisticsPopup.height = 300;
         this._statisticsPopup.title = "Player's statistics";
         this._statisticsPopup.onClose = () => { this._statisticsPopup = null; this.setEnabled(true); };
     }
 
+    //TODOD: board cleard when custom game saved!!!
     private createCustomBoardSizePopup(): void {
         this.setEnabled(false);
 
-        this._customBoardSizePopup = new CustomBoardSizePopup(this._context);
+        //if (!this._customBoardSizePopup)
+            this._customBoardSizePopup = new CustomBoardSizePopup(this._context);
+
         this._customBoardSizePopup.title = "Custom board settings";
         this._customBoardSizePopup.onSave = (options: ICustomModeOptions) => {
             this._customModeOptions = options;
-            this.setCanvasSize(Field.fieldSize * options.xSize + 30, Field.fieldSize * options.ySize + 125);
             this._customBoardSizePopup = null; 
             this.setEnabled(true); 
+            //console.log('custom popup')
             this.newGame();
         };
 
         this._customBoardSizePopup.onCancel = () => { 
-            this._gameMode = this._currentGameMode;
-            this._menuBar.changeGameMode(this._currentGameMode);
+            this._gameMode = this._previousGameMode;
+            this._menuBar.changeGameMode(this._previousGameMode);
             this._customBoardSizePopup = null; 
             this.setEnabled(true); 
         };
@@ -135,21 +146,35 @@ export class Game {
     }
 
     private adjustComponentsWidth(): void {
-        this._menuBar.width = this._canvas.width;
+        this._menuBar.width = Game.getWidth();
         this._faceIndicatorImage.position.x = Game.getWidth() / 2 - 20;
     }
 
-    private newGame(): void {
-        if (this._gameMode !== GameMode.Custom)
-            this.setCanvasSize(Game.minWidth, Game.minHeight);
+    private adjustCanvasSize(): void {
+        if (this._gameMode === GameMode.Custom) {
+            const newWidth: number = Field.fieldSize * this._customModeOptions.xSize + 30;
+            const newHeight: number = Field.fieldSize * this._customModeOptions.ySize + 125;
 
+            if (this._canvas.width !== newWidth ||
+                this._canvas.height !== newHeight)
+                this.setCanvasSize(newWidth, newHeight);
+        }
+        else {
+            if (this._previousGameMode === GameMode.Custom)
+                this.setCanvasSize(Game.minWidth, Game.minHeight);
+        }
+    }
+
+    private newGame(): void {
+        this.adjustCanvasSize();
         this.adjustComponentsWidth();
         this.setGameState(GameState.Started);
         this.createMineField(this._customModeOptions);
+        this._previousGameMode = this._gameMode;
     }
 
     private changeMode(mode: GameMode): void {
-        this._currentGameMode = this._gameMode;
+        this._previousGameMode = this._gameMode;
         this._gameMode = mode;
 
         if (mode === GameMode.Custom) {

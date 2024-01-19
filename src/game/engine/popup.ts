@@ -10,8 +10,25 @@ export abstract class Popup {
 
     public title: string = 'Popup';
     public position: Point = new Point(0, 0);
-    public width: number = 400;
-    public height: number  = 150;
+    private _width: number = 400;
+    private _height: number = 150;
+
+    public get width(): number {
+        return this._width;
+    }
+    public set width(value: number) {
+        this._width = value;
+
+        this.position.x = Game.getWidth() / 2 - this.width / 2;
+    }
+    public get height(): number {
+        return this._height;
+    }
+    public set height(value: number) {
+        this._height = value;
+
+        this.position.y = window.innerHeight / 2 - this.height;
+    }
 
     public constructor(context: CanvasRenderingContext2D) {
         this._context = context;

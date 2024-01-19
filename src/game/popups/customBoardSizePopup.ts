@@ -1,9 +1,10 @@
-import { Button } from "./engine/inputs/button";
-import { InputNumber } from "./engine/inputs/inputNumber";
-import { Label } from "./engine/inputs/label";
-import { Point } from "./engine/point";
-import { Popup } from "./engine/popup";
-import { ICustomModeOptions } from "./mineFiledBuilder";
+import { Button } from "../engine/inputs/button";
+import { InputNumber } from "../engine/inputs/inputNumber";
+import { Label } from "../engine/inputs/label";
+import { Point } from "../engine/point";
+import { Popup } from "../engine/popup";
+import { Colors } from "../enums";
+import { ICustomModeOptions } from "../mineFiledBuilder";
 
 export class CustomBoardSizePopup extends Popup {
     private _xValueInput!: InputNumber;
@@ -73,22 +74,25 @@ export class CustomBoardSizePopup extends Popup {
     protected drawInternal(): void {
         Label.drawText(this._context, 
             "X size:", this.position.x + 20, this.position.y + 57, { 
-            size: 16, 
-            bold: true
+            size: 15, 
+            bold: true,
+            color: Colors.DarkGrey
         });
         this._xValueInput.draw();
 
         Label.drawText(this._context, 
             "Y size:", this.position.x + 20, this.position.y + 87, { 
-            size: 16, 
-            bold: true
+            size: 15, 
+            bold: true,
+            color: Colors.DarkGrey
         });
         this._yValueInput.draw();
 
         Label.drawText(this._context, 
             "Mines number:", this.position.x + 20, this.position.y + 115, { 
-            size: 16, 
-            bold: true
+            size: 15, 
+            bold: true,
+            color: Colors.DarkGrey
         });
         this._minesValueInput.draw();
 

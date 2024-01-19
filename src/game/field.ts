@@ -1,7 +1,7 @@
 import { Label } from "./engine/inputs/label";
 import { Point } from "./engine/point";
 import { Asset, Colors, FieldState, FieldType, Sprite } from "./enums";
-import { AssetsManager } from "./managers/assetsManager";
+import { AssetsManager } from "./engine/managers/assetsManager";
 
 export class Field {
     public static readonly fieldSize: number = 30;

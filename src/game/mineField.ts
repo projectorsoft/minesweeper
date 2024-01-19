@@ -4,20 +4,24 @@ import { Colors, FieldState, FieldType, GameMode, GameState } from "./enums";
 import { Field } from "./field";
 import { Game } from "./game";
 import { Helpers } from "./helpers";
-import { AssetsManager } from "./managers/assetsManager";
+import { AssetsManager } from "./engine/managers/assetsManager";
+import { StatisticsService } from "./services/statisticsService";
+import { StatisticsRecord } from "./services/statistics";
 
 export class MineField {
     public static readonly minMarginLeft: number = 15;
 
     private _context: CanvasRenderingContext2D;
+    private _statisticsService: StatisticsService;
     private _fields: Field[][];
     private _xSize: number;
     private _ySize: number;
     private _mines: Map<string, Point> = new Map<string, Point>();
     private _flaggedFields: Map<string, Point> = new Map<string, Point>();
     private _flagsNumber: number = 0;
+    private _mode: GameMode;
     private _uncoveredFieldsLeft: number;
-    private _time: number = 0;
+    private _statisticsRecord: StatisticsRecord;
     private _timerId: number = 0;
     private _marginLeft: number;
     private _enabled: boolean = true;
@@ -47,10 +51,12 @@ export class MineField {
     }
 
     public constructor(context: CanvasRenderingContext2D,
-        assetsManager: AssetsManager,
-        xSize: number, 
-        ySize: number) {
+                        assetsManager: AssetsManager,
+                        statisticsService: StatisticsService,
+                        xSize: number, 
+                        ySize: number) {
         this._context = context;
+        this._statisticsService = statisticsService;
         this._xSize = xSize;
         this._ySize = ySize;
         this._marginLeft = Math.floor((Game.minWidth - Field.fieldSize * this.xSize) / 2);
@@ -87,10 +93,8 @@ export class MineField {
     private drawClocks(): void {
         this.drawText(this._flagsNumber.toString(), 42, new Point(-15, -40), 'rgb(255, 0, 0)', true, 'left');
 
-        const zeroPad = (num: number, places: number) => String(num).padStart(places, '0');
-
-        if (this._time < 1000) //TODO: format time from miliseconds to full seconds
-            this.drawText(zeroPad(this._time, 3), 42, new Point(Field.fieldSize * this.xSize + 15, -40), 'rgb(255, 0, 0)', true, 'right');
+        if (this._statisticsRecord.time < 1000) //TODO: format time from miliseconds to full seconds
+            this.drawText(Helpers.zeroPad(this._statisticsRecord.time, 3), 42, new Point(Field.fieldSize * this.xSize + 15, -40), 'rgb(255, 0, 0)', true, 'right');
         else
             this.drawText('999', 42, new Point(Field.fieldSize * this.xSize, -40), 'rgb(255, 0, 0)', true, 'right');
     }
@@ -106,7 +110,7 @@ export class MineField {
 
         this._context.beginPath();
         this._context.strokeStyle = Colors.Gray;
-        this._context.fillStyle = Colors.LightGray;
+        this._context.fillStyle = Colors.DarkGrey;
         this._context.roundRect(this._marginLeft - 12, Field.marginTop - 12, Field.fieldSize * this.xSize + 24, Field.fieldSize * this.ySize + 24, [40]);
         this._context.stroke();
         this._context.fill();
@@ -114,8 +118,10 @@ export class MineField {
     }
 
     public createMineField(mode: GameMode, minesNumber: number): void {
+        this._mode = mode;
         this._flagsNumber = minesNumber;
-        this._time = 0;
+        this._statisticsRecord = new StatisticsRecord();
+        this._statisticsRecord.time = 0;
 
         //generate mines
         let x: number, y: number;
@@ -169,6 +175,9 @@ export class MineField {
         //all empty fields have been revealed and all flags set on mines
         if (this._uncoveredFieldsLeft === 0) {
             this.stopTimer();
+            this._statisticsService.updateLastGameStatistics(this._statisticsRecord);
+            this._statisticsService.setModeStatistics(this._mode, this._statisticsRecord);
+
             if (this.onFieldChanged)
                 this.onFieldChanged(GameState.Won);
         }
@@ -193,6 +202,8 @@ export class MineField {
                 this._fields[flagged.x][flagged.y].revealFlag();
         });
 
+        this._statisticsService.updateLastGameStatistics(this._statisticsRecord);
+
         if (this.onFieldChanged)
             this.onFieldChanged(GameState.Lost);
 
@@ -207,6 +218,8 @@ export class MineField {
 
         if (!coordinates)
             return;
+
+        this._statisticsRecord.clicks++;
 
         //first click, start timer
         if (!this._timerId)
@@ -237,6 +250,8 @@ export class MineField {
 
         if (!coordinates)
             return;
+
+        this._statisticsRecord.clicks++;
 
         //first click, start timer
         if (!this._timerId)
@@ -318,7 +333,6 @@ export class MineField {
             return false;
 
         return this._fields[x][y].fieldState === FieldState.Covered
-            //&& this._mineField.fields[x][y].fieldType === FieldType.Number
             && this._fields[x][y].minesNumber >= 0;
     }
 
@@ -344,7 +358,7 @@ export class MineField {
     }
 
     private createTimer(): void {
-        this._timerId = window.setInterval(() => this._time++, 1000); //TODO: timer in miliseconds
+        this._timerId = window.setInterval(() => this._statisticsRecord.time++, 1000); //TODO: timer in miliseconds
     }
 
     private stopTimer(): void {

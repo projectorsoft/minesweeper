@@ -1,10 +1,10 @@
-import { IAsset } from "../assets/IAsset";
-import { AudioAsset } from "../assets/audioAsset";
-import { FontAsset } from "../assets/fontAsset";
-import { ImageAsset } from "../assets/imageAsset";
-import { TranslationAsset } from "../assets/translationAsset";
-import { Asset } from "../enums";
-import { EnvironmentHelper } from "../helpers/environmentHelper";
+import { IAsset } from "../../assets/IAsset";
+import { AudioAsset } from "../../assets/audioAsset";
+import { FontAsset } from "../../assets/fontAsset";
+import { ImageAsset } from "../../assets/imageAsset";
+import { TranslationAsset } from "../../assets/translationAsset";
+import { Asset } from "../../enums";
+import { EnvironmentHelper } from "../../helpers/environmentHelper";
 
 
 export class AssetsManager {

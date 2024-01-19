@@ -1,8 +1,8 @@
 import { Point } from "./engine/point";
-import { Asset, Colors, GameState } from "./enums";
-import { AssetsManager } from "./managers/assetsManager";
+import { Asset, Colors, GameState, Sprite } from "./enums";
+import { AssetsManager } from "./engine/managers/assetsManager";
 
-export class ImageObject {
+export class FaceIndicator {
     private readonly _spriteSize: number = 108;
 
     private _context: CanvasRenderingContext2D;
@@ -21,16 +21,16 @@ export class ImageObject {
 
     public draw(): void {
         if (this.gameState === GameState.Started) {
-            this._context.fillStyle = Colors.VeryDarkGrey;
+            this._context.fillStyle = Colors.LightGray;
             this._context.fillRect(this.position.x, this.position.y, 40, 40);
             return;
         }
 
         if (this.gameState === GameState.Won)
-            this.drawImage(8);
+            this.drawImage(Sprite.Win);
         else
         if (this.gameState === GameState.Lost)
-            this.drawImage(9);
+            this.drawImage(Sprite.Lost);
     }
 
     private drawImage(imageIndex: number): void {
