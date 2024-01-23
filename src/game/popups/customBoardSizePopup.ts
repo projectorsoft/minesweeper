@@ -35,7 +35,7 @@ export class CustomBoardSizePopup extends Popup {
         this._xValueInput = new InputNumber(this._context);
         this._xValueInput.parent = this;
         this._xValueInput.positionX = 240;
-        this._xValueInput.positionY = 42;
+        this._xValueInput.positionY = 44;
         this._xValueInput.minValue = 45;
         this._xValueInput.maxValue = 65;
         this._xValueInput.value = 50;
