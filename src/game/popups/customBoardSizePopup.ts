@@ -62,7 +62,7 @@ export class CustomBoardSizePopup extends Popup {
         this._cancelBtn = new Button(this._context);
         this._cancelBtn.parent = this;
         this._cancelBtn.positionX = 150;
-        this._cancelBtn.positionY = 165;
+        this._cancelBtn.positionY = 145;
         this._cancelBtn.text = "Cancel";
         this._cancelBtn.font = "bold 15px sans-serif";
         this._cancelBtn.width = 80;
@@ -72,7 +72,7 @@ export class CustomBoardSizePopup extends Popup {
         this._saveBtn = new Button(this._context);
         this._saveBtn.parent = this;
         this._saveBtn.positionX = 240;
-        this._saveBtn.positionY = 165;
+        this._saveBtn.positionY = 145;
         this._saveBtn.text = "Save";
         this._saveBtn.font = "bold 15px sans-serif";
         this._saveBtn.width = 80;
@@ -99,7 +99,7 @@ export class CustomBoardSizePopup extends Popup {
     protected drawPopupInternal(): void {
         Label.drawText(this._context, 
             "X size:", this.positionX + 20, this.positionY + 57, { 
-            size: 15, 
+            size: 14, 
             bold: true,
             color: Colors.DarkGrey
         });
@@ -107,7 +107,7 @@ export class CustomBoardSizePopup extends Popup {
 
         Label.drawText(this._context, 
             "Y size:", this.positionX + 20, this.positionY + 87, { 
-            size: 15, 
+            size: 14, 
             bold: true,
             color: Colors.DarkGrey
         });
@@ -115,7 +115,7 @@ export class CustomBoardSizePopup extends Popup {
 
         Label.drawText(this._context, 
             "Mines number:", this.positionX + 20, this.positionY + 115, { 
-            size: 15, 
+            size: 14, 
             bold: true,
             color: Colors.DarkGrey
         });

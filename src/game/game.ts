@@ -105,7 +105,7 @@ export class Game {
         this._customBoardSizePopup = new CustomBoardSizePopup(this._context);
         this._customBoardSizePopup.title = "Custom board settings";
         this._customBoardSizePopup.width = 340;
-        this._customBoardSizePopup.height = 200;
+        this._customBoardSizePopup.height = 180;
         this._customBoardSizePopup.onSave = (options: ICustomModeOptions) => {
             this._customModeOptions = options;
             this.setComponentsEnabled(true); 
@@ -124,7 +124,7 @@ export class Game {
     private createStatisticsPopup(): void {
         this._statisticsPopup = new StatisticsPopup(this._context, this._statisticsService);
         this._statisticsPopup.title = "Player's statistics";
-        this._statisticsPopup.width = 270;
+        this._statisticsPopup.width = 280;
         this._statisticsPopup.height = 300;
         this._statisticsPopup.onClose = () => { this._statisticsPopup.visible = false; this.setComponentsEnabled(true); };
     }

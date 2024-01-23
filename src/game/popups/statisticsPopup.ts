@@ -38,7 +38,7 @@ export class StatisticsPopup extends Popup {
             'Last game:', 
             this.positionX + 20, 
             this.positionY + 50, { 
-            size: 15,
+            size: 14,
             align: 'left',
             bold: true,
             color: Colors.DarkGrey
@@ -66,7 +66,7 @@ export class StatisticsPopup extends Popup {
             'Best games:', 
             this.positionX + 20, 
             this.positionY + 145, { 
-            size: 15,
+            size: 14,
             align: 'left',
             bold: true,
             color: Colors.DarkGrey
@@ -114,7 +114,7 @@ export class StatisticsPopup extends Popup {
     protected createInputsInternal(): void {
         this._closeBtn = new Button(this._context);
         this._closeBtn.parent = this;
-        this._closeBtn.positionX = 95;
+        this._closeBtn.positionX = 100;
         this._closeBtn.positionY = 265;
         this._closeBtn.text = "Close";
         this._closeBtn.font = "bold 15px sans-serif";
