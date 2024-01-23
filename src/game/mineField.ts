@@ -1,12 +1,12 @@
 import { Label } from "./engine/inputs/label";
+import { AssetsManager } from "./engine/managers/assetsManager";
 import { Point } from "./engine/point";
 import { Colors, FieldState, FieldType, GameMode, GameState } from "./enums";
 import { Field } from "./field";
 import { Game } from "./game";
 import { Helpers } from "./helpers";
-import { AssetsManager } from "./engine/managers/assetsManager";
-import { StatisticsService } from "./services/statisticsService";
 import { StatisticsRecord } from "./services/statistics";
+import { StatisticsService } from "./services/statisticsService";
 
 export class MineField {
     public static readonly minMarginLeft: number = 15;
@@ -330,6 +330,9 @@ export class MineField {
 
     private canUncoverField(x: number, y: number): boolean {
         if (!MineField.checkField(this._fields, x, y))
+            return false;
+
+        if (this._fields[x][y].fieldType === FieldType.Flagged)
             return false;
 
         return this._fields[x][y].fieldState === FieldState.Covered
