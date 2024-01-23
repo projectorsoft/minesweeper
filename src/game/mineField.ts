@@ -59,7 +59,7 @@ export class MineField {
         this._statisticsService = statisticsService;
         this._xSize = xSize;
         this._ySize = ySize;
-        this._marginLeft = Math.floor((Game.minWidth - Field.fieldSize * this.xSize) / 2);
+        this._marginLeft = Math.floor((Game.minWidth - this.width) / 2);
 
         if (this._marginLeft <= 0)
             this._marginLeft = MineField.minMarginLeft;
@@ -94,16 +94,16 @@ export class MineField {
         this.drawText(this._flagsNumber.toString(), 42, new Point(-15, -40), 'rgb(255, 0, 0)', true, 'left');
 
         if (this._statisticsRecord.time < 1000) //TODO: format time from miliseconds to full seconds
-            this.drawText(Helpers.zeroPad(this._statisticsRecord.time, 3), 42, new Point(Field.fieldSize * this.xSize + 15, -40), 'rgb(255, 0, 0)', true, 'right');
+            this.drawText(Helpers.zeroPad(this._statisticsRecord.time, 3), 42, new Point(this.width + 15, -40), 'rgb(255, 0, 0)', true, 'right');
         else
-            this.drawText('999', 42, new Point(Field.fieldSize * this.xSize, -40), 'rgb(255, 0, 0)', true, 'right');
+            this.drawText('999', 42, new Point(this.width, -40), 'rgb(255, 0, 0)', true, 'right');
     }
 
     private drawFrame(): void {
         this._context.beginPath();
         this._context.strokeStyle = Colors.White;
         this._context.fillStyle = Colors.White;
-        this._context.roundRect(this._marginLeft - 15, Field.marginTop - 15, Field.fieldSize * this.xSize + 30, Field.fieldSize * this.ySize + 30, [43]);
+        this._context.roundRect(this._marginLeft - 15, Field.marginTop - 15, this.width + 30, this.height + 30, [43]);
         this._context.stroke();
         this._context.fill();
         this._context.closePath();
@@ -111,7 +111,7 @@ export class MineField {
         this._context.beginPath();
         this._context.strokeStyle = Colors.Gray;
         this._context.fillStyle = Colors.DarkGrey;
-        this._context.roundRect(this._marginLeft - 12, Field.marginTop - 12, Field.fieldSize * this.xSize + 24, Field.fieldSize * this.ySize + 24, [40]);
+        this._context.roundRect(this._marginLeft - 12, Field.marginTop - 12, this.width + 24, this.height + 24, [40]);
         this._context.stroke();
         this._context.fill();
         this._context.closePath();

@@ -7,6 +7,8 @@ export class Field {
     public static readonly fieldSize: number = 30;
     public static readonly marginTop: number = 110;
 
+    private readonly _halfFieldSize: number = Field.fieldSize / 2;
+
     private readonly _colors: string[] = [
         Colors.Blue,
         Colors.Green,
@@ -26,11 +28,13 @@ export class Field {
     private _hasMine: boolean;
     private _minesNumber: number;
     private _marginLeft: number = 0;
+    private _positionX: number; //X pos in pixels
+    private _positionY: number; //Y pos in puixels
     
     public fieldType: FieldType;
     public fieldState: FieldState;
-    public position: Point;
-
+    public position: Point; //position in grid
+    
     public get minesNumber(): number {
         return this._minesNumber;
     }
@@ -60,6 +64,8 @@ export class Field {
             this._minesNumber = 0;
             this._hasMine = false;
             this._image = assetsManager.getImage(Asset.SpritesImg);
+            this._positionX = position.x * Field.fieldSize;
+            this._positionY = position.y * Field.fieldSize;
             this.setImageIndex();
     }
 
@@ -76,7 +82,7 @@ export class Field {
             } else
                 if (this.fieldType === FieldType.Tentative) {
                         Label.drawText(this._context, 
-                            '?', this.position.x * Field.fieldSize + Field.fieldSize / 2 + this._marginLeft, this.position.y * Field.fieldSize + Field.fieldSize / 2 + Field.marginTop + 1, { 
+                            '?', this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.marginTop + 1, { 
                             size: 24,
                             family: 'pixelCode',
                             bold: true,
@@ -94,7 +100,7 @@ export class Field {
         else {
             if (this._minesNumber > 0) {
                     Label.drawText(this._context, 
-                        this._minesNumber.toString(), this.position.x * Field.fieldSize + Field.fieldSize / 2 + this._marginLeft, this.position.y * Field.fieldSize + Field.fieldSize / 2 + Field.marginTop + 1, { 
+                        this._minesNumber.toString(), this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.marginTop + 1, { 
                         size: 24,
                         family: 'pixelCode',
                         bold: true,
@@ -111,8 +117,8 @@ export class Field {
             0, 
             this._spriteSize, 
             this._spriteSize,
-            this.position.x * Field.fieldSize + this._marginLeft, 
-            this.position.y * Field.fieldSize + Field.marginTop,
+            this._positionX + this._marginLeft, 
+            this._positionY + Field.marginTop,
             Field.fieldSize, 
             Field.fieldSize
         );
