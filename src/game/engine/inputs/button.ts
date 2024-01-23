@@ -1,14 +1,13 @@
+import { Colors, Event } from "../../enums";
 import { EventBus } from "../events/eventBus";
 import { Point } from "../point";
-import { Colors, Event } from "../../enums";
+import { Component } from "./component";
 import { Label } from "./label";
 
-export class Button {
-    private _context: CanvasRenderingContext2D;
+export class Button extends Component {
     private _isHighlited: boolean = false;
     private _enabled: boolean = true;
 
-    public position: Point;
     public width: number = 120;
     public height: number = 40;
     public text: string = "Text";
@@ -23,23 +22,21 @@ export class Button {
         this._enabled = value;
     }
 
-    public constructor(context: CanvasRenderingContext2D,
-        position: Point) {
-            this._context = context;
-            this.position = position;
+    public constructor(context: CanvasRenderingContext2D) {
+            super(context);
             this.onClick = () => null;
 
             EventBus.getInstance().subscribe(Event.OnClick, (point: Point) => this.isClicked(point));
             EventBus.getInstance().subscribe(Event.OnMouseMove, (point: Point) => this.onMouseMove(point));
     }
 
-    public draw(): void {
+    protected drawInternal(): void {
         // Button background
         this._context.fillStyle = this._isHighlited || this.checked ? Colors.LightBlue : Colors.DarkGrey;
-        this._context.fillRect(this.position.x, this.position.y, this.width, this.height);
+        this._context.fillRect(this.positionX, this.positionY, this.width, this.height);
 
         Label.drawText(this._context, 
-            this.text, this.position.x + this.width / 2, this.position.y + this.height / 2, { 
+            this.text, this.positionX + this.width / 2, this.positionY + this.height / 2, { 
             size: 15,
             align: 'center',
             color: Colors.White
@@ -47,10 +44,10 @@ export class Button {
     }
 
     public isClicked(point: Point): boolean {
-        if (point.x < this.position.x ||
-            point.x > this.position.x + this.width ||
-            point.y < this.position.y ||
-            point.y > this.position.y + this.height)
+        if (point.x < this.positionX ||
+            point.x > this.positionX + this.width ||
+            point.y < this.positionY ||
+            point.y > this.positionY + this.height)
             return false;
 
         if (this.onClick && this._enabled)
@@ -61,9 +58,9 @@ export class Button {
 
     public onMouseMove(point: Point): void {
         this._isHighlited = this._enabled && 
-            !(point.x < this.position.x ||
-            point.x > this.position.x + this.width ||
-            point.y < this.position.y ||
-            point.y > this.position.y + this.height);
+            !(point.x < this.positionX ||
+            point.x > this.positionX + this.width ||
+            point.y < this.positionY ||
+            point.y > this.positionY + this.height);
     }
 }

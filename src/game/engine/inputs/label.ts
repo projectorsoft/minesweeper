@@ -1,5 +1,5 @@
 import { Colors, FontFamily } from "@/game/enums";
-import { Point } from "../point";
+import { Component } from "./component";
 
 export interface ILabelOptions {
     size: number, 
@@ -10,14 +10,11 @@ export interface ILabelOptions {
     bold: boolean
 }
 
-export class Label {
+export class Label extends Component {
     public static fontFamily: string = FontFamily.SansSerif;
     public static fontSize: number = 12;
 
-    protected _context!: CanvasRenderingContext2D;
-
     public text: string = 'Popup';
-    public position: Point = new Point(0, 0);
     public color: Colors | string = Colors.Black;
     public align: CanvasTextAlign = 'left';
     public fontSize: number = Label.fontSize;
@@ -25,19 +22,19 @@ export class Label {
     public bold: boolean = false;
 
     public constructor(context: CanvasRenderingContext2D) {
-        this._context = context;
+        super(context);
     }
 
-    public draw(): void {
+    protected drawInternal(): void {
         this._context.font = `${this.bold ? 'bold' : ''} ${this.fontSize}px ${this.fontFamily}`;
         this._context.textAlign = this.align;
         this._context.fillStyle = this.color;
-        this._context.fillText(this.text, this.position.x, this.position.y);
+        this._context.fillText(this.text, this.positionX, this.positionY);
 
         Label.drawText(this._context, 
             this.text, 
-            this.position.x, 
-            this.position.y, { 
+            this.positionX, 
+            this.positionY, { 
             size: this.fontSize, 
             color: this.color, 
             family: this.fontFamily, 

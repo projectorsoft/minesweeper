@@ -62,9 +62,8 @@ export class Game {
         this.createMenuBar();
         this.createStatusBar();
         this.createMineField();
-
-        this._customBoardSizePopup = new CustomBoardSizePopup(this._context);
-        this._statisticsPopup = new StatisticsPopup(this._context, this._statisticsService);
+        this.createCustomBoardSizePopup();
+        this.createStatisticsPopup();
         
         this.animate();
     }
@@ -86,11 +85,13 @@ export class Game {
         this._menuBar.width = this._canvas.width;
         this._menuBar.onModeChange = (mode: GameMode) => { this.changeMode(mode) };
         this._menuBar.onNewGameClick = () => { this.newGame() };
-        this._menuBar.onShowStatisticsClick = () => { this.createStatisticsPopup() };
+        this._menuBar.onShowStatisticsClick = () => { this.showStatisticsPopup() };
     }
 
     private createStatusBar(): void {
-        this._faceIndicatorImage = new FaceIndicator(this._context, this._assetsManager, new Point(Game.minWidth / 2 - 20, Field.marginTop - 62));
+        this._faceIndicatorImage = new FaceIndicator(this._context, this._assetsManager);
+        this._faceIndicatorImage.positionX = Game.minWidth / 2 - 20;
+        this._faceIndicatorImage.positionY = Field.marginTop - 62;
     }
 
     private createMineField(customOptions?: ICustomModeOptions): void {
@@ -100,25 +101,15 @@ export class Game {
             .Build();
     }
 
-    private createStatisticsPopup(): void {
-        this.setComponentsEnabled(false);
-        this._statisticsPopup.visible = true;
-
-        this._statisticsPopup.height = 300;
-        this._statisticsPopup.title = "Player's statistics";
-        this._statisticsPopup.onClose = () => { this._statisticsPopup.visible = false; this.setComponentsEnabled(true); };
-    }
-
     private createCustomBoardSizePopup(): void {
-        this.setComponentsEnabled(false);
-        this._customBoardSizePopup.visible = true;
-
+        this._customBoardSizePopup = new CustomBoardSizePopup(this._context);
         this._customBoardSizePopup.title = "Custom board settings";
+        this._customBoardSizePopup.width = 340;
+        this._customBoardSizePopup.height = 200;
         this._customBoardSizePopup.onSave = (options: ICustomModeOptions) => {
             this._customModeOptions = options;
             this.setComponentsEnabled(true); 
             this._customBoardSizePopup.visible = false;
-            console.log('custom popup')
             this.newGame();
         };
 
@@ -128,6 +119,24 @@ export class Game {
             this._customBoardSizePopup.visible = false;
             this.setComponentsEnabled(true); 
         };
+    }
+
+    private createStatisticsPopup(): void {
+        this._statisticsPopup = new StatisticsPopup(this._context, this._statisticsService);
+        this._statisticsPopup.title = "Player's statistics";
+        this._statisticsPopup.width = 270;
+        this._statisticsPopup.height = 300;
+        this._statisticsPopup.onClose = () => { this._statisticsPopup.visible = false; this.setComponentsEnabled(true); };
+    }
+
+    private showStatisticsPopup(): void {
+        this.setComponentsEnabled(false);
+        this._statisticsPopup.visible = true;
+    }
+
+    private showCustomBoardSizePopup(): void {
+        this.setComponentsEnabled(false);
+        this._customBoardSizePopup.visible = true;
     }
 
     private setCanvasSize(width: number, height: number): void {
@@ -147,7 +156,7 @@ export class Game {
 
     private adjustComponentsWidth(): void {
         this._menuBar.width = Game.getWidth();
-        this._faceIndicatorImage.position.x = Game.getWidth() / 2 - 20;
+        this._faceIndicatorImage.positionX = Game.getWidth() / 2 - 20;
     }
 
     private adjustCanvasSize(): void {
@@ -178,7 +187,7 @@ export class Game {
         this._gameMode = mode;
 
         if (mode === GameMode.Custom) {
-            this.createCustomBoardSizePopup();
+            this.showCustomBoardSizePopup();
         }
     }
 

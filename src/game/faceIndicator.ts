@@ -1,28 +1,25 @@
-import { Point } from "./engine/point";
-import { Asset, Colors, GameState, Sprite } from "./enums";
+import { Component } from "./engine/inputs/component";
 import { AssetsManager } from "./engine/managers/assetsManager";
+import { Asset, Colors, GameState, Sprite } from "./enums";
 
-export class FaceIndicator {
+export class FaceIndicator extends Component {
     private readonly _spriteSize: number = 108;
+    private readonly _displaySize = 40;
 
-    private _context: CanvasRenderingContext2D;
     private _image: CanvasImageSource;
 
     public gameState: GameState = GameState.Started;
-    public position: Point;
 
     public constructor(context: CanvasRenderingContext2D,
-        assetsManager: AssetsManager,
-        position: Point) {
-            this._context = context;
-            this.position = position;
+        assetsManager: AssetsManager) {
+            super(context);
             this._image = assetsManager.getImage(Asset.SpritesImg);
     }
 
-    public draw(): void {
+    protected drawInternal(): void {
         if (this.gameState === GameState.Started) {
             this._context.fillStyle = Colors.LightGray;
-            this._context.fillRect(this.position.x, this.position.y, 40, 40);
+            this._context.fillRect(this.positionX, this.positionY, this._displaySize, this._displaySize);
             return;
         }
 
@@ -39,10 +36,10 @@ export class FaceIndicator {
             0, 
             this._spriteSize, 
             this._spriteSize,
-            this.position.x, 
-            this.position.y,
-            40, 
-            40
+            this.positionX, 
+            this.positionY,
+            this._displaySize, 
+            this._displaySize
         );
     }
 }

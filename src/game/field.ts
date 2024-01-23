@@ -1,7 +1,7 @@
 import { Label } from "./engine/inputs/label";
+import { AssetsManager } from "./engine/managers/assetsManager";
 import { Point } from "./engine/point";
 import { Asset, Colors, FieldState, FieldType, Sprite } from "./enums";
-import { AssetsManager } from "./engine/managers/assetsManager";
 
 export class Field {
     public static readonly fieldSize: number = 30;
@@ -156,7 +156,7 @@ export class Field {
             this.position.x === x && 
             this.position.y === y
         )
-            this._imageIndex = Sprite.Danger;
+        this._imageIndex = Sprite.Danger;
     }
 
     public onRightClick(x: number, y: number): void {

@@ -1,18 +1,16 @@
 import { Colors } from "../enums";
 import { Game } from "../game";
+import { Component } from "./inputs/component";
 import { Label } from "./inputs/label";
-import { Point } from "./point";
 
-export abstract class Popup {
+export abstract class Popup extends Component {
     protected static readonly cornerRadius = 10;
 
-    protected _context: CanvasRenderingContext2D;
     protected _visible: boolean = false;
 
     public title: string = 'Popup';
-    public position: Point = new Point(0, 0);
-    private _width: number = 400;
-    private _height: number = 150;
+    private _width: number = 0;
+    private _height: number = 0;
 
     public get width(): number {
         return this._width;
@@ -20,7 +18,7 @@ export abstract class Popup {
     public set width(value: number) {
         this._width = value;
 
-        this.position.x = Game.getWidth() / 2 - this.width / 2;
+        this.positionX = Game.getWidth() / 2 - this.width / 2;
     }
     public get height(): number {
         return this._height;
@@ -28,19 +26,19 @@ export abstract class Popup {
     public set height(value: number) {
         this._height = value;
 
-        this.position.y = window.innerHeight / 2 - this.height;
+        this.positionY = Game.getHeight() / 2 - this.height;
     }
 
     public constructor(context: CanvasRenderingContext2D) {
-        this._context = context;
+        super(context);
 
-        this.position.x = Game.getWidth() / 2 - this.width / 2;
-        this.position.y = window.innerHeight / 2 - this.height;
+        this.createInputs();
     }
 
-    protected abstract drawInternal(): void;
+    protected abstract drawPopupInternal(): void;
+    protected abstract createInputsInternal(): void;
 
-    public draw(): void {
+    protected drawInternal(): void {
         if (!this._visible)
             return;
 
@@ -48,14 +46,18 @@ export abstract class Popup {
         this.drawPopup();
 
         Label.drawText(this._context, 
-            this.title, this.position.x + 20, this.position.y + 20, { 
+            this.title, this.positionX + 20, this.positionY + 20, { 
             size: 20,
             align: 'left',
             bold: true,
             color: Colors.DarkGrey
         });
 
-        this.drawInternal();
+        this.drawPopupInternal();
+    }
+
+    private createInputs(): void {
+        this.createInputsInternal();
     }
 
     private drawTransparentBox(): void {
@@ -72,7 +74,7 @@ export abstract class Popup {
     private drawPopup(): void {
         this._context.save();
         this._context.beginPath();
-        this._context.roundRect(this.position.x, this.position.y, this.width, this.height, [Popup.cornerRadius]);
+        this._context.roundRect(this.positionX, this.positionY, this.width, this.height, [Popup.cornerRadius]);
         this._context.shadowColor = Colors.DarkGrey;
         this._context.shadowBlur = 25;
         this._context.shadowOffsetX = 15;

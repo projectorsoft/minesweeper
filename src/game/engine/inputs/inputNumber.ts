@@ -1,20 +1,17 @@
 import { Colors } from "@/game/enums";
-import { Point } from "../point";
 import { Button } from "./button";
+import { Component } from "./component";
 import { Label } from "./label";
 
-export class InputNumber {
+export class InputNumber extends Component {
     private _minValue: number = 30;
     private _maxValue: number = 999;
     
-    private _context: CanvasRenderingContext2D
     private _enabled: boolean = true;
     private _value: number = 30;
 
     private _increaseBtn!: Button;
     private _decreseBtn!: Button;
-
-    public position: Point = new Point(0, 0);
     
     public onIncrease!: Function;
     public onDecrease!: Function;
@@ -53,51 +50,57 @@ export class InputNumber {
         this._value = value;
     }
 
-    public constructor(context: CanvasRenderingContext2D,
-        position: Point) {
-        this._context = context;
-        this.position = position
+    public constructor(context: CanvasRenderingContext2D) {
+        super(context);
 
         this.onIncrease = () => null;
         this.onDecrease = () => null;
 
-        this.create();
+        //this.create();
     }
 
-    public draw(): void {
-        this.drawInput();
-        this._increaseBtn.draw();
-        this._decreseBtn.draw();
+    protected drawInternal(): void {
+        this.drawValueInput();
+        this._components.forEach(input => input.draw());
     }
 
-    private drawInput(): void {
+    private drawValueInput(): void {
         // Button background
         this._context.fillStyle = Colors.LightGray;
-        this._context.fillRect(this.position.x - 20, this.position.y + 2, 45, 25);
+        this._context.fillRect(this._positionX - 20, this._positionY + 2, 45, 25);
 
         Label.drawText(this._context, 
-            this.value.toString(), this.position.x, this.position.y + 15, { 
-            size: 20,
+            this.value.toString(), this._positionX, this._positionY + 17, { 
+            size: 18,
             align: 'center',
             color: Colors.Red,
             bold: true
         });
     }
 
-    private create() {
-        this._decreseBtn = new Button(this._context, new Point(this.position.x + 25, this.position.y + 2));
+    public create() {
+        this._decreseBtn = new Button(this._context);
+        this._decreseBtn.parent = this;
+        this._decreseBtn.positionX = 30;
+        this._decreseBtn.positionY = 2;
         this._decreseBtn.text = "<";
         this._decreseBtn.font = "bold 15px sans-serif";
         this._decreseBtn.width = 25;
         this._decreseBtn.height = 25;
         this._decreseBtn.onClick = this.decrease.bind(this);
 
-        this._increaseBtn = new Button(this._context, new Point(this.position.x + 50, this.position.y + 2));
+        this._increaseBtn = new Button(this._context);
+        this._increaseBtn.parent = this;
+        this._increaseBtn.positionX = 55;
+        this._increaseBtn.positionY = 2;
         this._increaseBtn.text = ">";
         this._increaseBtn.font = "bold 15px sans-serif";
         this._increaseBtn.width = 25;
         this._increaseBtn.height = 25;
         this._increaseBtn.onClick = this.increase.bind(this);
+
+        this._components.push(this._decreseBtn);
+        this._components.push(this._increaseBtn);
     }
 
     private increase(): void {
