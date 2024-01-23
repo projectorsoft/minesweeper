@@ -1,4 +1,4 @@
-import { Colors, Event } from "../../enums";
+import { Colors, InputEvent } from "../../enums";
 import { EventBus } from "../events/eventBus";
 import { Point } from "../point";
 import { Component } from "./component";
@@ -26,8 +26,8 @@ export class Button extends Component {
             super(context);
             this.onClick = () => null;
 
-            EventBus.getInstance().subscribe(Event.OnClick, (point: Point) => this.isClicked(point));
-            EventBus.getInstance().subscribe(Event.OnMouseMove, (point: Point) => this.onMouseMove(point));
+            EventBus.getInstance().subscribe(InputEvent.OnClick, (point: Point) => this.isClicked(point));
+            EventBus.getInstance().subscribe(InputEvent.OnMouseMove, (point: Point) => this.onMouseMove(point));
     }
 
     protected drawInternal(): void {

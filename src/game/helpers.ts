@@ -7,5 +7,9 @@ export class Helpers {
         return `${date.getFullYear()}-${Helpers.zeroPad(date.getMonth() + 1, 2)}-${Helpers.zeroPad(date.getDate(), 2)} ${Helpers.zeroPad(date.getHours(), 2)}:${Helpers.zeroPad(date.getMinutes(), 2)}`;
     }
 
+    public static hasTouchScreen(): boolean {
+        return 'ontouchstart' in window;
+    }
+
     public static zeroPad = (num: number, places: number) => String(num).padStart(places, '0');
 }

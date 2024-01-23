@@ -17,7 +17,9 @@ export default defineComponent({
 </script>
 
 <template>
-  <canvas id="canvas" width="960" height="610"></canvas>
+  <canvas id="canvas" width="960" height="610">
+    Your browser does not support canvas element.
+  </canvas>
 </template>
 
 <style scoped>

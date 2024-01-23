@@ -61,9 +61,11 @@ export enum Sprite {
     Lost = 9
 }
 
-export enum Event {
+export enum InputEvent {
     OnClick = 'onClick',
-    OnMouseMove = 'onMouseMove'
+    OnMouseMove = 'onMouseMove',
+    OnTap = 'onTap',
+    OnDoubleTap = 'onDoubleTap'
 }
 
 export enum FontFamily {

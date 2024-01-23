@@ -2,9 +2,11 @@ import { EventBus } from "./engine/events/eventBus";
 import { AssetsManager } from "./engine/managers/assetsManager";
 import { StorageService } from "./engine/managers/storageService";
 import { Point } from "./engine/point";
-import { Asset, Event, GameMode, GameState, MouseButtons } from "./enums";
+import { Asset, GameMode, GameState, InputEvent, MouseButtons } from "./enums";
 import { FaceIndicator } from "./faceIndicator";
 import { Field } from "./field";
+import { Helpers } from "./helpers";
+import { TapHelper } from "./helpers/tapHelper";
 import { MenuBar } from "./menuBar";
 import { MineField } from "./mineField";
 import { ICustomModeOptions, MineFieldBuilder } from "./mineFiledBuilder";
@@ -26,6 +28,7 @@ export class Game {
     private _assetsManager!: AssetsManager;
     private _statisticsService!: StatisticsService;
     private _storageService!: StorageService<Statistics>;
+    private _currenPossision: Point = new Point(0, 0);
 
     private _mineField!: MineField;
     private _menuBar!: MenuBar;
@@ -34,8 +37,6 @@ export class Game {
     private _faceIndicatorImage!: FaceIndicator;
 
     constructor() {
-        this._storageService = new StorageService();
-        this._statisticsService = new StatisticsService(this._storageService);
         this._assetsManager = new AssetsManager();
 
         this.addAssets();
@@ -55,10 +56,10 @@ export class Game {
         this._canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this._context = this._canvas.getContext('2d') as CanvasRenderingContext2D;
 
-        this._canvas.oncontextmenu = (e) => e.preventDefault();
-        this._canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event));
-        this._canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event));
+        this._storageService = new StorageService();
+        this._statisticsService = new StatisticsService(this._storageService);
 
+        this.registerEvents();
         this.createMenuBar();
         this.createStatusBar();
         this.createMineField();
@@ -66,6 +67,18 @@ export class Game {
         this.createStatisticsPopup();
         
         this.animate();
+    }
+
+    private registerEvents(): void {
+        this._canvas.oncontextmenu = (e) => e.preventDefault();
+
+        if (Helpers.hasTouchScreen()) {
+            this._canvas.addEventListener('touchstart', (event: TouchEvent) => this.onTouchStart(event));
+            this._canvas.addEventListener('touchend', () => this.onTouchEnd());
+        }
+        else
+            this._canvas.addEventListener('mouseup', (event: MouseEvent) => this.onMouseUp(event));
+            this._canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event));
     }
 
     private animate(): void {
@@ -191,26 +204,50 @@ export class Game {
         }
     }
 
-    private onMouseDown(event: MouseEvent): void {
-        const x = Math.floor(event.pageX - this._canvas.offsetLeft);
-        const y = Math.floor(event.pageY - this._canvas.offsetTop);
+    private onMouseUp(event: MouseEvent): void {
+        this.setCanvasCoordinates(event);
 
-        if (this._gameState == GameState.Started) {
+        if (this._gameState === GameState.Started) {
             if (event.button === MouseButtons.Left)
-                this._mineField.onLeftButtonClick(x, y);
+                this._mineField.onLeftButtonClick(this._currenPossision.x, this._currenPossision.y);
             else
             if (event.button === MouseButtons.Right)
-                this._mineField.onRightButtonClick(x, y);
+                this._mineField.onRightButtonClick(this._currenPossision.x, this._currenPossision.y);
         }
 
-        EventBus.getInstance().emit(Event.OnClick, new Point(x, y));
+        EventBus.getInstance().emit(InputEvent.OnClick, new Point(this._currenPossision.x, this._currenPossision.y));
     }
 
     private onMouseMove(event: MouseEvent): void {
-        const x = Math.floor(event.pageX - this._canvas.offsetLeft);
-        const y = Math.floor(event.pageY - this._canvas.offsetTop);
+        this.setCanvasCoordinates(event);
 
-        EventBus.getInstance().emit(Event.OnMouseMove, new Point(x, y));
+        EventBus.getInstance().emit(InputEvent.OnMouseMove, new Point(this._currenPossision.x, this._currenPossision.y));
+    }
+
+    private onTouchStart(event: TouchEvent): void {
+        this._currenPossision.x = Math.floor(event.touches[0].pageX - this._canvas.offsetLeft);
+        this._currenPossision.y = Math.floor(event.touches[0].pageY - this._canvas.offsetTop);
+
+        TapHelper.onTouchStart();
+    }
+
+    private onTouchEnd(): void {
+        TapHelper.onTouchEnd();
+
+        if (this._gameState === GameState.Started) {
+            if (TapHelper.result === InputEvent.OnTap)
+                this._mineField.onLeftButtonClick(this._currenPossision.x, this._currenPossision.y);
+            else
+                if (TapHelper.result === InputEvent.OnDoubleTap)
+                this._mineField.onRightButtonClick(this._currenPossision.x, this._currenPossision.y);
+        }
+
+        EventBus.getInstance().emit(InputEvent.OnClick, new Point(this._currenPossision.x, this._currenPossision.y));
+    }
+
+    private setCanvasCoordinates(event: MouseEvent): void {
+        this._currenPossision.x = Math.floor(event.pageX - this._canvas.offsetLeft);
+        this._currenPossision.y = Math.floor(event.pageY - this._canvas.offsetTop);
     }
 
     private addAssets(): void {
