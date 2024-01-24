@@ -222,11 +222,12 @@ export class MineField {
             this.createTimer();
 
         this._fields[coordinates.x][coordinates.y].onLeftClick(coordinates.x, coordinates.y);
-        this._uncoveredFieldsLeft--;
 
         //can't click on flagged field
         if (this._fields[coordinates.x][coordinates.y].fieldType === FieldType.Flagged)
             return;
+
+        this._uncoveredFieldsLeft--;
 
         if (this.isLostCondition(coordinates))
             return;
