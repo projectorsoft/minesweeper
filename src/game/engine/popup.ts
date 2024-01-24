@@ -4,11 +4,15 @@ import { Component } from "./inputs/component";
 import { Label } from "./inputs/label";
 
 export abstract class Popup extends Component {
-    protected static readonly cornerRadius = 10;
+    protected static readonly cornerRadius: number = 10;
+    protected static readonly padding: number = 20;
+    protected static readonly headerSize: number = 40;
 
     protected _visible: boolean = false;
 
     public title: string = 'Popup';
+    public roundedCorners: boolean = true;
+
     private _width: number = 0;
     private _height: number = 0;
 
@@ -26,7 +30,7 @@ export abstract class Popup extends Component {
     public set height(value: number) {
         this._height = value;
 
-        this.positionY = Game.getHeight() / 2 - this.height;
+        this.positionY = Game.getHeight() / 2 - this.height / 2;
     }
 
     public constructor(context: CanvasRenderingContext2D) {
@@ -44,14 +48,7 @@ export abstract class Popup extends Component {
 
         this.drawTransparentBox();
         this.drawPopup();
-
-        Label.drawText(this._context, 
-            this.title, this.positionX + 20, this.positionY + 20, { 
-            size: 20,
-            align: 'left',
-            bold: true,
-            color: Colors.DarkGrey
-        });
+        this.drawTitleBar();
 
         this.drawPopupInternal();
     }
@@ -62,10 +59,10 @@ export abstract class Popup extends Component {
 
     private drawTransparentBox(): void {
         this._context.save();
-        this._context.globalAlpha = 0.4;
+        this._context.globalAlpha = 0.3;
         this._context.beginPath();
         this._context.rect(0, 0, Game.getWidth(), Game.getHeight());
-        this._context.fillStyle = Colors.LightGray;
+        this._context.fillStyle = Colors.White;
         this._context.fill();
         this._context.closePath();
         this._context.restore();
@@ -74,16 +71,43 @@ export abstract class Popup extends Component {
     private drawPopup(): void {
         this._context.save();
         this._context.beginPath();
-        this._context.roundRect(this.positionX, this.positionY, this.width, this.height, [Popup.cornerRadius]);
+
+        if (this.roundedCorners)
+            this._context.roundRect(this.positionX, this.positionY, this.width, this.height, [Popup.cornerRadius]);
+        else
+            this._context.rect(this.positionX, this.positionY, this.width, this.height);
+
         this._context.shadowColor = Colors.DarkGrey;
         this._context.shadowBlur = 25;
         this._context.shadowOffsetX = 15;
         this._context.shadowOffsetY = 15;
         this._context.strokeStyle = Colors.Black;
         this._context.stroke();
-        this._context.fillStyle = Colors.LightGray;
+        this._context.fillStyle = Colors.White;
         this._context.fill();
         this._context.closePath();
         this._context.restore();
+    }
+
+    private drawTitleBar(): void {
+        this._context.beginPath();
+
+        if (this.roundedCorners)
+            this._context.roundRect(this.positionX, this.positionY, this.width, Popup.headerSize, [Popup.cornerRadius, Popup.cornerRadius, 0 , 0]);
+        else
+            this._context.rect(this.positionX, this.positionY, this.width, Popup.headerSize);
+
+        this._context.strokeStyle = Colors.Black;
+        this._context.stroke();
+        this._context.fillStyle = Colors.DarkPurple;
+        this._context.fill();
+        this._context.closePath();
+
+        Label.drawText(this._context, 
+            this.title, this.positionX + Popup.padding, this.positionY + Popup.padding, { 
+            size: 18,
+            align: 'left',
+            color: Colors.White
+        });
     }
 }

@@ -40,7 +40,8 @@ export enum Colors {
     LightGray = 'rgb(225, 225, 225)',
     DarkGrey = 'rgb(74, 82, 92)',
     VeryDarkGrey = 'rgb(45, 45, 47)',
-    White = 'rgb(255, 255, 255)'
+    White = 'rgb(255, 255, 255)',
+    DarkPurple = 'rgb(61, 56, 71)'
 }
 
 export enum MouseButtons {

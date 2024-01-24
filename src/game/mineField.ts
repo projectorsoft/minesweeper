@@ -91,30 +91,26 @@ export class MineField {
     }
 
     private drawClocks(): void {
-        this.drawText(this._flagsNumber.toString(), 42, new Point(-15, -40), 'rgb(255, 0, 0)', true, 'left');
+        this.drawText(this._flagsNumber.toString(), 42, new Point(-15, -40), Colors.Red, true, 'left');
 
         if (this._statisticsRecord.time < 1000) //TODO: format time from miliseconds to full seconds
-            this.drawText(Helpers.zeroPad(this._statisticsRecord.time, 3), 42, new Point(this.width + 15, -40), 'rgb(255, 0, 0)', true, 'right');
+            this.drawText(Helpers.zeroPad(this._statisticsRecord.time, 3), 42, new Point(this.width + 15, -40), Colors.Red, true, 'right');
         else
-            this.drawText('999', 42, new Point(this.width, -40), 'rgb(255, 0, 0)', true, 'right');
+            this.drawText('999', 42, new Point(this.width, -40), Colors.Red, true, 'right');
     }
 
     private drawFrame(): void {
+        this._context.save();
         this._context.beginPath();
-        this._context.strokeStyle = Colors.White;
-        this._context.fillStyle = Colors.White;
-        this._context.roundRect(this._marginLeft - 15, Field.marginTop - 15, this.width + 30, this.height + 30, [43]);
-        this._context.stroke();
-        this._context.fill();
-        this._context.closePath();
-
-        this._context.beginPath();
+        this._context.globalAlpha = 0.3;
         this._context.strokeStyle = Colors.Gray;
-        this._context.fillStyle = Colors.DarkGrey;
-        this._context.roundRect(this._marginLeft - 12, Field.marginTop - 12, this.width + 24, this.height + 24, [40]);
+        this._context.fillStyle = Colors.White;
+        this._context.roundRect(this._marginLeft - 14, Field.marginTop - 14, this.width + 28, this.height + 28, [40]);
+        this._context.strokeStyle = Colors.Black;
         this._context.stroke();
         this._context.fill();
         this._context.closePath();
+        this._context.restore();
     }
 
     public createMineField(mode: GameMode, minesNumber: number): void {

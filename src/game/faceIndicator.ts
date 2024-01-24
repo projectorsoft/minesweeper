@@ -18,8 +18,7 @@ export class FaceIndicator extends Component {
 
     protected drawInternal(): void {
         if (this.gameState === GameState.Started) {
-            this._context.fillStyle = Colors.LightGray;
-            this._context.fillRect(this.positionX, this.positionY, this._displaySize, this._displaySize);
+            this._context.clearRect(this.positionX, this.positionY, this._displaySize, this._displaySize)
             return;
         }
 

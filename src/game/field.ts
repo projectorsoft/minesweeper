@@ -4,7 +4,7 @@ import { Point } from "./engine/point";
 import { Asset, Colors, FieldState, FieldType, Sprite } from "./enums";
 
 export class Field {
-    public static readonly fieldSize: number = 30;
+    public static readonly fieldSize: number = 29;
     public static readonly marginTop: number = 110;
 
     private readonly _halfFieldSize: number = Field.fieldSize / 2;
@@ -83,7 +83,7 @@ export class Field {
                 if (this.fieldType === FieldType.Tentative) {
                         Label.drawText(this._context, 
                             '?', this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.marginTop + 1, { 
-                            size: 24,
+                            size: 20,
                             family: 'pixelCode',
                             bold: true,
                             align: 'center',
@@ -101,7 +101,7 @@ export class Field {
             if (this._minesNumber > 0) {
                     Label.drawText(this._context, 
                         this._minesNumber.toString(), this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.marginTop + 1, { 
-                        size: 24,
+                        size: 20,
                         family: 'pixelCode',
                         bold: true,
                         align: 'center',

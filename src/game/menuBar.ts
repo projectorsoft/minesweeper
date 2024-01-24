@@ -42,11 +42,14 @@ export class MenuBar extends Component {
     }
 
     protected drawInternal(): void {
+        this._context.save();
         this._context.beginPath();
+        this._context.globalAlpha = 0.5;
         this._context.fillStyle = Colors.DarkGrey;
         this._context.rect(0, 0, this.width, this.height);
         this._context.fill();
         this._context.closePath();
+        this._context.restore();
 
         this._newGameBtn.draw();
         this._easyModeBtn.draw();
