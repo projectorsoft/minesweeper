@@ -1,4 +1,4 @@
-import { Asset } from "../enums";
+import { Asset } from "../../enums";
 import { IAsset } from "./IAsset";
 
 export class AudioAsset implements IAsset {

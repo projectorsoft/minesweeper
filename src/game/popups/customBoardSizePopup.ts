@@ -1,9 +1,9 @@
+import { ICustomModeOptions } from "../components/mineField/mineFiledBuilder";
 import { Button } from "../engine/inputs/button";
 import { InputNumber } from "../engine/inputs/inputNumber";
 import { Label } from "../engine/inputs/label";
 import { Popup } from "../engine/popup";
 import { Colors } from "../enums";
-import { ICustomModeOptions } from "../mineFiledBuilder";
 
 export class CustomBoardSizePopup extends Popup {
     private _xValueInput!: InputNumber;

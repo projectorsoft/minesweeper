@@ -1,19 +1,21 @@
-import { Component } from "./engine/inputs/component";
-import { AssetsManager } from "./engine/managers/assetsManager";
-import { Asset, Colors, GameState, Sprite } from "./enums";
+import { Component } from "../engine/inputs/component";
+import { AssetsManager } from "../engine/managers/assetsManager";
+import { Asset, GameState } from "../enums";
 
 export class FaceIndicator extends Component {
-    private readonly _spriteSize: number = 108;
-    private readonly _displaySize = 40;
+    private readonly _spriteSize: number = 24;
+    private readonly _displaySize = 48;
 
-    private _image: CanvasImageSource;
+    private _smileImage: CanvasImageSource;
+    private _sadImage: CanvasImageSource;
 
     public gameState: GameState = GameState.Started;
 
     public constructor(context: CanvasRenderingContext2D,
         assetsManager: AssetsManager) {
             super(context);
-            this._image = assetsManager.getImage(Asset.SpritesImg);
+            this._smileImage = assetsManager.getImage(Asset.SmileImgSvg);
+            this._sadImage = assetsManager.getImage(Asset.SadImgSvg);
     }
 
     protected drawInternal(): void {
@@ -23,15 +25,15 @@ export class FaceIndicator extends Component {
         }
 
         if (this.gameState === GameState.Won)
-            this.drawImage(Sprite.Win);
+            this.drawImage(this._smileImage);
         else
         if (this.gameState === GameState.Lost)
-            this.drawImage(Sprite.Lost);
+            this.drawImage(this._sadImage);
     }
 
-    private drawImage(imageIndex: number): void {
-        this._context.drawImage(this._image, 
-            imageIndex * this._spriteSize,
+    private drawImage(image: CanvasImageSource): void {
+        this._context.drawImage(image, 
+            0,
             0, 
             this._spriteSize, 
             this._spriteSize,

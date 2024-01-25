@@ -1,12 +1,15 @@
-import { Colors, InputEvent } from "../../enums";
+import { Colors, InputEvent, MouseButtons } from "../../enums";
 import { EventBus } from "../events/eventBus";
-import { Point } from "../point";
+import { IMouseClickEvent } from "../events/types/IMouseClickEvent";
+import { IMouseMoveEvent } from "../events/types/IMouseMoveEvent";
 import { Component } from "./component";
 import { Label } from "./label";
 
 export class Button extends Component {
-    private _isHighlited: boolean = false;
-    private _enabled: boolean = true;
+    protected static readonly cornerRadius: number = 5;
+
+    protected _isHighlited: boolean = false;
+    protected _enabled: boolean = true;
 
     public width: number = 120;
     public height: number = 40;
@@ -14,6 +17,9 @@ export class Button extends Component {
     public checked: boolean = false;
     public onClick: Function;
     public font: string = "15px sans-serif";
+    public roundedCorners: boolean = false;
+    public highlightColor: Colors | string = Colors.LightBlue;
+    public backgroundColor: Colors | string = Colors.DarkGrey;
 
     public get enabled(): boolean {
         return this._enabled;
@@ -23,17 +29,20 @@ export class Button extends Component {
     }
 
     public constructor(context: CanvasRenderingContext2D) {
-            super(context);
-            this.onClick = () => null;
+        super(context);
+        this.onClick = () => null;
 
-            EventBus.getInstance().subscribe(InputEvent.OnClick, (point: Point) => this.isClicked(point));
-            EventBus.getInstance().subscribe(InputEvent.OnMouseMove, (point: Point) => this.onMouseMove(point));
+        EventBus.getInstance()
+            .subscribe(InputEvent.OnClick, (event: IMouseClickEvent) => {
+                if (event.button === MouseButtons.Left)
+                    this.isClicked(event.x, event.y);
+            });
+        EventBus.getInstance()
+            .subscribe(InputEvent.OnMouseMove, (event: IMouseMoveEvent) => this.onMouseMove(event.x, event.y));
     }
 
     protected drawInternal(): void {
-        // Button background
-        this._context.fillStyle = this._isHighlited || this.checked ? Colors.LightBlue : Colors.DarkGrey;
-        this._context.fillRect(this.positionX, this.positionY, this.width, this.height);
+        this.drawFrame();
 
         Label.drawText(this._context, 
             this.text, this.positionX + this.width / 2, this.positionY + this.height / 2, { 
@@ -43,11 +52,27 @@ export class Button extends Component {
         });
     }
 
-    public isClicked(point: Point): boolean {
-        if (point.x < this.positionX ||
-            point.x > this.positionX + this.width ||
-            point.y < this.positionY ||
-            point.y > this.positionY + this.height)
+    protected drawFrame(): void {
+        // Button background
+        this._context.save();
+        this._context.beginPath();
+        this._context.fillStyle = this._isHighlited || this.checked ? this.highlightColor : this.backgroundColor;
+
+        if (this.roundedCorners)
+            this._context.roundRect(this.positionX, this.positionY, this.width, this.height, [Button.cornerRadius]);
+        else
+            this._context.rect(this.positionX, this.positionY, this.width, this.height);
+
+        this._context.fill();
+        this._context.closePath();
+        this._context.restore();
+    }
+
+    public isClicked(x: number, y: number): boolean {
+        if (x < this.positionX ||
+            x > this.positionX + this.width ||
+            y < this.positionY ||
+            y > this.positionY + this.height)
             return false;
 
         if (this.onClick && this._enabled)
@@ -56,11 +81,11 @@ export class Button extends Component {
         return true;
     }
 
-    public onMouseMove(point: Point): void {
+    public onMouseMove(x: number, y: number): void {
         this._isHighlited = this._enabled && 
-            !(point.x < this.positionX ||
-            point.x > this.positionX + this.width ||
-            point.y < this.positionY ||
-            point.y > this.positionY + this.height);
+            !(x < this.positionX ||
+            x > this.positionX + this.width ||
+            y < this.positionY ||
+            y > this.positionY + this.height);
     }
 }

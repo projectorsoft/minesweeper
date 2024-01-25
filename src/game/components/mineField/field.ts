@@ -1,11 +1,11 @@
-import { Label } from "./engine/inputs/label";
-import { AssetsManager } from "./engine/managers/assetsManager";
-import { Point } from "./engine/point";
-import { Asset, Colors, FieldState, FieldType, Sprite } from "./enums";
+import { Label } from "../../engine/inputs/label";
+import { AssetsManager } from "../../engine/managers/assetsManager";
+import { Point } from "../../engine/point";
+import { Asset, Colors, FieldState, FieldType, Sprite } from "../../enums";
 
 export class Field {
     public static readonly fieldSize: number = 29;
-    public static readonly marginTop: number = 110;
+    public static readonly marginTop: number = 160;
 
     private readonly _halfFieldSize: number = Field.fieldSize / 2;
 

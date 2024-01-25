@@ -1,8 +1,8 @@
-import { AssetsManager } from "./engine/managers/assetsManager";
-import { Point } from "./engine/point";
-import { GameMode, GameState } from "./enums";
+import { AssetsManager } from "../../engine/managers/assetsManager";
+import { Point } from "../../engine/point";
+import { GameMode, GameState } from "../../enums";
 import { MineField } from "./mineField";
-import { StatisticsService } from "./services/statisticsService";
+import { StatisticsService } from "../../services/statisticsService";
 
 export interface ICustomModeOptions {
     xSize: number;

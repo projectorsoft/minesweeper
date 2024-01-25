@@ -1,15 +1,15 @@
-import { Asset } from "../enums";
+import { Asset } from "../../enums";
 import { IAsset } from "./IAsset";
 
-export class TranslationAsset implements IAsset {
+export class FontAsset implements IAsset {
     private _path: string;
     private _name: Asset;
-    private _data!: {};
+    private _data!: FontFace;
 
     public get name(): Asset {
         return this._name;
     }
-    public get data(): {} {
+    public get data(): FontFace {
         return this._data;
     }
 
@@ -20,9 +20,10 @@ export class TranslationAsset implements IAsset {
 
     public load(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            fetch(this._path)
-                .then((translations: Response) => {
-                    translations.json().then((data) => this._data = data);
+            new FontFace('PixelCode', `url(${this._path})`)
+                .load()
+                .then((font: FontFace) => {
+                    this._data = font;
                     resolve(true);  
                 })
                 .catch(() => {

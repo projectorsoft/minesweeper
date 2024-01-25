@@ -1,23 +1,26 @@
+import { FaceIndicator } from "./components/faceIndicator";
+import { MenuBar } from "./components/menuBar";
+import { Field } from "./components/mineField/field";
+import { MineField } from "./components/mineField/mineField";
+import { ICustomModeOptions, MineFieldBuilder } from "./components/mineField/mineFiledBuilder";
 import { EventBus } from "./engine/events/eventBus";
+import { IMouseClickEvent } from "./engine/events/types/IMouseClickEvent";
+import { IMouseMoveEvent } from "./engine/events/types/IMouseMoveEvent";
 import { AssetsManager } from "./engine/managers/assetsManager";
 import { StorageService } from "./engine/managers/storageService";
 import { Point } from "./engine/point";
 import { Asset, GameMode, GameState, InputEvent, MouseButtons } from "./enums";
-import { FaceIndicator } from "./faceIndicator";
-import { Field } from "./field";
-import { Helpers } from "./helpers";
+import { Helpers } from "./helpers/helpers";
 import { TapHelper } from "./helpers/tapHelper";
-import { MenuBar } from "./menuBar";
-import { MineField } from "./mineField";
-import { ICustomModeOptions, MineFieldBuilder } from "./mineFiledBuilder";
 import { CustomBoardSizePopup } from "./popups/customBoardSizePopup";
+import { SettingsPopup } from "./popups/settingsPopup";
 import { StatisticsPopup } from "./popups/statisticsPopup";
 import { Statistics } from "./services/statistics";
 import { StatisticsService } from "./services/statisticsService";
 
 export class Game {
     public static readonly minWidth: number = 960;
-    public static readonly minHeight: number = 610;
+    public static readonly minHeight: number = 660;
 
     private _canvas!: HTMLCanvasElement;
     private _context!: CanvasRenderingContext2D;
@@ -28,13 +31,14 @@ export class Game {
     private _assetsManager!: AssetsManager;
     private _statisticsService!: StatisticsService;
     private _storageService!: StorageService<Statistics>;
-    private _currenPossision: Point = new Point(0, 0);
+    private _currenPointerPossision: Point = new Point(0, 0);
 
     private _mineField!: MineField;
     private _menuBar!: MenuBar;
-    private _statisticsPopup!: StatisticsPopup | null;
-    private _customBoardSizePopup!: CustomBoardSizePopup | null;
-    private _faceIndicatorImage!: FaceIndicator;
+    private _statisticsPopup!: StatisticsPopup;
+    private _customBoardSizePopup!: CustomBoardSizePopup;
+    private _settingsPopup: SettingsPopup;
+    private _faceIndicator!: FaceIndicator;
 
     constructor() {
         this._assetsManager = new AssetsManager();
@@ -65,6 +69,7 @@ export class Game {
         this.createMineField();
         this.createCustomBoardSizePopup();
         this.createStatisticsPopup();
+        this.createSettingsPopup();
         
         this.animate();
     }
@@ -87,24 +92,25 @@ export class Game {
 
         this._menuBar.draw();
         this._mineField.draw();
-        this._faceIndicatorImage.draw();
+        this._faceIndicator.draw();
 
         this._statisticsPopup.draw();
         this._customBoardSizePopup.draw();
+        this._settingsPopup.draw();
     }
 
     private createMenuBar(): void {
-        this._menuBar = new MenuBar(this._context);
+        this._menuBar = new MenuBar(this._context, this._assetsManager);
         this._menuBar.width = this._canvas.width;
-        this._menuBar.onModeChange = (mode: GameMode) => { this.changeMode(mode) };
         this._menuBar.onNewGameClick = () => { this.newGame() };
         this._menuBar.onShowStatisticsClick = () => { this.showStatisticsPopup() };
+        this._menuBar.onShowSettingsClick = () => { this.showSettingsPopup() };
     }
 
     private createStatusBar(): void {
-        this._faceIndicatorImage = new FaceIndicator(this._context, this._assetsManager);
-        this._faceIndicatorImage.positionX = Game.minWidth / 2 - 20;
-        this._faceIndicatorImage.positionY = Field.marginTop - 62;
+        this._faceIndicator = new FaceIndicator(this._context, this._assetsManager);
+        this._faceIndicator.positionX = Game.minWidth / 2 - 20;
+        this._faceIndicator.positionY = Field.marginTop - 64;
     }
 
     private createMineField(customOptions?: ICustomModeOptions): void {
@@ -128,7 +134,7 @@ export class Game {
 
         this._customBoardSizePopup.onCancel = () => { 
             this._gameMode = this._previousGameMode;
-            this._menuBar.changeGameMode(this._previousGameMode);
+            this._settingsPopup.changeGameMode(this._previousGameMode);
             this._customBoardSizePopup.visible = false;
             this.setComponentsEnabled(true); 
         };
@@ -139,7 +145,34 @@ export class Game {
         this._statisticsPopup.title = "Player's statistics";
         this._statisticsPopup.width = 280;
         this._statisticsPopup.height = 320;
-        this._statisticsPopup.onClose = () => { this._statisticsPopup.visible = false; this.setComponentsEnabled(true); };
+        this._statisticsPopup.onClose = () => { 
+            this._statisticsPopup.visible = false;
+            this.setComponentsEnabled(true);
+        };
+    }
+
+    private createSettingsPopup(): void {
+        this._settingsPopup = new SettingsPopup(this._context);
+        this._settingsPopup.title = "Settings";
+        this._settingsPopup.width = 380;
+        this._settingsPopup.height = 420;
+        this._settingsPopup.roundedCorners = false;
+        this._settingsPopup.onCancel = () => {
+            this._settingsPopup.changeGameMode(this._previousGameMode);
+            this._settingsPopup.visible = false;
+            this.setComponentsEnabled(true);
+        };
+        this._settingsPopup.onSave = (mode: GameMode) => { 
+            this._settingsPopup.visible = false; 
+            this.changeMode(mode);
+
+            if (mode === GameMode.Custom)
+                this.showCustomBoardSizePopup();
+            else {
+                this.newGame();
+                this.setComponentsEnabled(true);
+            }
+        };
     }
 
     private showStatisticsPopup(): void {
@@ -150,6 +183,11 @@ export class Game {
     private showCustomBoardSizePopup(): void {
         this.setComponentsEnabled(false);
         this._customBoardSizePopup.visible = true;
+    }
+
+    private showSettingsPopup(): void {
+        this.setComponentsEnabled(false);
+        this._settingsPopup.visible = true;
     }
 
     private setCanvasSize(width: number, height: number): void {
@@ -164,18 +202,18 @@ export class Game {
 
     private setGameState(state: GameState): void {
         this._gameState = state;
-        this._faceIndicatorImage.gameState = this._gameState;
+        this._faceIndicator.gameState = this._gameState;
     }
 
     private adjustComponentsWidth(): void {
         this._menuBar.width = Game.getWidth();
-        this._faceIndicatorImage.positionX = Game.getWidth() / 2 - 20;
+        this._faceIndicator.positionX = Game.getWidth() / 2 - 20;
     }
 
     private adjustCanvasSize(): void {
         if (this._gameMode === GameMode.Custom) {
             const newWidth: number = Field.fieldSize * this._customModeOptions.xSize + 30;
-            const newHeight: number = Field.fieldSize * this._customModeOptions.ySize + 125;
+            const newHeight: number = Field.fieldSize * this._customModeOptions.ySize + 175;
 
             if (this._canvas.width !== newWidth ||
                 this._canvas.height !== newHeight)
@@ -209,24 +247,31 @@ export class Game {
 
         if (this._gameState === GameState.Started) {
             if (event.button === MouseButtons.Left)
-                this._mineField.onLeftButtonClick(this._currenPossision.x, this._currenPossision.y);
+                this._mineField.onLeftButtonClick(this._currenPointerPossision.x, this._currenPointerPossision.y);
             else
             if (event.button === MouseButtons.Right)
-                this._mineField.onRightButtonClick(this._currenPossision.x, this._currenPossision.y);
+                this._mineField.onRightButtonClick(this._currenPointerPossision.x, this._currenPointerPossision.y);
         }
 
-        EventBus.getInstance().emit(InputEvent.OnClick, new Point(this._currenPossision.x, this._currenPossision.y));
+        EventBus.getInstance().emit<IMouseClickEvent>(InputEvent.OnClick, {
+            x: this._currenPointerPossision.x, 
+            y: this._currenPointerPossision.y,
+            button: event.button
+        });
     }
 
     private onMouseMove(event: MouseEvent): void {
         this.setCanvasCoordinates(event);
 
-        EventBus.getInstance().emit(InputEvent.OnMouseMove, new Point(this._currenPossision.x, this._currenPossision.y));
+        EventBus.getInstance().emit<IMouseMoveEvent>(InputEvent.OnMouseMove, {
+            x: this._currenPointerPossision.x, 
+            y: this._currenPointerPossision.y,
+        });
     }
 
     private onTouchStart(event: TouchEvent): void {
-        this._currenPossision.x = Math.floor(event.touches[0].pageX - this._canvas.offsetLeft);
-        this._currenPossision.y = Math.floor(event.touches[0].pageY - this._canvas.offsetTop);
+        this._currenPointerPossision.x = Math.floor(event.touches[0].pageX - this._canvas.offsetLeft);
+        this._currenPointerPossision.y = Math.floor(event.touches[0].pageY - this._canvas.offsetTop);
 
         TapHelper.onTouchStart();
     }
@@ -236,23 +281,28 @@ export class Game {
 
         if (this._gameState === GameState.Started) {
             if (TapHelper.result === InputEvent.OnTap)
-                this._mineField.onLeftButtonClick(this._currenPossision.x, this._currenPossision.y);
+                this._mineField.onLeftButtonClick(this._currenPointerPossision.x, this._currenPointerPossision.y);
             else
                 if (TapHelper.result === InputEvent.OnDoubleTap)
-                this._mineField.onRightButtonClick(this._currenPossision.x, this._currenPossision.y);
+                this._mineField.onRightButtonClick(this._currenPointerPossision.x, this._currenPointerPossision.y);
         }
 
-        EventBus.getInstance().emit(InputEvent.OnClick, new Point(this._currenPossision.x, this._currenPossision.y));
+        EventBus.getInstance().emit(InputEvent.OnClick, new Point(this._currenPointerPossision.x, this._currenPointerPossision.y));
     }
 
     private setCanvasCoordinates(event: MouseEvent): void {
-        this._currenPossision.x = Math.floor(event.pageX - this._canvas.offsetLeft);
-        this._currenPossision.y = Math.floor(event.pageY - this._canvas.offsetTop);
+        this._currenPointerPossision.x = Math.floor(event.pageX - this._canvas.offsetLeft);
+        this._currenPointerPossision.y = Math.floor(event.pageY - this._canvas.offsetTop);
     }
 
     private addAssets(): void {
         this._assetsManager.addFontAsset(Asset.PixelCodeFont, `${AssetsManager.Path}assets/fonts/pixelCode.woff`);
         this._assetsManager.addImageAsset(Asset.SpritesImg, `${AssetsManager.Path}assets/images/sprites.png`);
+        this._assetsManager.addImageAsset(Asset.NewImgSvg, `${AssetsManager.Path}assets/images/new.svg`);
+        this._assetsManager.addImageAsset(Asset.StatisticsImgSvg, `${AssetsManager.Path}assets/images/statistics.svg`);
+        this._assetsManager.addImageAsset(Asset.SettingsImgSvg, `${AssetsManager.Path}assets/images/settings.svg`);
+        this._assetsManager.addImageAsset(Asset.SmileImgSvg, `${AssetsManager.Path}assets/images/smile.svg`);
+        this._assetsManager.addImageAsset(Asset.SadImgSvg, `${AssetsManager.Path}assets/images/sad.svg`);
     }
 
     public static getWidth(): number {

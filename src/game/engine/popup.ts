@@ -46,7 +46,7 @@ export abstract class Popup extends Component {
         if (!this._visible)
             return;
 
-        this.drawTransparentBox();
+        //this.drawTransparentBox();
         this.drawPopup();
         this.drawTitleBar();
 
@@ -77,10 +77,10 @@ export abstract class Popup extends Component {
         else
             this._context.rect(this.positionX, this.positionY, this.width, this.height);
 
-        this._context.shadowColor = Colors.DarkGrey;
-        this._context.shadowBlur = 25;
-        this._context.shadowOffsetX = 15;
-        this._context.shadowOffsetY = 15;
+        this._context.shadowColor = Colors.VeryDarkGrey;
+        this._context.shadowBlur = 15;
+        this._context.shadowOffsetX = 10;
+        this._context.shadowOffsetY = 10;
         this._context.strokeStyle = Colors.Black;
         this._context.stroke();
         this._context.fillStyle = Colors.White;

@@ -24,6 +24,11 @@ export enum GameMode {
 
 export enum Asset {
     SpritesImg = 'spritesIsmg',
+    SettingsImgSvg = 'settingsImgSvg',
+    NewImgSvg = 'newImgSvg',
+    StatisticsImgSvg = 'statisticsImgSvg',
+    SmileImgSvg = 'smileImgSvg',
+    SadImgSvg = 'sadImgSvg',
     PixelCodeFont = 'pixelCodeFont'
 }
 

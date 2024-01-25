@@ -1,4 +1,4 @@
-import { Asset } from "../enums";
+import { Asset } from "../../enums";
 
 export interface IAsset {
     load(): Promise<boolean>;

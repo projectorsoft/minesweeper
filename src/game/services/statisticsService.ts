@@ -1,6 +1,6 @@
 import { StorageService } from "../engine/managers/storageService";
 import { GameMode } from "../enums";
-import { Helpers } from "../helpers";
+import { Helpers } from "../helpers/helpers";
 import { Statistics, StatisticsRecord } from "./statistics";
 
 export class StatisticsService {
