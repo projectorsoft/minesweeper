@@ -296,7 +296,7 @@ export class Game {
                 this._mineField.onRightButtonClick(this._currenPointerPossision.x, this._currenPointerPossision.y);
         }
 
-        EventBus.getInstance().emit(InputEvent.OnClick, new Point(this._currenPointerPossision.x, this._currenPointerPossision.y));
+        EventBus.getInstance().emit(InputEvent.OnTap, new Point(this._currenPointerPossision.x, this._currenPointerPossision.y));
     }
 
     private setCanvasCoordinates(event: MouseEvent): void {

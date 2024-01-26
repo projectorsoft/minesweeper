@@ -1,3 +1,4 @@
+import { Helpers } from "@/game/helpers/helpers";
 import { Colors, InputEvent, MouseButtons } from "../../enums";
 import { EventBus } from "../events/eventBus";
 import { IMouseClickEvent } from "../events/types/IMouseClickEvent";
@@ -20,13 +21,20 @@ export class Button extends Component {
     public constructor(context: CanvasRenderingContext2D) {
         super(context);
 
-        EventBus.getInstance()
+        if (Helpers.hasTouchScreen())
+            EventBus.getInstance()
+            .subscribe(InputEvent.OnTap, (event: IMouseClickEvent) => {
+                    this.isClicked(event.x, event.y);
+            });
+        else {
+            EventBus.getInstance()
             .subscribe(InputEvent.OnClick, (event: IMouseClickEvent) => {
                 if (event.button === MouseButtons.Left)
                     this.isClicked(event.x, event.y);
             });
-        EventBus.getInstance()
-            .subscribe(InputEvent.OnMouseMove, (event: IMouseMoveEvent) => this.onMouseMove(event.x, event.y));
+            EventBus.getInstance()
+                .subscribe(InputEvent.OnMouseMove, (event: IMouseMoveEvent) => this.onMouseMove(event.x, event.y));
+        }
     }
 
     protected drawInternal(): void {

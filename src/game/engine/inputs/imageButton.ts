@@ -1,8 +1,8 @@
 
-import { Button } from "./button"
-import { Label } from "./label";
-import { AssetsManager } from "../managers/assetsManager";
 import { Asset } from "../../enums";
+import { AssetsManager } from "../managers/assetsManager";
+import { Button } from "./button";
+import { Label } from "./label";
 
 export interface IImageButtonOptions {
     asset: Asset

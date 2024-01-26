@@ -82,7 +82,7 @@ export class Field {
             } else
                 if (this.fieldType === FieldType.Tentative) {
                         Label.drawText(this._context, 
-                            '?', this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.MarginTop + 1, { 
+                            '?', this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.MarginTop, { 
                             size: 20,
                             family: 'pixelCode',
                             bold: true,
@@ -100,7 +100,7 @@ export class Field {
         else {
             if (this._minesNumber > 0) {
                     Label.drawText(this._context, 
-                        this._minesNumber.toString(), this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.MarginTop + 1, { 
+                        this._minesNumber.toString(), this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.MarginTop, { 
                         size: 20,
                         family: 'pixelCode',
                         bold: true,
