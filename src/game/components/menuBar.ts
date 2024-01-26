@@ -2,6 +2,7 @@ import { Component } from "../engine/inputs/component";
 import { ImageButton } from "../engine/inputs/imageButton";
 import { AssetsManager } from "../engine/managers/assetsManager";
 import { Asset, Colors } from "../enums";
+import { MineField } from "./mineField/mineField";
 
 export class MenuBar extends Component {
     public static readonly Height: number = 80;
@@ -18,11 +19,14 @@ export class MenuBar extends Component {
     public set width(value: number) {
         this._width = value;
 
+        if (this.getComponent('newGameBtn') as ImageButton)
+            (this.getComponent('newGameBtn') as ImageButton).positionX = -MineField.MinMarginLeft;
+
         if (this.getComponent('statisticsBtn') as ImageButton)
-            (this.getComponent('statisticsBtn') as ImageButton).positionX = this._width - 150;
+            (this.getComponent('statisticsBtn') as ImageButton).positionX = value - 130;
 
         if (this.getComponent('settingsBtn') as ImageButton)
-            (this.getComponent('settingsBtn') as ImageButton).positionX = this._width - 70;
+            (this.getComponent('settingsBtn') as ImageButton).positionX = value - 55;
     }
 
     public constructor(context: CanvasRenderingContext2D,
@@ -42,7 +46,7 @@ export class MenuBar extends Component {
         this._context.beginPath();
         this._context.globalAlpha = 0.5;
         this._context.fillStyle = Colors.DarkGrey;
-        this._context.rect(0, 0, this.width, MenuBar.Height);
+        this._context.rect(this.positionX - MineField.MinMarginLeft, 0, this.width + 2 * MineField.MinMarginLeft, MenuBar.Height);
         this._context.fill();
         this._context.closePath();
         this._context.restore();
@@ -53,7 +57,7 @@ export class MenuBar extends Component {
     private createMenu(): void {
         const newGameBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.NewImgSvg });
         newGameBtn.parent = this;
-        newGameBtn.positionX = 0;
+        newGameBtn.positionX = -MineField.MinMarginLeft;
         newGameBtn.positionY = 0;
         newGameBtn.text = "New game";
         newGameBtn.font = "bold 12px sans-serif";

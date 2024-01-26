@@ -70,6 +70,7 @@ export class Game {
         this.createCustomBoardSizePopup();
         this.createStatisticsPopup();
         this.createSettingsPopup();
+        this.adjustComponentsToBoardSize();
         
         this.animate();
     }
@@ -212,8 +213,9 @@ export class Game {
         this._faceIndicator.gameState = this._gameState;
     }
 
-    private adjustComponentsWidth(): void {
-        this._menuBar.width = Game.getWidth();
+    private adjustComponentsToBoardSize(): void {
+        this._menuBar.positionX = this._mineField.marginLeft;
+        this._menuBar.width = this._mineField.width; //Game.getWidth();
         this._faceIndicator.positionX = Game.getWidth() / 2 - 20;
     }
 
@@ -234,9 +236,9 @@ export class Game {
 
     private newGame(): void {
         this.adjustCanvasSize();
-        this.adjustComponentsWidth();
         this.setGameState(GameState.Started);
         this.createMineField(this._customModeOptions);
+        this.adjustComponentsToBoardSize();
         this._previousGameMode = this._gameMode;
     }
 

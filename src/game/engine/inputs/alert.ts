@@ -5,8 +5,9 @@ import { Component } from "./component";
 import { Label } from "./label";
 
 export class Alert extends Component {
+    protected static readonly Height: number = 40;
     protected static readonly Padding: number = 20;
-    protected static readonly CornerRadius: number = 10;
+    protected static readonly CornerRadius: number = 7;
 
     private _colors: Colors[] = [
         Colors.Success,
@@ -45,7 +46,7 @@ export class Alert extends Component {
     }
 
     protected drawInternal(): void {
-        const width: number = this._context.measureText(this.text).width + Alert.Padding;
+        const width: number = this._context.measureText(this.text).width + 2* Alert.Padding;
         const xPos = Game.getWidth() - width - Alert.Padding;
         const yPos = Alert.Padding;
 
@@ -54,18 +55,18 @@ export class Alert extends Component {
         this._context.fillStyle = this._colors[this.type];
 
         if (this.roundedCorners)
-            this._context.roundRect(xPos, yPos, width, 40, [Alert.CornerRadius]);
+            this._context.roundRect(xPos, yPos, width, Alert.Height, [Alert.CornerRadius]);
         else
-            this._context.rect(xPos, yPos, width, 40);
+            this._context.rect(xPos, yPos, width, Alert.Height);
 
         this._context.fill();
         this._context.closePath();
         this._context.restore();
 
         Label.drawText(this._context, 
-            this.text, xPos + 100, yPos + 20, { 
+            this.text, xPos + Alert.Padding, yPos + Alert.Padding, { 
             size: 15,
-            align: 'center',
+            align: "start",
             color: this._enabled ? Colors.White : Colors.Gray
         });
     }

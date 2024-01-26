@@ -112,7 +112,6 @@ export class SettingsPopup extends Popup {
 
         const alert = new Alert(this._context);
         alert.text = 'Statistics have been cleard';
-        //alert.visible = false;
 
         this.addComponent('easyModeBtn', easyModeBtn);
         this.addComponent('mediumModeBtn', mediumModeBtn);
