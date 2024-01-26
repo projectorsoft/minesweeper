@@ -4,7 +4,7 @@ import { AssetsManager } from "../engine/managers/assetsManager";
 import { Asset, Colors } from "../enums";
 
 export class MenuBar extends Component {
-    public static readonly height: number = 80;
+    public static readonly Height: number = 80;
 
     private _assetsManager: AssetsManager;
 
@@ -43,7 +43,7 @@ export class MenuBar extends Component {
         this._context.beginPath();
         this._context.globalAlpha = 0.5;
         this._context.fillStyle = Colors.DarkGrey;
-        this._context.rect(0, 0, this.width, MenuBar.height);
+        this._context.rect(0, 0, this.width, MenuBar.Height);
         this._context.fill();
         this._context.closePath();
         this._context.restore();
@@ -59,8 +59,8 @@ export class MenuBar extends Component {
         newGameBtn.text = "New game";
         newGameBtn.font = "bold 12px sans-serif";
         newGameBtn.width = 70;
-        newGameBtn.height = MenuBar.height;
-        newGameBtn.roundedCorners = true;
+        newGameBtn.height = MenuBar.Height;
+        newGameBtn.roundedCorners = false;
         newGameBtn.onClick = this.newGame.bind(this);
 
         const statisticsBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.StatisticsImgSvg });
@@ -70,7 +70,7 @@ export class MenuBar extends Component {
         statisticsBtn.text = "Statistics";
         statisticsBtn.font = "bold 12px sans-serif";
         statisticsBtn.width = 70;
-        statisticsBtn.height = MenuBar.height;
+        statisticsBtn.height = MenuBar.Height;
         statisticsBtn.onClick = this.showStatisticsPopup.bind(this);
 
         const settingsBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.SettingsImgSvg });
@@ -80,8 +80,8 @@ export class MenuBar extends Component {
         settingsBtn.text = "Settings";
         settingsBtn.font = "bold 12px sans-serif";
         settingsBtn.width = 70;
-        settingsBtn.height = MenuBar.height;
-        settingsBtn.roundedCorners = true;
+        settingsBtn.height = MenuBar.Height;
+        settingsBtn.roundedCorners = false;
         settingsBtn.onClick = this.showSettingsPopup.bind(this);
 
         this.addComponent('newGameBtn', newGameBtn);

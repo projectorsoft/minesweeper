@@ -19,8 +19,8 @@ import { Statistics } from "./services/statistics";
 import { StatisticsService } from "./services/statisticsService";
 
 export class Game {
-    public static readonly minWidth: number = 960;
-    public static readonly minHeight: number = 660;
+    public static readonly MinWidth: number = 960;
+    public static readonly MinHeight: number = 660;
 
     private _canvas!: HTMLCanvasElement;
     private _context!: CanvasRenderingContext2D;
@@ -109,8 +109,8 @@ export class Game {
 
     private createStatusBar(): void {
         this._faceIndicator = new FaceIndicator(this._context, this._assetsManager);
-        this._faceIndicator.positionX = Game.minWidth / 2 - 20;
-        this._faceIndicator.positionY = Field.marginTop - 66;
+        this._faceIndicator.positionX = Game.MinWidth / 2 - 20;
+        this._faceIndicator.positionY = Field.MarginTop - 66;
     }
 
     private createMineField(customOptions?: ICustomModeOptions): void {
@@ -212,8 +212,8 @@ export class Game {
 
     private adjustCanvasSize(): void {
         if (this._gameMode === GameMode.Custom) {
-            const newWidth: number = Field.fieldSize * this._customModeOptions.xSize + 30;
-            const newHeight: number = Field.fieldSize * this._customModeOptions.ySize + 175;
+            const newWidth: number = Field.FieldSize * this._customModeOptions.xSize + 30;
+            const newHeight: number = Field.FieldSize * this._customModeOptions.ySize + 175;
 
             if (this._canvas.width !== newWidth ||
                 this._canvas.height !== newHeight)
@@ -221,7 +221,7 @@ export class Game {
         }
         else {
             if (this._previousGameMode === GameMode.Custom)
-                this.setCanvasSize(Game.minWidth, Game.minHeight);
+                this.setCanvasSize(Game.MinWidth, Game.MinHeight);
         }
     }
 

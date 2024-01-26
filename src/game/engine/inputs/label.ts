@@ -11,14 +11,14 @@ export interface ILabelOptions {
 }
 
 export class Label extends Component {
-    public static fontFamily: string = FontFamily.SansSerif;
-    public static fontSize: number = 12;
+    public static FontFamily: string = FontFamily.SansSerif;
+    public static FontSize: number = 12;
 
     public text: string = 'Popup';
     public color: Colors | string = Colors.Black;
     public align: CanvasTextAlign = 'left';
-    public fontSize: number = Label.fontSize;
-    public fontFamily: string = Label.fontFamily;
+    public fontSize: number = Label.FontSize;
+    public fontFamily: string = Label.FontFamily;
     public bold: boolean = false;
 
     public constructor(context: CanvasRenderingContext2D) {
@@ -48,7 +48,7 @@ export class Label extends Component {
         x: number, 
         y: number, 
         options: Partial<ILabelOptions>): void {
-            context.font = `${ options?.bold ? 'bold' : '' } ${ options?.size ? options.size : Label.fontSize }px ${ options?.family ? options.family : Label.fontFamily }`;
+            context.font = `${ options?.bold ? 'bold' : '' } ${ options?.size ? options.size : Label.FontSize }px ${ options?.family ? options.family : Label.FontFamily }`;
             context.textAlign = options?.align ? options.align : 'left';
             context.textBaseline = options?.baseline ? options.baseline : "middle";
             context.fillStyle = options?.color ? options.color : Colors.Black;

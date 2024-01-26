@@ -4,7 +4,7 @@ import { Helpers } from "../helpers/helpers";
 import { Statistics, StatisticsRecord } from "./statistics";
 
 export class StatisticsService {
-    public static readonly statisticsLocalStorageKey: string = 'MinesweeperStartistics';
+    public static readonly StatisticsLocalStorageKey: string = 'MinesweeperStartistics';
 
     private _storageService: StorageService<Statistics>;
     
@@ -13,7 +13,7 @@ export class StatisticsService {
     }
 
     public getStatistics(): Statistics {
-        let statistics = this._storageService.get(StatisticsService.statisticsLocalStorageKey) as Statistics;
+        let statistics = this._storageService.get(StatisticsService.StatisticsLocalStorageKey) as Statistics;
 
         if (!statistics) {
             statistics = this.createStatistics();
@@ -25,7 +25,7 @@ export class StatisticsService {
     public createStatistics(): Statistics {
         let statistics = new Statistics();
 
-        this._storageService.update(StatisticsService.statisticsLocalStorageKey, statistics);
+        this._storageService.update(StatisticsService.StatisticsLocalStorageKey, statistics);
 
         return statistics;
     }
@@ -39,7 +39,7 @@ export class StatisticsService {
         statistics.lastGame.time = record.time;
         statistics.lastGame.clicks = record.clicks;
 
-        this._storageService.update(StatisticsService.statisticsLocalStorageKey, statistics);
+        this._storageService.update(StatisticsService.StatisticsLocalStorageKey, statistics);
     }
 
     public setModeStatistics(mode: GameMode, record: StatisticsRecord): void {
@@ -60,7 +60,7 @@ export class StatisticsService {
             break;
         }
 
-        this._storageService.update(StatisticsService.statisticsLocalStorageKey, localStatistics);
+        this._storageService.update(StatisticsService.StatisticsLocalStorageKey, localStatistics);
     }
 
     private setStatisticsRecord(localStatistics: StatisticsRecord, record: StatisticsRecord): StatisticsRecord {

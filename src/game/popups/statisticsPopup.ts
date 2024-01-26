@@ -35,8 +35,8 @@ export class StatisticsPopup extends Popup {
     protected drawPopupInternal(): void {
         Label.drawText(this._context, 
             'LAST GAME:', 
-            this.positionX + Popup.padding, 
-            this.positionY + Popup.headerSize + Popup.padding, { 
+            this.positionX + Popup.Padding, 
+            this.positionY + Popup.HeaderSize + Popup.Padding, { 
             size: 14,
             align: 'left',
             bold: true,
@@ -45,8 +45,8 @@ export class StatisticsPopup extends Popup {
 
         Label.drawText(this._context, 
             `Time: ${ this._statistics.lastGame ? this._statistics.lastGame.time : 0 }s`, 
-            this.positionX + Popup.padding, 
-            this.positionY + Popup.headerSize + Popup.padding + 25, { 
+            this.positionX + Popup.Padding, 
+            this.positionY + Popup.HeaderSize + Popup.Padding + 25, { 
             size: 13,
             align: 'left',
             color: Colors.Black
@@ -54,8 +54,8 @@ export class StatisticsPopup extends Popup {
 
         Label.drawText(this._context, 
             `Clicks: ${ this._statistics.lastGame ? this._statistics.lastGame.clicks : 0 }`, 
-            this.positionX + Popup.padding, 
-            this.positionY + Popup.headerSize + Popup.padding + 50, { 
+            this.positionX + Popup.Padding, 
+            this.positionY + Popup.HeaderSize + Popup.Padding + 50, { 
             size: 13,
             align: 'left',
             color: Colors.Black
@@ -63,8 +63,8 @@ export class StatisticsPopup extends Popup {
 
         Label.drawText(this._context, 
             'BEST GAMES:', 
-            this.positionX + Popup.padding, 
-            this.positionY + Popup.headerSize + Popup.padding + 75, { 
+            this.positionX + Popup.Padding, 
+            this.positionY + Popup.HeaderSize + Popup.Padding + 75, { 
             size: 14,
             align: 'left',
             bold: true,
@@ -73,8 +73,8 @@ export class StatisticsPopup extends Popup {
 
         Label.drawText(this._context, 
             `Easy: ${ this._statistics.easyModeBestTime ? this.formatRecord(this._statistics.easyModeBestTime) : 'none' }`, 
-            this.positionX + Popup.padding, 
-            this.positionY + Popup.headerSize + Popup.padding + 100, { 
+            this.positionX + Popup.Padding, 
+            this.positionY + Popup.HeaderSize + Popup.Padding + 100, { 
             size: 13,
             align: 'left',
             color: Colors.Black
@@ -82,8 +82,8 @@ export class StatisticsPopup extends Popup {
 
         Label.drawText(this._context, 
             `Medium: ${ this._statistics.mediumModeBestTime ? this.formatRecord(this._statistics.mediumModeBestTime) : 'none' }`, 
-            this.positionX + Popup.padding, 
-            this.positionY + Popup.headerSize + Popup.padding + 125, { 
+            this.positionX + Popup.Padding, 
+            this.positionY + Popup.HeaderSize + Popup.Padding + 125, { 
             size: 13,
             align: 'left',
             color: Colors.Black
@@ -91,8 +91,8 @@ export class StatisticsPopup extends Popup {
 
         Label.drawText(this._context, 
             `Difficult: ${ this._statistics.difficultModeBestTime ? this.formatRecord(this._statistics.difficultModeBestTime) : 'none' }`, 
-            this.positionX + Popup.padding, 
-            this.positionY + Popup.headerSize + Popup.padding + 150, { 
+            this.positionX + Popup.Padding, 
+            this.positionY + Popup.HeaderSize + Popup.Padding + 150, { 
             size: 13,
             align: 'left',
             color: Colors.Black
@@ -100,8 +100,8 @@ export class StatisticsPopup extends Popup {
 
         Label.drawText(this._context, 
             `Custom: ${ this._statistics.customModeBestTime ? this.formatRecord(this._statistics.customModeBestTime) : 'none' }`, 
-            this.positionX + Popup.padding, 
-            this.positionY + Popup.headerSize + Popup.padding + 175, { 
+            this.positionX + Popup.Padding, 
+            this.positionY + Popup.HeaderSize + Popup.Padding + 175, { 
             size: 13,
             align: 'left',
             color: Colors.Black
@@ -113,7 +113,7 @@ export class StatisticsPopup extends Popup {
     protected createInputsInternal(): void {
         const closeBtn = new Button(this._context);
         closeBtn.parent = this;
-        closeBtn.positionX = Popup.padding;
+        closeBtn.positionX = Popup.Padding;
         closeBtn.positionY = 270;
         closeBtn.text = "Close";
         closeBtn.font = "bold 15px sans-serif";

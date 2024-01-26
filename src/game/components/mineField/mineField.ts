@@ -9,7 +9,7 @@ import { StatisticsRecord } from "../../services/statistics";
 import { StatisticsService } from "../../services/statisticsService";
 
 export class MineField {
-    public static readonly minMarginLeft: number = 15;
+    public static readonly MinMarginLeft: number = 15;
 
     private _context: CanvasRenderingContext2D;
     private _statisticsService: StatisticsService;
@@ -35,10 +35,10 @@ export class MineField {
         return this._ySize;
     }
     public get width(): number {
-        return Field.fieldSize * this.xSize;
+        return Field.FieldSize * this.xSize;
     }
     public get height(): number {
-        return Field.fieldSize * this.ySize;
+        return Field.FieldSize * this.ySize;
     }
     public get marginLeft(): number {
         return this._marginLeft;
@@ -59,10 +59,10 @@ export class MineField {
         this._statisticsService = statisticsService;
         this._xSize = xSize;
         this._ySize = ySize;
-        this._marginLeft = Math.floor((Game.minWidth - this.width) / 2);
+        this._marginLeft = Math.floor((Game.MinWidth - this.width) / 2);
 
         if (this._marginLeft <= 0)
-            this._marginLeft = MineField.minMarginLeft;
+            this._marginLeft = MineField.MinMarginLeft;
 
         this._uncoveredFieldsLeft = this._xSize * this._ySize;
         this._fields = [];
@@ -105,7 +105,7 @@ export class MineField {
         this._context.globalAlpha = 0.3;
         this._context.strokeStyle = Colors.Gray;
         this._context.fillStyle = Colors.White;
-        this._context.roundRect(this._marginLeft - 14, Field.marginTop - 14, this.width + 28, this.height + 28, [40]);
+        this._context.roundRect(this._marginLeft - 14, Field.MarginTop - 14, this.width + 28, this.height + 28, [40]);
         this._context.strokeStyle = Colors.Black;
         this._context.stroke();
         this._context.fill();
@@ -280,8 +280,8 @@ export class MineField {
     }
 
     private getFieldCoordinates(mouseX: number, mouseY: number): Point | null {
-        const x = Math.floor((mouseX - this.marginLeft) / Field.fieldSize);
-        const y = Math.floor((mouseY - Field.marginTop) / Field.fieldSize);
+        const x = Math.floor((mouseX - this.marginLeft) / Field.FieldSize);
+        const y = Math.floor((mouseY - Field.MarginTop) / Field.FieldSize);
 
         if (x < 0 || x >= this.xSize)
             return null;
@@ -348,7 +348,7 @@ export class MineField {
         align: CanvasTextAlign = 'center'
     ): void {
         Label.drawText(this._context, 
-            text, position.x + this._marginLeft, position.y + Field.marginTop, { 
+            text, position.x + this._marginLeft, position.y + Field.MarginTop, { 
             size: size,
             family: 'pixelCode',
             bold: bold,

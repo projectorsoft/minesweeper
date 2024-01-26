@@ -4,9 +4,9 @@ import { Component } from "./inputs/component";
 import { Label } from "./inputs/label";
 
 export abstract class Popup extends Component {
-    protected static readonly cornerRadius: number = 10;
-    protected static readonly padding: number = 20;
-    protected static readonly headerSize: number = 40;
+    protected static readonly CornerRadius: number = 10;
+    protected static readonly Padding: number = 20;
+    protected static readonly HeaderSize: number = 40;
 
     protected _visible: boolean = false;
 
@@ -73,7 +73,7 @@ export abstract class Popup extends Component {
         this._context.beginPath();
 
         if (this.roundedCorners)
-            this._context.roundRect(this.positionX, this.positionY, this.width, this.height, [Popup.cornerRadius]);
+            this._context.roundRect(this.positionX, this.positionY, this.width, this.height, [Popup.CornerRadius]);
         else
             this._context.rect(this.positionX, this.positionY, this.width, this.height);
 
@@ -93,9 +93,9 @@ export abstract class Popup extends Component {
         this._context.beginPath();
 
         if (this.roundedCorners)
-            this._context.roundRect(this.positionX, this.positionY, this.width, Popup.headerSize, [Popup.cornerRadius, Popup.cornerRadius, 0 , 0]);
+            this._context.roundRect(this.positionX, this.positionY, this.width, Popup.HeaderSize, [Popup.CornerRadius, Popup.CornerRadius, 0 , 0]);
         else
-            this._context.rect(this.positionX, this.positionY, this.width, Popup.headerSize);
+            this._context.rect(this.positionX, this.positionY, this.width, Popup.HeaderSize);
 
         this._context.strokeStyle = Colors.Black;
         this._context.stroke();
@@ -104,7 +104,7 @@ export abstract class Popup extends Component {
         this._context.closePath();
 
         Label.drawText(this._context, 
-            this.title, this.positionX + Popup.padding, this.positionY + Popup.padding, { 
+            this.title, this.positionX + Popup.Padding, this.positionY + Popup.Padding, { 
             size: 18,
             align: 'left',
             color: Colors.White

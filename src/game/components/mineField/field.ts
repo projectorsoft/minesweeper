@@ -4,10 +4,10 @@ import { Point } from "../../engine/point";
 import { Asset, Colors, FieldState, FieldType, Sprite } from "../../enums";
 
 export class Field {
-    public static readonly fieldSize: number = 29;
-    public static readonly marginTop: number = 160;
+    public static readonly FieldSize: number = 29;
+    public static readonly MarginTop: number = 160;
 
-    private readonly _halfFieldSize: number = Field.fieldSize / 2;
+    private readonly _halfFieldSize: number = Field.FieldSize / 2;
 
     private readonly _colors: string[] = [
         Colors.Blue,
@@ -64,8 +64,8 @@ export class Field {
             this._minesNumber = 0;
             this._hasMine = false;
             this._image = assetsManager.getImage(Asset.SpritesImg);
-            this._positionX = position.x * Field.fieldSize;
-            this._positionY = position.y * Field.fieldSize;
+            this._positionX = position.x * Field.FieldSize;
+            this._positionY = position.y * Field.FieldSize;
             this.setImageIndex();
     }
 
@@ -82,7 +82,7 @@ export class Field {
             } else
                 if (this.fieldType === FieldType.Tentative) {
                         Label.drawText(this._context, 
-                            '?', this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.marginTop + 1, { 
+                            '?', this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.MarginTop + 1, { 
                             size: 20,
                             family: 'pixelCode',
                             bold: true,
@@ -100,7 +100,7 @@ export class Field {
         else {
             if (this._minesNumber > 0) {
                     Label.drawText(this._context, 
-                        this._minesNumber.toString(), this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.marginTop + 1, { 
+                        this._minesNumber.toString(), this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.MarginTop + 1, { 
                         size: 20,
                         family: 'pixelCode',
                         bold: true,
@@ -118,9 +118,9 @@ export class Field {
             this._spriteSize, 
             this._spriteSize,
             this._positionX + this._marginLeft, 
-            this._positionY + Field.marginTop,
-            Field.fieldSize, 
-            Field.fieldSize
+            this._positionY + Field.MarginTop,
+            Field.FieldSize, 
+            Field.FieldSize
         );
     }
 

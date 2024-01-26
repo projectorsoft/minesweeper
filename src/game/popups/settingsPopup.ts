@@ -29,8 +29,8 @@ export class SettingsPopup extends Popup {
     protected drawPopupInternal(): void {
         Label.drawText(this._context, 
             'Game mode:', 
-            this.positionX + Popup.padding, 
-            this.positionY + Popup.headerSize + Popup.padding, { 
+            this.positionX + Popup.Padding, 
+            this.positionY + Popup.HeaderSize + Popup.Padding, { 
             size: 14,
             align: 'left',
             bold: true,
@@ -43,8 +43,8 @@ export class SettingsPopup extends Popup {
     protected createInputsInternal(): void {
         const easyModeBtn = new Button(this._context);
         easyModeBtn.parent = this;
-        easyModeBtn.positionX = Popup.padding;
-        easyModeBtn.positionY = Popup.headerSize + Popup.padding + 15;
+        easyModeBtn.positionX = Popup.Padding;
+        easyModeBtn.positionY = Popup.HeaderSize + Popup.Padding + 15;
         easyModeBtn.text = "Easy";
         easyModeBtn.font = "bold 15px sans-serif";
         easyModeBtn.width = 340;
@@ -53,8 +53,8 @@ export class SettingsPopup extends Popup {
 
         const mediumModeBtn = new Button(this._context);
         mediumModeBtn.parent = this;
-        mediumModeBtn.positionX = Popup.padding;
-        mediumModeBtn.positionY = Popup.headerSize + Popup.padding + 65;
+        mediumModeBtn.positionX = Popup.Padding;
+        mediumModeBtn.positionY = Popup.HeaderSize + Popup.Padding + 65;
         mediumModeBtn.text = "Medium";
         mediumModeBtn.font = "bold 15px sans-serif";
         mediumModeBtn.width = 340;
@@ -62,8 +62,8 @@ export class SettingsPopup extends Popup {
 
         const difficultModeBtn = new Button(this._context);
         difficultModeBtn.parent = this;
-        difficultModeBtn.positionX = Popup.padding;
-        difficultModeBtn.positionY = Popup.headerSize + Popup.padding + 115;
+        difficultModeBtn.positionX = Popup.Padding;
+        difficultModeBtn.positionY = Popup.HeaderSize + Popup.Padding + 115;
         difficultModeBtn.text = "Difficult";
         difficultModeBtn.font = "bold 15px sans-serif";
         difficultModeBtn.width = 340;
@@ -71,8 +71,8 @@ export class SettingsPopup extends Popup {
 
         const customModeBtn = new Button(this._context);
         customModeBtn.parent = this;
-        customModeBtn.positionX = Popup.padding;
-        customModeBtn.positionY = Popup.headerSize + Popup.padding + 165;
+        customModeBtn.positionX = Popup.Padding;
+        customModeBtn.positionY = Popup.HeaderSize + Popup.Padding + 165;
         customModeBtn.text = "Custom";
         customModeBtn.font = "bold 15px sans-serif";
         customModeBtn.width = 340;
@@ -80,8 +80,8 @@ export class SettingsPopup extends Popup {
 
         const cancelBtn = new Button(this._context);
         cancelBtn.parent = this;
-        cancelBtn.positionX = Popup.padding;
-        cancelBtn.positionY = Popup.headerSize + Popup.padding + 310;
+        cancelBtn.positionX = Popup.Padding;
+        cancelBtn.positionY = Popup.HeaderSize + Popup.Padding + 310;
         cancelBtn.text = "Cancel";
         cancelBtn.font = "bold 15px sans-serif";
         cancelBtn.width = 165;
@@ -91,7 +91,7 @@ export class SettingsPopup extends Popup {
         const saveBtn = new Button(this._context);
         saveBtn.parent = this;
         saveBtn.positionX = 195;
-        saveBtn.positionY = Popup.headerSize + Popup.padding + 310;
+        saveBtn.positionY = Popup.HeaderSize + Popup.Padding + 310;
         saveBtn.text = "Save";
         saveBtn.font = "bold 15px sans-serif";
         saveBtn.width = 165;

@@ -6,7 +6,7 @@ import { Component } from "./component";
 import { Label } from "./label";
 
 export class Button extends Component {
-    protected static readonly cornerRadius: number = 5;
+    protected static readonly CornerRadius: number = 5;
 
     protected _isHighlited: boolean = false;
 
@@ -51,7 +51,7 @@ export class Button extends Component {
         this._context.fillStyle = this._isHighlited || this.checked ? this.highlightColor : this.backgroundColor;
 
         if (this.roundedCorners)
-            this._context.roundRect(this.positionX, this.positionY, this.width, this.height, [Button.cornerRadius]);
+            this._context.roundRect(this.positionX, this.positionY, this.width, this.height, [Button.CornerRadius]);
         else
             this._context.rect(this.positionX, this.positionY, this.width, this.height);
 

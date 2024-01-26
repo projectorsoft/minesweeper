@@ -28,7 +28,7 @@ export class CustomBoardSizePopup extends Popup {
         const xValueInput = new InputNumber(this._context);
         xValueInput.parent = this;
         xValueInput.positionX = 240;
-        xValueInput.positionY = Popup.headerSize + Popup.padding;
+        xValueInput.positionY = Popup.HeaderSize + Popup.Padding;
         xValueInput.minValue = 45;
         xValueInput.maxValue = 65;
         xValueInput.value = 50;
@@ -37,7 +37,7 @@ export class CustomBoardSizePopup extends Popup {
         const yValueInput = new InputNumber(this._context);
         yValueInput.parent = this;
         yValueInput.positionX = 240;
-        yValueInput.positionY = Popup.headerSize + Popup.padding + 28;
+        yValueInput.positionY = Popup.HeaderSize + Popup.Padding + 28;
         yValueInput.minValue = 40;
         yValueInput.maxValue = 50;
         yValueInput.value = 40;
@@ -46,7 +46,7 @@ export class CustomBoardSizePopup extends Popup {
         const minesValueInput = new InputNumber(this._context);
         minesValueInput.parent = this;
         minesValueInput.positionX = 240;
-        minesValueInput.positionY = Popup.headerSize + Popup.padding + 56;
+        minesValueInput.positionY = Popup.HeaderSize + Popup.Padding + 56;
         minesValueInput.minValue = 40;
         minesValueInput.maxValue = 1600;
         minesValueInput.value = 500;
@@ -54,8 +54,8 @@ export class CustomBoardSizePopup extends Popup {
 
         const cancelBtn = new Button(this._context);
         cancelBtn.parent = this;
-        cancelBtn.positionX = Popup.padding;
-        cancelBtn.positionY = Popup.headerSize + Popup.padding + 96;
+        cancelBtn.positionX = Popup.Padding;
+        cancelBtn.positionY = Popup.HeaderSize + Popup.Padding + 96;
         cancelBtn.text = "Cancel";
         cancelBtn.font = "bold 15px sans-serif";
         cancelBtn.width = 145;
@@ -65,7 +65,7 @@ export class CustomBoardSizePopup extends Popup {
         const saveBtn = new Button(this._context);
         saveBtn.parent = this;
         saveBtn.positionX = 175;
-        saveBtn.positionY = Popup.headerSize + Popup.padding + 96;
+        saveBtn.positionY = Popup.HeaderSize + Popup.Padding + 96;
         saveBtn.text = "Save";
         saveBtn.font = "bold 15px sans-serif";
         saveBtn.width = 145;
