@@ -16,7 +16,7 @@ export class StatisticsPopup extends Popup {
         this._components.forEach(cmp => cmp.visible = value);
 
         if (value)
-            this._statistics = this._statisticsService.getStatistics();
+            this._statistics = this._statisticsService.get();
     }
 
     public constructor(context: CanvasRenderingContext2D,
@@ -24,7 +24,7 @@ export class StatisticsPopup extends Popup {
         super(context);
 
         this._statisticsService = statisticsService;
-        this._statistics = this._statisticsService.getStatistics();
+        this._statistics = this._statisticsService.get();
     }
 
     protected drawPopupInternal(): void {
@@ -101,6 +101,34 @@ export class StatisticsPopup extends Popup {
             align: 'left',
             color: Colors.Black
         });
+
+        Label.drawText(this._context, 
+            'SCORES:', 
+            this.positionX + Popup.Padding, 
+            this.positionY + Popup.HeaderSize + Popup.Padding + 200, { 
+            size: 14,
+            align: 'left',
+            bold: true,
+            color: Colors.Black
+        });
+
+        Label.drawText(this._context, 
+            `Won: ${ this._statistics.gamesWon ? this._statistics.gamesWon : 0 }`, 
+            this.positionX + Popup.Padding, 
+            this.positionY + Popup.HeaderSize + Popup.Padding + 225, { 
+            size: 13,
+            align: 'left',
+            color: Colors.Black
+        });
+
+        Label.drawText(this._context, 
+            `Lost: ${ this._statistics.gamesLost ? this._statistics.gamesLost : 0 }`, 
+            this.positionX + Popup.Padding, 
+            this.positionY + Popup.HeaderSize + Popup.Padding + 250, { 
+            size: 13,
+            align: 'left',
+            color: Colors.Black
+        });
         
         this._components.forEach(cmp => cmp.draw());
     }
@@ -109,10 +137,10 @@ export class StatisticsPopup extends Popup {
         const closeBtn = new Button(this._context);
         closeBtn.parent = this;
         closeBtn.positionX = Popup.Padding;
-        closeBtn.positionY = 270;
+        closeBtn.positionY = 330;
         closeBtn.text = "Close";
         closeBtn.font = "bold 15px sans-serif";
-        closeBtn.width = 240;
+        closeBtn.width = 280;
         closeBtn.height = 30;
         closeBtn.onClick = this.close.bind(this);
 

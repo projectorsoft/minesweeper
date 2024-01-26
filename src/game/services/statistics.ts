@@ -5,6 +5,8 @@ export class StatisticsRecord {
 }
 
 export class Statistics {
+    public gamesWon: number = 0;
+    public gamesLost: number = 0;
     public lastGame: StatisticsRecord = null;
     public easyModeBestTime: StatisticsRecord = null;
     public mediumModeBestTime: StatisticsRecord = null;

@@ -1,5 +1,5 @@
 import { StorageService } from "../engine/managers/storageService";
-import { GameMode } from "../enums";
+import { GameMode, GameState } from "../enums";
 import { Helpers } from "../helpers/helpers";
 import { Statistics, StatisticsRecord } from "./statistics";
 
@@ -12,17 +12,17 @@ export class StatisticsService {
         this._storageService = storageService;
     }
 
-    public getStatistics(): Statistics {
+    public get(): Statistics {
         let statistics = this._storageService.get(StatisticsService.StatisticsLocalStorageKey) as Statistics;
 
         if (!statistics) {
-            statistics = this.createStatistics();
+            statistics = this.create();
         }
 
         return statistics;
     }
 
-    public createStatistics(): Statistics {
+    public create(): Statistics {
         let statistics = new Statistics();
 
         this._storageService.update(StatisticsService.StatisticsLocalStorageKey, statistics);
@@ -30,8 +30,12 @@ export class StatisticsService {
         return statistics;
     }
 
-    public updateLastGameStatistics(record: StatisticsRecord): void {
-        let statistics = this.getStatistics();
+    public clear(): void {
+        this._storageService.clear(StatisticsService.StatisticsLocalStorageKey);
+    }
+
+    public updateLastGame(record: StatisticsRecord): void {
+        let statistics = this.get();
 
         if (!statistics.lastGame)
             statistics.lastGame = new StatisticsRecord();
@@ -42,8 +46,8 @@ export class StatisticsService {
         this._storageService.update(StatisticsService.StatisticsLocalStorageKey, statistics);
     }
 
-    public setModeStatistics(mode: GameMode, record: StatisticsRecord): void {
-        let localStatistics = this.getStatistics();
+    public updateModeData(mode: GameMode, record: StatisticsRecord): void {
+        let localStatistics = this.get();
 
         switch (mode) {
             case GameMode.Easy:
@@ -63,8 +67,16 @@ export class StatisticsService {
         this._storageService.update(StatisticsService.StatisticsLocalStorageKey, localStatistics);
     }
 
-    public clear(): void {
-        this._storageService.clear(StatisticsService.StatisticsLocalStorageKey);
+    public updateScores(score: GameState): void {
+        let localStatistics = this.get();
+
+        if (score === GameState.Won)
+            localStatistics.gamesWon++; 
+        else
+            if (score === GameState.Lost)
+                localStatistics.gamesLost++; 
+
+        this._storageService.update(StatisticsService.StatisticsLocalStorageKey, localStatistics);
     }
 
     private setStatisticsRecord(localStatistics: StatisticsRecord, record: StatisticsRecord): StatisticsRecord {

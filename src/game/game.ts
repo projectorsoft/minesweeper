@@ -146,8 +146,8 @@ export class Game {
     private createStatisticsPopup(): void {
         this._statisticsPopup = new StatisticsPopup(this._context, this._statisticsService);
         this._statisticsPopup.title = "Player's statistics";
-        this._statisticsPopup.width = 280;
-        this._statisticsPopup.height = 320;
+        this._statisticsPopup.width = 320;
+        this._statisticsPopup.height = 380;
         this._statisticsPopup.roundedCorners = true;
         this._statisticsPopup.visible = false;
         this._statisticsPopup.enabled = false;

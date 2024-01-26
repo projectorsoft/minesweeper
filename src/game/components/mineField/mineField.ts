@@ -171,8 +171,9 @@ export class MineField {
         //all empty fields have been revealed and all flags set on mines
         if (this._uncoveredFieldsLeft === 0) {
             this.stopTimer();
-            this._statisticsService.updateLastGameStatistics(this._statisticsRecord);
-            this._statisticsService.setModeStatistics(this._mode, this._statisticsRecord);
+            this._statisticsService.updateLastGame(this._statisticsRecord);
+            this._statisticsService.updateModeData(this._mode, this._statisticsRecord);
+            this._statisticsService.updateScores(GameState.Won);
 
             if (this.onFieldChanged)
                 this.onFieldChanged(GameState.Won);
@@ -198,7 +199,8 @@ export class MineField {
                 this._fields[flagged.x][flagged.y].revealFlag();
         });
 
-        this._statisticsService.updateLastGameStatistics(this._statisticsRecord);
+        this._statisticsService.updateLastGame(this._statisticsRecord);
+        this._statisticsService.updateScores(GameState.Lost);
 
         if (this.onFieldChanged)
             this.onFieldChanged(GameState.Lost);
