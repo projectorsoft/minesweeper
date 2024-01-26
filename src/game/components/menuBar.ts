@@ -7,35 +7,23 @@ export class MenuBar extends Component {
     public static readonly height: number = 80;
 
     private _assetsManager: AssetsManager;
-    private _enabled: boolean = true;
-
-    private _newGameBtn!: ImageButton;
-    private _statisticsBtn!: ImageButton;
-    private _settingsBtn!: ImageButton;
 
     private _width: number = 1000;
     public onNewGameClick: Function;
     public onShowStatisticsClick: Function;
     public onShowSettingsClick: Function;
 
-    public get enabled(): boolean {
-        return this._enabled;
-    }
-    public set enabled(value: boolean) {
-        this._enabled = value;
-
-        this._newGameBtn.enabled = value;
-        this._statisticsBtn.enabled = value;
-        this._settingsBtn.enabled = value;
-    }
     public get width(): number {
         return this._width;
     }
     public set width(value: number) {
         this._width = value;
 
-        this._statisticsBtn.positionX = this.width - 150;
-        this._settingsBtn.positionX = this.width - 70;
+        if (this.getComponent('statisticsBtn') as ImageButton)
+            (this.getComponent('statisticsBtn') as ImageButton).positionX = this.width - 150;
+
+        if (this.getComponent('settingsBtn') as ImageButton)
+            (this.getComponent('settingsBtn') as ImageButton).positionX = this.width - 70;
     }
 
     public constructor(context: CanvasRenderingContext2D,
@@ -60,49 +48,45 @@ export class MenuBar extends Component {
         this._context.closePath();
         this._context.restore();
 
-        this._newGameBtn.draw();
-        this._statisticsBtn.draw();
-        this._settingsBtn.draw();
-
         this._components.forEach(input => input.draw());
     }
 
     private createMenu(): void {
-        this._newGameBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.NewImgSvg });
-        this._newGameBtn.parent = this;
-        this._newGameBtn.positionX = 0;
-        this._newGameBtn.positionY = 0;
-        this._newGameBtn.text = "New game";
-        this._newGameBtn.font = "bold 12px sans-serif";
-        this._newGameBtn.width = 70;
-        this._newGameBtn.height = MenuBar.height;
-        this._newGameBtn.roundedCorners = true;
-        this._newGameBtn.onClick = this.newGame.bind(this);
+        const newGameBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.NewImgSvg });
+        newGameBtn.parent = this;
+        newGameBtn.positionX = 0;
+        newGameBtn.positionY = 0;
+        newGameBtn.text = "New game";
+        newGameBtn.font = "bold 12px sans-serif";
+        newGameBtn.width = 70;
+        newGameBtn.height = MenuBar.height;
+        newGameBtn.roundedCorners = true;
+        newGameBtn.onClick = this.newGame.bind(this);
 
-        this._statisticsBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.StatisticsImgSvg });
-        this._statisticsBtn.parent = this;
-        this._statisticsBtn.positionX = this.width - 190;
-        this._statisticsBtn.positionY = 0;
-        this._statisticsBtn.text = "Statistics";
-        this._statisticsBtn.font = "bold 12px sans-serif";
-        this._statisticsBtn.width = 70;
-        this._statisticsBtn.height = MenuBar.height;
-        this._statisticsBtn.onClick = this.showStatisticsPopup.bind(this);
+        const statisticsBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.StatisticsImgSvg });
+        statisticsBtn.parent = this;
+        statisticsBtn.positionX = this.width - 190;
+        statisticsBtn.positionY = 0;
+        statisticsBtn.text = "Statistics";
+        statisticsBtn.font = "bold 12px sans-serif";
+        statisticsBtn.width = 70;
+        statisticsBtn.height = MenuBar.height;
+        statisticsBtn.onClick = this.showStatisticsPopup.bind(this);
 
-        this._settingsBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.SettingsImgSvg });
-        this._settingsBtn.parent = this;
-        this._settingsBtn.positionX = this.width - 110;
-        this._settingsBtn.positionY = 0;
-        this._settingsBtn.text = "Settings";
-        this._settingsBtn.font = "bold 12px sans-serif";
-        this._settingsBtn.width = 70;
-        this._settingsBtn.height = MenuBar.height;
-        this._settingsBtn.roundedCorners = true;
-        this._settingsBtn.onClick = this.showSettingsPopup.bind(this);
+        const settingsBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.SettingsImgSvg });
+        settingsBtn.parent = this;
+        settingsBtn.positionX = this.width - 110;
+        settingsBtn.positionY = 0;
+        settingsBtn.text = "Settings";
+        settingsBtn.font = "bold 12px sans-serif";
+        settingsBtn.width = 70;
+        settingsBtn.height = MenuBar.height;
+        settingsBtn.roundedCorners = true;
+        settingsBtn.onClick = this.showSettingsPopup.bind(this);
 
-        this._components.push(this._newGameBtn);
-        this._components.push(this._statisticsBtn);
-        this._components.push(this._settingsBtn);
+        this.addComponent('newGameBtn', newGameBtn);
+        this.addComponent('statisticsBtn', statisticsBtn);
+        this.addComponent('settingsBtn', settingsBtn);
     }
 
     private newGame(): void {

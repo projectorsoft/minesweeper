@@ -1,10 +1,10 @@
-
 export abstract class Component {
     protected _context!: CanvasRenderingContext2D;
     protected _parent: Component;
     protected _positionX: number = 0;
     protected _positionY: number = 0;
-    protected _components: Component[] = [];
+    protected _enabled: boolean = true;
+    protected _components: Map<string, Component> = new Map<string, Component>();
 
     public get parent(): Component {
         return this._parent;
@@ -41,6 +41,16 @@ export abstract class Component {
             });
         });
     }
+    public get enabled(): boolean {
+        return this._enabled;
+    }
+    public set enabled(value: boolean) {
+        this._enabled = value;
+
+        this._components.forEach(input => {
+            input._enabled = value;
+        });
+    }
 
     public constructor(context: CanvasRenderingContext2D) {
         this._context = context;
@@ -50,5 +60,16 @@ export abstract class Component {
 
     public draw(): void {
         this.drawInternal();
+    }
+
+    public addComponent(name: string, component: Component): void {
+        if (this._components.has(name))
+            throw `Component with name '${name}' already exists!`;
+
+        this._components.set(`${name}`, component);
+    }
+
+    public getComponent(name: string): Component | undefined {
+        return this._components.get(name);
     }
 }

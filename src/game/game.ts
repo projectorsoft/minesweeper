@@ -110,7 +110,7 @@ export class Game {
     private createStatusBar(): void {
         this._faceIndicator = new FaceIndicator(this._context, this._assetsManager);
         this._faceIndicator.positionX = Game.minWidth / 2 - 20;
-        this._faceIndicator.positionY = Field.marginTop - 64;
+        this._faceIndicator.positionY = Field.marginTop - 66;
     }
 
     private createMineField(customOptions?: ICustomModeOptions): void {

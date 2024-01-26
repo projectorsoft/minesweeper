@@ -1,7 +1,8 @@
-import { Asset, Colors } from "@/game/enums";
+
 import { Button } from "./button"
 import { Label } from "./label";
 import { AssetsManager } from "../managers/assetsManager";
+import { Asset } from "../../enums";
 
 export interface IImageButtonOptions {
     asset: Asset

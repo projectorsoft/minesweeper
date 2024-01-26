@@ -8,7 +8,6 @@ import { StatisticsService } from "../services/statisticsService";
 export class StatisticsPopup extends Popup {
     private _statisticsService: StatisticsService;
     private _statistics: Statistics;
-    private _closeBtn!: Button;
 
     public onClose!: Function;
 
@@ -17,7 +16,7 @@ export class StatisticsPopup extends Popup {
     }
     public set visible(value: boolean) {
         this._visible = value;
-        this._closeBtn.enabled = value;
+        this._components.forEach(cmp => cmp.enabled = value);
 
         if (value)
             this._statistics = this._statisticsService.getStatistics();
@@ -108,21 +107,21 @@ export class StatisticsPopup extends Popup {
             color: Colors.Black
         });
         
-        this._closeBtn.draw();
+        this._components.forEach(cmp => cmp.draw());
     }
 
     protected createInputsInternal(): void {
-        this._closeBtn = new Button(this._context);
-        this._closeBtn.parent = this;
-        this._closeBtn.positionX = Popup.padding;
-        this._closeBtn.positionY = 270;
-        this._closeBtn.text = "Close";
-        this._closeBtn.font = "bold 15px sans-serif";
-        this._closeBtn.width = 240;
-        this._closeBtn.height = 30;
-        this._closeBtn.onClick = this.close.bind(this);
+        const closeBtn = new Button(this._context);
+        closeBtn.parent = this;
+        closeBtn.positionX = Popup.padding;
+        closeBtn.positionY = 270;
+        closeBtn.text = "Close";
+        closeBtn.font = "bold 15px sans-serif";
+        closeBtn.width = 240;
+        closeBtn.height = 30;
+        closeBtn.onClick = this.close.bind(this);
 
-        this._components.push(this._closeBtn);
+        this.addComponent('closeBtn', closeBtn);
     }
 
     private close(): void {

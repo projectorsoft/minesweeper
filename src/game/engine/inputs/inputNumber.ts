@@ -1,4 +1,4 @@
-import { Colors } from "@/game/enums";
+import { Colors } from "../../enums";
 import { Button } from "./button";
 import { Component } from "./component";
 import { Label } from "./label";
@@ -6,12 +6,7 @@ import { Label } from "./label";
 export class InputNumber extends Component {
     private _minValue: number = 30;
     private _maxValue: number = 999;
-    
-    private _enabled: boolean = true;
     private _value: number = 30;
-
-    private _increaseBtn!: Button;
-    private _decreseBtn!: Button;
     
     public onIncrease!: Function;
     public onDecrease!: Function;
@@ -40,8 +35,7 @@ export class InputNumber extends Component {
     public set enabled(value: boolean) {
         this._enabled = value;
 
-        this._increaseBtn.enabled = value;
-        this._decreseBtn.enabled = value;
+        this._components.forEach(cmp => cmp.enabled = value);
     }
     public get value(): number {
         return this._value;
@@ -55,8 +49,6 @@ export class InputNumber extends Component {
 
         this.onIncrease = () => null;
         this.onDecrease = () => null;
-
-        //this.create();
     }
 
     protected drawInternal(): void {
@@ -79,28 +71,28 @@ export class InputNumber extends Component {
     }
 
     public create() {
-        this._decreseBtn = new Button(this._context);
-        this._decreseBtn.parent = this;
-        this._decreseBtn.positionX = 30;
-        this._decreseBtn.positionY = 2;
-        this._decreseBtn.text = "<";
-        this._decreseBtn.font = "bold 15px sans-serif";
-        this._decreseBtn.width = 25;
-        this._decreseBtn.height = 25;
-        this._decreseBtn.onClick = this.decrease.bind(this);
+        const decreseBtn = new Button(this._context);
+        decreseBtn.parent = this;
+        decreseBtn.positionX = 30;
+        decreseBtn.positionY = 2;
+        decreseBtn.text = "<";
+        decreseBtn.font = "bold 15px sans-serif";
+        decreseBtn.width = 25;
+        decreseBtn.height = 25;
+        decreseBtn.onClick = this.decrease.bind(this);
 
-        this._increaseBtn = new Button(this._context);
-        this._increaseBtn.parent = this;
-        this._increaseBtn.positionX = 55;
-        this._increaseBtn.positionY = 2;
-        this._increaseBtn.text = ">";
-        this._increaseBtn.font = "bold 15px sans-serif";
-        this._increaseBtn.width = 25;
-        this._increaseBtn.height = 25;
-        this._increaseBtn.onClick = this.increase.bind(this);
+        const increaseBtn = new Button(this._context);
+        increaseBtn.parent = this;
+        increaseBtn.positionX = 55;
+        increaseBtn.positionY = 2;
+        increaseBtn.text = ">";
+        increaseBtn.font = "bold 15px sans-serif";
+        increaseBtn.width = 25;
+        increaseBtn.height = 25;
+        increaseBtn.onClick = this.increase.bind(this);
 
-        this._components.push(this._decreseBtn);
-        this._components.push(this._increaseBtn);
+        this.addComponent('decreseBtn', decreseBtn);
+        this.addComponent('increaseBtn', increaseBtn);
     }
 
     private increase(): void {

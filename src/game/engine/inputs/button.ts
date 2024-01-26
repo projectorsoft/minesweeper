@@ -9,7 +9,6 @@ export class Button extends Component {
     protected static readonly cornerRadius: number = 5;
 
     protected _isHighlited: boolean = false;
-    protected _enabled: boolean = true;
 
     public width: number = 120;
     public height: number = 40;
@@ -20,13 +19,6 @@ export class Button extends Component {
     public roundedCorners: boolean = false;
     public highlightColor: Colors | string = Colors.LightBlue;
     public backgroundColor: Colors | string = Colors.DarkGrey;
-
-    public get enabled(): boolean {
-        return this._enabled;
-    }
-    public set enabled(value: boolean) {
-        this._enabled = value;
-    }
 
     public constructor(context: CanvasRenderingContext2D) {
         super(context);
