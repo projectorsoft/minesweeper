@@ -9,14 +9,11 @@ export class StatisticsPopup extends Popup {
     private _statisticsService: StatisticsService;
     private _statistics: Statistics;
 
-    public onClose!: Function;
+    public onClose: Function = () => null;
 
-    public get visible(): boolean {
-        return this._visible;
-    }
-    public set visible(value: boolean) {
+    public override set visible(value: boolean) {
         this._visible = value;
-        this._components.forEach(cmp => cmp.enabled = value);
+        this._components.forEach(cmp => cmp.visible = value);
 
         if (value)
             this._statistics = this._statisticsService.getStatistics();
@@ -28,8 +25,6 @@ export class StatisticsPopup extends Popup {
 
         this._statisticsService = statisticsService;
         this._statistics = this._statisticsService.getStatistics();
-
-        this.onClose = () => null;
     }
 
     protected drawPopupInternal(): void {

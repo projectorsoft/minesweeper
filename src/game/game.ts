@@ -125,6 +125,8 @@ export class Game {
         this._customBoardSizePopup.title = "Custom board settings";
         this._customBoardSizePopup.width = 340;
         this._customBoardSizePopup.height = 200;
+        this._customBoardSizePopup.visible = false;
+        this._customBoardSizePopup.enabled = false;
         this._customBoardSizePopup.onSave = (options: ICustomModeOptions) => {
             this._customModeOptions = options;
             this.setComponentsEnabled(true); 
@@ -145,6 +147,9 @@ export class Game {
         this._statisticsPopup.title = "Player's statistics";
         this._statisticsPopup.width = 280;
         this._statisticsPopup.height = 320;
+        this._statisticsPopup.roundedCorners = true;
+        this._statisticsPopup.visible = false;
+        this._statisticsPopup.enabled = false;
         this._statisticsPopup.onClose = () => { 
             this._statisticsPopup.visible = false;
             this.setComponentsEnabled(true);
@@ -152,11 +157,13 @@ export class Game {
     }
 
     private createSettingsPopup(): void {
-        this._settingsPopup = new SettingsPopup(this._context);
+        this._settingsPopup = new SettingsPopup(this._context, this._statisticsService);
         this._settingsPopup.title = "Settings";
         this._settingsPopup.width = 380;
         this._settingsPopup.height = 420;
         this._settingsPopup.roundedCorners = false;
+        this._settingsPopup.visible = false;
+        this._settingsPopup.enabled = false;
         this._settingsPopup.onCancel = () => {
             this._settingsPopup.changeGameMode(this._previousGameMode);
             this._settingsPopup.visible = false;

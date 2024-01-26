@@ -8,13 +8,7 @@ export abstract class Popup extends Component {
     protected static readonly Padding: number = 20;
     protected static readonly HeaderSize: number = 40;
 
-    protected _visible: boolean = false;
-
     public title: string = 'Popup';
-    public roundedCorners: boolean = true;
-
-    private _width: number = 0;
-    private _height: number = 0;
 
     public get width(): number {
         return this._width;
@@ -43,13 +37,9 @@ export abstract class Popup extends Component {
     protected abstract createInputsInternal(): void;
 
     protected drawInternal(): void {
-        if (!this._visible)
-            return;
-
         //this.drawTransparentBox();
         this.drawPopup();
         this.drawTitleBar();
-
         this.drawPopupInternal();
     }
 

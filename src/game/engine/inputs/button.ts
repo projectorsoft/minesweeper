@@ -10,19 +10,15 @@ export class Button extends Component {
 
     protected _isHighlited: boolean = false;
 
-    public width: number = 120;
-    public height: number = 40;
     public text: string = "Text";
     public checked: boolean = false;
-    public onClick: Function;
+    public onClick: Function = () => null;
     public font: string = "15px sans-serif";
-    public roundedCorners: boolean = false;
     public highlightColor: Colors | string = Colors.LightBlue;
     public backgroundColor: Colors | string = Colors.DarkGrey;
 
     public constructor(context: CanvasRenderingContext2D) {
         super(context);
-        this.onClick = () => null;
 
         EventBus.getInstance()
             .subscribe(InputEvent.OnClick, (event: IMouseClickEvent) => {
@@ -37,10 +33,10 @@ export class Button extends Component {
         this.drawFrame();
 
         Label.drawText(this._context, 
-            this.text, this.positionX + this.width / 2, this.positionY + this.height / 2, { 
+            this.text, this.positionX + this._width / 2, this.positionY + this._height / 2, { 
             size: 15,
             align: 'center',
-            color: Colors.White
+            color: this._enabled ? Colors.White : Colors.Gray
         });
     }
 
@@ -48,12 +44,12 @@ export class Button extends Component {
         // Button background
         this._context.save();
         this._context.beginPath();
-        this._context.fillStyle = this._isHighlited || this.checked ? this.highlightColor : this.backgroundColor;
+        this._context.fillStyle = (this._isHighlited || this.checked) && this._enabled ? this.highlightColor : this.backgroundColor;
 
         if (this.roundedCorners)
-            this._context.roundRect(this.positionX, this.positionY, this.width, this.height, [Button.CornerRadius]);
+            this._context.roundRect(this.positionX, this.positionY, this._width, this._height, [Button.CornerRadius]);
         else
-            this._context.rect(this.positionX, this.positionY, this.width, this.height);
+            this._context.rect(this.positionX, this.positionY, this._width, this._height);
 
         this._context.fill();
         this._context.closePath();
@@ -61,23 +57,26 @@ export class Button extends Component {
     }
 
     public isClicked(x: number, y: number): boolean {
+        if (!this._visible || !this._enabled)
+            return;
+
         if (x < this.positionX ||
-            x > this.positionX + this.width ||
+            x > this.positionX + this._width ||
             y < this.positionY ||
-            y > this.positionY + this.height)
+            y > this.positionY + this._height)
             return false;
 
-        if (this.onClick && this._enabled)
+        if (this.onClick)
             this.onClick();
 
         return true;
     }
 
     public onMouseMove(x: number, y: number): void {
-        this._isHighlited = this._enabled && 
+        this._isHighlited = this._visible && this._enabled && 
             !(x < this.positionX ||
-            x > this.positionX + this.width ||
+            x > this.positionX + this._width ||
             y < this.positionY ||
-            y > this.positionY + this.height);
+            y > this.positionY + this._height);
     }
 }

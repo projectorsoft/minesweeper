@@ -63,6 +63,10 @@ export class StatisticsService {
         this._storageService.update(StatisticsService.StatisticsLocalStorageKey, localStatistics);
     }
 
+    public clear(): void {
+        this._storageService.clear(StatisticsService.StatisticsLocalStorageKey);
+    }
+
     private setStatisticsRecord(localStatistics: StatisticsRecord, record: StatisticsRecord): StatisticsRecord {
         if (!localStatistics)
             localStatistics = new StatisticsRecord();

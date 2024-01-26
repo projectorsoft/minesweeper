@@ -1,36 +1,39 @@
+import { Alert } from "../engine/inputs/alert";
 import { Button } from "../engine/inputs/button";
 import { Label } from "../engine/inputs/label";
 import { Popup } from "../engine/popup";
-import { Colors, GameMode } from "../enums";
+import { AlertType, Colors, GameMode } from "../enums";
+import { StatisticsService } from "../services/statisticsService";
 
 export class SettingsPopup extends Popup {
+    private _statisticsService: StatisticsService;
     private _mode: GameMode = GameMode.Easy;
 
-    public onCancel!: Function;
-    public onSave!: Function;
+    public onCancel: Function = () => null;
+    public onSave: Function = (mode: GameMode) => null;
 
-    public get visible(): boolean {
-        return this._visible;
-    }
-
-    public set visible(value: boolean) {
-        this._visible = value;
-
-        this._components.forEach(cmp => cmp.enabled = value);
-    }
-
-    public constructor(context: CanvasRenderingContext2D) {
+    public constructor(context: CanvasRenderingContext2D,
+        statisticsService: StatisticsService) {
         super(context);
 
-        this.onCancel = () => null;
-        this.onSave = (mode: GameMode) => null;
+        this._statisticsService = statisticsService;
     }
     
     protected drawPopupInternal(): void {
         Label.drawText(this._context, 
-            'Game mode:', 
+            'GAME MODE:', 
             this.positionX + Popup.Padding, 
             this.positionY + Popup.HeaderSize + Popup.Padding, { 
+            size: 14,
+            align: 'left',
+            bold: true,
+            color: Colors.Black
+        });
+
+        Label.drawText(this._context, 
+            'STATISTICS:', 
+            this.positionX + Popup.Padding, 
+            this.positionY + Popup.HeaderSize + Popup.Padding + 225, { 
             size: 14,
             align: 'left',
             bold: true,
@@ -78,6 +81,15 @@ export class SettingsPopup extends Popup {
         customModeBtn.width = 340;
         customModeBtn.onClick = this.changeGameMode.bind(this, GameMode.Custom);
 
+        const clearStatisticsBtn = new Button(this._context);
+        clearStatisticsBtn.parent = this;
+        clearStatisticsBtn.positionX = Popup.Padding;
+        clearStatisticsBtn.positionY = Popup.HeaderSize + Popup.Padding + 245;
+        clearStatisticsBtn.text = "Clear statistics";
+        clearStatisticsBtn.font = "bold 15px sans-serif";
+        clearStatisticsBtn.width = 340;
+        clearStatisticsBtn.onClick = this.clearStatistics.bind(this);
+
         const cancelBtn = new Button(this._context);
         cancelBtn.parent = this;
         cancelBtn.positionX = Popup.Padding;
@@ -98,12 +110,18 @@ export class SettingsPopup extends Popup {
         saveBtn.height = 30;
         saveBtn.onClick = this.save.bind(this);
 
+        const alert = new Alert(this._context);
+        alert.text = 'Statistics have been cleard';
+        //alert.visible = false;
+
         this.addComponent('easyModeBtn', easyModeBtn);
         this.addComponent('mediumModeBtn', mediumModeBtn);
         this.addComponent('difficultModeBtn', difficultModeBtn);
         this.addComponent('customModeBtn', customModeBtn);
+        this.addComponent('clearStatisticsBtn', clearStatisticsBtn);
         this.addComponent('cancelBtn', cancelBtn);
         this.addComponent('saveBtn', saveBtn);
+        this.addComponent('alert', alert);
     }
 
     private cancel(): void {
@@ -114,6 +132,15 @@ export class SettingsPopup extends Popup {
     private save(): void {
         if (this.onSave)
             this.onSave(this._mode);
+    }
+
+    private clearStatistics(): void {
+        this._statisticsService.clear();
+
+        (this.getComponent('clearStatisticsBtn') as Button).enabled = false;
+        const alert = (this.getComponent('alert') as Alert);
+        alert.type = AlertType.Success;
+        alert.visible = true;
     }
 
     public changeGameMode(mode: GameMode): void {

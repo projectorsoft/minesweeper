@@ -46,7 +46,11 @@ export enum Colors {
     DarkGrey = 'rgb(74, 82, 92)',
     VeryDarkGrey = 'rgb(45, 45, 47)',
     White = 'rgb(255, 255, 255)',
-    DarkPurple = 'rgb(61, 56, 71)'
+    DarkPurple = 'rgb(61, 56, 71)',
+    Success = 'rgb(81, 163, 81)',
+    Danger = 'rgb(189, 53, 47)',
+    Warning = 'rgb(248, 148, 7)',
+    Info = 'rgb(47, 149, 179)',
 }
 
 export enum MouseButtons {
@@ -77,4 +81,11 @@ export enum InputEvent {
 export enum FontFamily {
     SansSerif = 'sans-serif',
     PixelCode = 'pixelCode'
+}
+
+export enum AlertType {
+    Success = 0,
+    Danger = 1,
+    Warning = 2,
+    Info = 3
 }

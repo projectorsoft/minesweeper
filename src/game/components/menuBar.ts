@@ -8,7 +8,6 @@ export class MenuBar extends Component {
 
     private _assetsManager: AssetsManager;
 
-    private _width: number = 1000;
     public onNewGameClick: Function;
     public onShowStatisticsClick: Function;
     public onShowSettingsClick: Function;
@@ -20,10 +19,10 @@ export class MenuBar extends Component {
         this._width = value;
 
         if (this.getComponent('statisticsBtn') as ImageButton)
-            (this.getComponent('statisticsBtn') as ImageButton).positionX = this.width - 150;
+            (this.getComponent('statisticsBtn') as ImageButton).positionX = this._width - 150;
 
         if (this.getComponent('settingsBtn') as ImageButton)
-            (this.getComponent('settingsBtn') as ImageButton).positionX = this.width - 70;
+            (this.getComponent('settingsBtn') as ImageButton).positionX = this._width - 70;
     }
 
     public constructor(context: CanvasRenderingContext2D,

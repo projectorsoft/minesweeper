@@ -25,4 +25,8 @@ export class StorageService<T> {
     public keyExists(key: string): boolean {
         return localStorage.getItem(key) !== null;
     }
+
+    public clear(key: string): void {
+        localStorage.removeItem(key);
+    }
 }
