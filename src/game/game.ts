@@ -246,7 +246,7 @@ export class Game {
 
     private adjustComponentsToBoardSize(): void {
         this._menuBar.positionX = this._mineField.marginLeft;
-        this._menuBar.width = this._mineField.width; //Game.getWidth();
+        this._menuBar.width = this._mineField.width;
         this._faceIndicator.positionX = Game.getWidth() / 2 - 20;
     }
 

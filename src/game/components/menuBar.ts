@@ -21,16 +21,9 @@ export class MenuBar extends Component {
     public set gameState(value: GameState) {
         this._gameState = value;
 
-        if (value === GameState.Won || value === GameState.Lost)
-            this.getComponent('pauseBtn').enabled = false;
-        else
-            if (value === GameState.NotStarted) {
-                this.getComponent('pauseBtn').enabled = false;
-            }
-        else {
-            this.getComponent('pauseBtn').enabled = true;
-            (this.getComponent('pauseBtn') as ImageButton).checked = false;
-        }
+        const pauseBtn = (this.getComponent('pauseBtn') as ImageButton);
+        pauseBtn.enabled = value === GameState.Started ? true : false;
+        pauseBtn.checked = false;
     }
     public get width(): number {
         return this._width;
@@ -98,6 +91,7 @@ export class MenuBar extends Component {
         pauseBtn.font = "bold 12px sans-serif";
         pauseBtn.width = 70;
         pauseBtn.height = MenuBar.Height;
+        pauseBtn.checkedColor = Colors.Danger;
         pauseBtn.onClick = this.pause.bind(this);
 
         const statisticsBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.StatisticsImgSvg });

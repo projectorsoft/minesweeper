@@ -103,6 +103,7 @@ export class SettingsPopup extends Popup {
         cancelBtn.font = "bold 15px sans-serif";
         cancelBtn.width = 165;
         cancelBtn.height = 30;
+        cancelBtn.backgroundColor = Colors.Danger;
         cancelBtn.onClick = this.cancel.bind(this);
 
         const saveBtn = new Button(this._context);
@@ -113,6 +114,7 @@ export class SettingsPopup extends Popup {
         saveBtn.font = "bold 15px sans-serif";
         saveBtn.width = 165;
         saveBtn.height = 30;
+        saveBtn.backgroundColor = Colors.Success;
         saveBtn.onClick = this.save.bind(this);
 
         const alert = new Alert(this._context);

@@ -17,6 +17,7 @@ export class Button extends Component {
     public font: string = "15px sans-serif";
     public highlightColor: Colors | string = Colors.LightBlue;
     public backgroundColor: Colors | string = Colors.DarkGrey;
+    public checkedColor: Colors | string = Colors.LightBlue;
 
     public constructor(context: CanvasRenderingContext2D) {
         super(context);
@@ -52,7 +53,11 @@ export class Button extends Component {
         // Button background
         this._context.save();
         this._context.beginPath();
-        this._context.fillStyle = (this._isHighlited || this.checked) && this._enabled ? this.highlightColor : this.backgroundColor;
+        this._context.fillStyle = this._isHighlited && this._enabled ? this.highlightColor : this.backgroundColor;
+        
+        if (this.checked) {
+            this._context.fillStyle = this.checkedColor;
+        }
 
         if (this.roundedCorners)
             this._context.roundRect(this.positionX, this.positionY, this._width, this._height, [Button.CornerRadius]);
