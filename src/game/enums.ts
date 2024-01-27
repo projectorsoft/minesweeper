@@ -10,9 +10,10 @@ export enum FieldState {
 }
 
 export enum GameState {
-    Started = 0,
-    Won = 1,
-    Lost = 2
+    NotStarted = 0,
+    Started = 1,
+    Won = 2,
+    Lost = 3
 }
 
 export enum GameMode {
@@ -29,6 +30,7 @@ export enum Asset {
     StatisticsImgSvg = 'statisticsImgSvg',
     SmileImgSvg = 'smileImgSvg',
     SadImgSvg = 'sadImgSvg',
+    PauseImgSvg = 'pauseImgSvg',
     PixelCodeFont = 'pixelCodeFont'
 }
 

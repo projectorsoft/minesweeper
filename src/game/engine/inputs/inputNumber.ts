@@ -34,8 +34,6 @@ export class InputNumber extends Component {
     }
     public set enabled(value: boolean) {
         this._enabled = value;
-
-        this._components.forEach(cmp => cmp.enabled = value);
     }
     public get value(): number {
         return this._value;
@@ -54,6 +52,11 @@ export class InputNumber extends Component {
     protected drawInternal(): void {
         this.drawValueInput();
         this._components.forEach(input => input.draw());
+    }
+
+    protected clickInternal(x: number, y: number): void {
+    }
+    protected mouseMoveInternal(x: number, y: number): void {
     }
 
     private drawValueInput(): void {

@@ -13,7 +13,6 @@ export class StatisticsPopup extends Popup {
 
     public override set visible(value: boolean) {
         this._visible = value;
-        this._components.forEach(cmp => cmp.visible = value);
 
         if (value)
             this._statistics = this._statisticsService.get();
@@ -131,6 +130,11 @@ export class StatisticsPopup extends Popup {
         });
         
         this._components.forEach(cmp => cmp.draw());
+    }
+
+    protected clickInternal(x: number, y: number): void {
+    }
+    protected mouseMoveInternal(x: number, y: number): void {
     }
 
     protected createInputsInternal(): void {

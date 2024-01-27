@@ -7,11 +7,13 @@ import { Game } from "../../game";
 import { Helpers } from "../../helpers/helpers";
 import { StatisticsRecord } from "../../services/statistics";
 import { StatisticsService } from "../../services/statisticsService";
+import { TimersManager } from "@/game/engine/managers/timersManager";
 
 export class MineField {
     public static readonly MinMarginLeft: number = 15;
 
     private _context: CanvasRenderingContext2D;
+    private _timersManager: TimersManager;
     private _statisticsService: StatisticsService;
     private _fields: Field[][];
     private _xSize: number;
@@ -22,7 +24,6 @@ export class MineField {
     private _mode: GameMode;
     private _uncoveredFieldsLeft: number;
     private _statisticsRecord: StatisticsRecord;
-    private _timerId: number = 0;
     private _marginLeft: number;
     private _enabled: boolean = true;
 
@@ -53,10 +54,13 @@ export class MineField {
     public constructor(context: CanvasRenderingContext2D,
                         assetsManager: AssetsManager,
                         statisticsService: StatisticsService,
+                        timersManager: TimersManager,
                         xSize: number, 
                         ySize: number) {
         this._context = context;
         this._statisticsService = statisticsService;
+        this._timersManager = timersManager;
+
         this._xSize = xSize;
         this._ySize = ySize;
         this._marginLeft = Math.floor((Game.MinWidth - this.width) / 2);
@@ -66,6 +70,9 @@ export class MineField {
 
         this._uncoveredFieldsLeft = this._xSize * this._ySize;
         this._fields = [];
+
+        //delete if already exists
+        this._timersManager.delete(Game.TimerName);
 
         //create mine field array
         for (let x = 0; x < this._xSize; x++) {
@@ -220,8 +227,10 @@ export class MineField {
         this._statisticsRecord.clicks++;
 
         //first click, start timer
-        if (!this._timerId)
+        if (!this._timersManager.exists(Game.TimerName)) {
+            this.onFieldChanged(GameState.Started);
             this.createTimer();
+        }
 
         this._fields[coordinates.x][coordinates.y].onLeftClick(coordinates.x, coordinates.y);
 
@@ -253,8 +262,10 @@ export class MineField {
         this._statisticsRecord.clicks++;
 
         //first click, start timer
-        if (!this._timerId)
+        if (!this._timersManager.exists(Game.TimerName)) {
+            this.onFieldChanged(GameState.Started);
             this.createTimer();
+        }
 
         this._fields[coordinates.x][coordinates.y].onRightClick(coordinates.x, coordinates.y);
         
@@ -360,10 +371,12 @@ export class MineField {
     }
 
     private createTimer(): void {
-        this._timerId = window.setInterval(() => this._statisticsRecord.time++, 1000); //TODO: timer in miliseconds
+        this._timersManager.addInterval(Game.TimerName, () => {
+            this._statisticsRecord.time++
+        }, 1000);
     }
 
     private stopTimer(): void {
-        window.clearInterval(this._timerId);
+        this._timersManager.delete(Game.TimerName);
     }
 }

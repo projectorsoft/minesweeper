@@ -43,6 +43,11 @@ export class Label extends Component {
         });
     }
 
+    protected clickInternal(x: number, y: number): void {
+    }
+    protected mouseMoveInternal(x: number, y: number): void {
+    }
+
     public static drawText(context: CanvasRenderingContext2D,
         text: string, 
         x: number, 

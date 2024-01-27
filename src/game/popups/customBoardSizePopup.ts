@@ -9,9 +9,8 @@ export class CustomBoardSizePopup extends Popup {
     public onCancel!: Function;
     public onSave!: Function;
 
-    public set visible(value: boolean) {
+    public override set visible(value: boolean) {
         this._visible = value;
-        this._components.forEach(cmp => cmp.enabled = value);
     }
 
     public constructor(context: CanvasRenderingContext2D) {
@@ -74,6 +73,11 @@ export class CustomBoardSizePopup extends Popup {
         this.addComponent('minesValueInput', minesValueInput);
         this.addComponent('cancelBtn', cancelBtn);
         this.addComponent('saveBtn', saveBtn);
+    }
+
+    protected clickInternal(x: number, y: number): void {
+    }
+    protected mouseMoveInternal(x: number, y: number): void {
     }
 
     private cancel(): void {

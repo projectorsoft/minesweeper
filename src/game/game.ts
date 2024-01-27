@@ -8,6 +8,7 @@ import { IMouseClickEvent } from "./engine/events/types/IMouseClickEvent";
 import { IMouseMoveEvent } from "./engine/events/types/IMouseMoveEvent";
 import { AssetsManager } from "./engine/managers/assetsManager";
 import { StorageService } from "./engine/managers/storageService";
+import { TimersManager } from "./engine/managers/timersManager";
 import { Point } from "./engine/point";
 import { Asset, GameMode, GameState, InputEvent, MouseButtons } from "./enums";
 import { Helpers } from "./helpers/helpers";
@@ -19,18 +20,22 @@ import { Statistics } from "./services/statistics";
 import { StatisticsService } from "./services/statisticsService";
 
 export class Game {
+    public static readonly TimerName: string = 'MainTimer';
     public static readonly MinWidth: number = 960;
     public static readonly MinHeight: number = 660;
 
-    private _canvas!: HTMLCanvasElement;
-    private _context!: CanvasRenderingContext2D;
-    private _gameState: GameState = GameState.Started;
+    private _canvas: HTMLCanvasElement;
+    private _context: CanvasRenderingContext2D;
+    private _assetsManager: AssetsManager;
+    private _timersManager: TimersManager;
+    private _statisticsService: StatisticsService;
+    private _storageService: StorageService<Statistics>;
+
+    private _gameState: GameState = GameState.NotStarted;
     private _gameMode: GameMode = GameMode.Easy;
     private _previousGameMode: GameMode = GameMode.Easy;
+    private _isPaused: boolean = false;
     private _customModeOptions: ICustomModeOptions | null;
-    private _assetsManager!: AssetsManager;
-    private _statisticsService!: StatisticsService;
-    private _storageService!: StorageService<Statistics>;
     private _currenPointerPossision: Point = new Point(0, 0);
 
     private _mineField!: MineField;
@@ -39,6 +44,26 @@ export class Game {
     private _customBoardSizePopup!: CustomBoardSizePopup;
     private _settingsPopup: SettingsPopup;
     private _faceIndicator!: FaceIndicator;
+
+    public get isPaused(): boolean {
+        return this._isPaused;
+    }
+    public set isPaused(value: boolean) {
+        this._isPaused = value;
+
+        const timer = this._timersManager.get(Game.TimerName);
+
+        if (!timer)
+            return;
+
+        if (value) {
+            timer.pause();
+            this._mineField.enabled = false;
+        } else {
+            timer.start();
+            this._mineField.enabled = true;
+        }
+    }
 
     constructor() {
         this._assetsManager = new AssetsManager();
@@ -60,6 +85,7 @@ export class Game {
         this._canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this._context = this._canvas.getContext('2d') as CanvasRenderingContext2D;
 
+        this._timersManager = new TimersManager();
         this._storageService = new StorageService();
         this._statisticsService = new StatisticsService(this._storageService);
 
@@ -103,7 +129,9 @@ export class Game {
     private createMenuBar(): void {
         this._menuBar = new MenuBar(this._context, this._assetsManager);
         this._menuBar.width = this._canvas.width;
+        this._menuBar.gameState = this._gameState;
         this._menuBar.onNewGameClick = () => { this.newGame() };
+        this._menuBar.onPauseClick = (paused: boolean) => { this.isPaused = paused };
         this._menuBar.onShowStatisticsClick = () => { this.showStatisticsPopup() };
         this._menuBar.onShowSettingsClick = () => { this.showSettingsPopup() };
     }
@@ -115,7 +143,10 @@ export class Game {
     }
 
     private createMineField(customOptions?: ICustomModeOptions): void {
-        this._mineField = new MineFieldBuilder(this._context, this._assetsManager, this._statisticsService)
+        this._mineField = new MineFieldBuilder(this._context, 
+            this._assetsManager, 
+            this._statisticsService,
+            this._timersManager)
             .setDifficulty(this._gameMode, customOptions)
             .setFiledChangedHandler(this.setGameState.bind(this))
             .Build();
@@ -127,7 +158,6 @@ export class Game {
         this._customBoardSizePopup.width = 340;
         this._customBoardSizePopup.height = 200;
         this._customBoardSizePopup.visible = false;
-        this._customBoardSizePopup.enabled = false;
         this._customBoardSizePopup.onSave = (options: ICustomModeOptions) => {
             this._customModeOptions = options;
             this.setComponentsEnabled(true); 
@@ -150,7 +180,6 @@ export class Game {
         this._statisticsPopup.height = 380;
         this._statisticsPopup.roundedCorners = true;
         this._statisticsPopup.visible = false;
-        this._statisticsPopup.enabled = false;
         this._statisticsPopup.onClose = () => { 
             this._statisticsPopup.visible = false;
             this.setComponentsEnabled(true);
@@ -164,7 +193,6 @@ export class Game {
         this._settingsPopup.height = 420;
         this._settingsPopup.roundedCorners = false;
         this._settingsPopup.visible = false;
-        this._settingsPopup.enabled = false;
         this._settingsPopup.onCancel = () => {
             this._settingsPopup.changeGameMode(this._previousGameMode);
             this._settingsPopup.visible = false;
@@ -177,8 +205,8 @@ export class Game {
             if (mode === GameMode.Custom)
                 this.showCustomBoardSizePopup();
             else {
-                this.newGame();
                 this.setComponentsEnabled(true);
+                this.newGame();
             }
         };
     }
@@ -205,12 +233,15 @@ export class Game {
 
     private setComponentsEnabled(value: boolean): void {
         this._menuBar.enabled = value;
-        this._mineField.enabled = value;
+
+        if (!this._isPaused)
+            this._mineField.enabled = value;
     }
 
     private setGameState(state: GameState): void {
         this._gameState = state;
         this._faceIndicator.gameState = this._gameState;
+        this._menuBar.gameState = this._gameState;
     }
 
     private adjustComponentsToBoardSize(): void {
@@ -236,9 +267,11 @@ export class Game {
 
     private newGame(): void {
         this.adjustCanvasSize();
-        this.setGameState(GameState.Started);
+        this.setGameState(GameState.NotStarted);
         this.createMineField(this._customModeOptions);
         this.adjustComponentsToBoardSize();
+        
+        this._isPaused = false;
         this._previousGameMode = this._gameMode;
     }
 
@@ -254,7 +287,7 @@ export class Game {
     private onMouseUp(event: MouseEvent): void {
         this.setCanvasCoordinates(event);
 
-        if (this._gameState === GameState.Started) {
+        if (this._gameState === GameState.NotStarted || this._gameState === GameState.Started) {
             if (event.button === MouseButtons.Left)
                 this._mineField.onLeftButtonClick(this._currenPointerPossision.x, this._currenPointerPossision.y);
             else
@@ -288,7 +321,7 @@ export class Game {
     private onTouchEnd(): void {
         TapHelper.onTouchEnd();
 
-        if (this._gameState === GameState.Started) {
+        if (this._gameState === GameState.NotStarted || this._gameState === GameState.Started) {
             if (TapHelper.result === InputEvent.OnTap)
                 this._mineField.onLeftButtonClick(this._currenPointerPossision.x, this._currenPointerPossision.y);
             else
@@ -308,6 +341,7 @@ export class Game {
         this._assetsManager.addFontAsset(Asset.PixelCodeFont, `${AssetsManager.Path}assets/fonts/pixelCode.woff`);
         this._assetsManager.addImageAsset(Asset.SpritesImg, `${AssetsManager.Path}assets/images/sprites.png`);
         this._assetsManager.addImageAsset(Asset.NewImgSvg, `${AssetsManager.Path}assets/images/new.svg`);
+        this._assetsManager.addImageAsset(Asset.PauseImgSvg, `${AssetsManager.Path}assets/images/pause.svg`);
         this._assetsManager.addImageAsset(Asset.StatisticsImgSvg, `${AssetsManager.Path}assets/images/statistics.svg`);
         this._assetsManager.addImageAsset(Asset.SettingsImgSvg, `${AssetsManager.Path}assets/images/settings.svg`);
         this._assetsManager.addImageAsset(Asset.SmileImgSvg, `${AssetsManager.Path}assets/images/smile.svg`);

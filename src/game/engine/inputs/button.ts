@@ -24,16 +24,16 @@ export class Button extends Component {
         if (Helpers.hasTouchScreen())
             EventBus.getInstance()
             .subscribe(InputEvent.OnTap, (event: IMouseClickEvent) => {
-                    this.isClicked(event.x, event.y);
+                    this.click(event.x, event.y);
             });
         else {
             EventBus.getInstance()
             .subscribe(InputEvent.OnClick, (event: IMouseClickEvent) => {
                 if (event.button === MouseButtons.Left)
-                    this.isClicked(event.x, event.y);
+                    this.click(event.x, event.y);
             });
             EventBus.getInstance()
-                .subscribe(InputEvent.OnMouseMove, (event: IMouseMoveEvent) => this.onMouseMove(event.x, event.y));
+                .subscribe(InputEvent.OnMouseMove, (event: IMouseMoveEvent) => this.mouseMove(event.x, event.y));
         }
     }
 
@@ -64,25 +64,19 @@ export class Button extends Component {
         this._context.restore();
     }
 
-    public isClicked(x: number, y: number): boolean {
-        if (!this._visible || !this._enabled)
-            return;
-
+    protected clickInternal(x: number, y: number): void {
         if (x < this.positionX ||
             x > this.positionX + this._width ||
             y < this.positionY ||
             y > this.positionY + this._height)
-            return false;
+            return;
 
         if (this.onClick)
             this.onClick();
-
-        return true;
     }
 
-    public onMouseMove(x: number, y: number): void {
-        this._isHighlited = this._visible && this._enabled && 
-            !(x < this.positionX ||
+    protected mouseMoveInternal(x: number, y: number): void {
+        this._isHighlited = !(x < this.positionX ||
             x > this.positionX + this._width ||
             y < this.positionY ||
             y > this.positionY + this._height);

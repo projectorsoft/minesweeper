@@ -1,18 +1,37 @@
 import { Component } from "../engine/inputs/component";
 import { ImageButton } from "../engine/inputs/imageButton";
 import { AssetsManager } from "../engine/managers/assetsManager";
-import { Asset, Colors } from "../enums";
+import { Asset, Colors, GameState } from "../enums";
 import { MineField } from "./mineField/mineField";
 
 export class MenuBar extends Component {
     public static readonly Height: number = 80;
 
     private _assetsManager: AssetsManager;
+    private _gameState: GameState = GameState.Started;
+    
+    public onNewGameClick: Function = () => null;
+    public onShowStatisticsClick: Function = () => null;
+    public onShowSettingsClick: Function = () => null;
+    public onPauseClick: Function = (paused: boolean) => null;
 
-    public onNewGameClick: Function;
-    public onShowStatisticsClick: Function;
-    public onShowSettingsClick: Function;
+    public get gameState(): GameState {
+        return this._gameState;
+    }
+    public set gameState(value: GameState) {
+        this._gameState = value;
 
+        if (value === GameState.Won || value === GameState.Lost)
+            this.getComponent('pauseBtn').enabled = false;
+        else
+            if (value === GameState.NotStarted) {
+                this.getComponent('pauseBtn').enabled = false;
+            }
+        else {
+            this.getComponent('pauseBtn').enabled = true;
+            (this.getComponent('pauseBtn') as ImageButton).checked = false;
+        }
+    }
     public get width(): number {
         return this._width;
     }
@@ -20,13 +39,16 @@ export class MenuBar extends Component {
         this._width = value;
 
         if (this.getComponent('newGameBtn') as ImageButton)
-            (this.getComponent('newGameBtn') as ImageButton).positionX = -MineField.MinMarginLeft;
+            (this.getComponent('newGameBtn') as ImageButton).positionX = -MineField.MinMarginLeft + 1;
+
+        if (this.getComponent('pauseBtn') as ImageButton)
+            (this.getComponent('pauseBtn') as ImageButton).positionX = value - 202;
 
         if (this.getComponent('statisticsBtn') as ImageButton)
-            (this.getComponent('statisticsBtn') as ImageButton).positionX = value - 130;
+            (this.getComponent('statisticsBtn') as ImageButton).positionX = value - 129;
 
         if (this.getComponent('settingsBtn') as ImageButton)
-            (this.getComponent('settingsBtn') as ImageButton).positionX = value - 55;
+            (this.getComponent('settingsBtn') as ImageButton).positionX = value - 56;
     }
 
     public constructor(context: CanvasRenderingContext2D,
@@ -35,9 +57,6 @@ export class MenuBar extends Component {
 
         this._assetsManager = assetsManager;
 
-        this.onNewGameClick = () => null;
-        this.onShowStatisticsClick = () => null;
-        this.onShowSettingsClick = () => null;
         this.createMenu();
     }
 
@@ -54,6 +73,11 @@ export class MenuBar extends Component {
         this._components.forEach(input => input.draw());
     }
 
+    protected clickInternal(x: number, y: number): void {
+    }
+    protected mouseMoveInternal(x: number, y: number): void {
+    }
+
     private createMenu(): void {
         const newGameBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.NewImgSvg });
         newGameBtn.parent = this;
@@ -65,6 +89,16 @@ export class MenuBar extends Component {
         newGameBtn.height = MenuBar.Height;
         newGameBtn.roundedCorners = false;
         newGameBtn.onClick = this.newGame.bind(this);
+
+        const pauseBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.PauseImgSvg });
+        pauseBtn.parent = this;
+        pauseBtn.positionX = this.width - 270;
+        pauseBtn.positionY = 0;
+        pauseBtn.text = "Pause";
+        pauseBtn.font = "bold 12px sans-serif";
+        pauseBtn.width = 70;
+        pauseBtn.height = MenuBar.Height;
+        pauseBtn.onClick = this.pause.bind(this);
 
         const statisticsBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.StatisticsImgSvg });
         statisticsBtn.parent = this;
@@ -88,6 +122,7 @@ export class MenuBar extends Component {
         settingsBtn.onClick = this.showSettingsPopup.bind(this);
 
         this.addComponent('newGameBtn', newGameBtn);
+        this.addComponent('pauseBtn', pauseBtn);
         this.addComponent('statisticsBtn', statisticsBtn);
         this.addComponent('settingsBtn', settingsBtn);
     }
@@ -97,6 +132,14 @@ export class MenuBar extends Component {
             return;
 
         this.onNewGameClick();
+    }
+
+    private pause(): void {
+        if (this.onPauseClick) {
+            const pauseBtn = this.getComponent('pauseBtn') as ImageButton;
+            pauseBtn.checked = !pauseBtn.checked;
+            this.onPauseClick(pauseBtn.checked);
+        }
     }
 
     private showStatisticsPopup(): void {

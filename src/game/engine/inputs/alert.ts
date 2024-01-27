@@ -1,4 +1,3 @@
-
 import { AlertType, Colors } from "@/game/enums";
 import { Game } from "@/game/game";
 import { Component } from "./component";
@@ -69,5 +68,10 @@ export class Alert extends Component {
             align: "start",
             color: this._enabled ? Colors.White : Colors.Gray
         });
+    }
+
+    protected clickInternal(x: number, y: number): void {
+    }
+    protected mouseMoveInternal(x: number, y: number): void {
     }
 }

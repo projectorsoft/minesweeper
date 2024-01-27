@@ -59,26 +59,16 @@ export abstract class Component {
         });
     }
     public get enabled(): boolean {
-        return this._enabled;
+        return this.isEnabled();
     }
     public set enabled(value: boolean) {
         this._enabled = value;
-
-        this._components.forEach(input => {
-            input._enabled = value;
-        });
     }
     public get visible(): boolean {
-        return this._visible;
+        return this.isVisible();
     }
     public set visible(value: boolean) {
         this._visible = value;
-        this.enabled = value;
-
-        /* this._components.forEach(input => {
-            input._visible = value;
-            input._enabled = value;
-        }); */
     }
 
     public constructor(context: CanvasRenderingContext2D) {
@@ -86,12 +76,34 @@ export abstract class Component {
     }
 
     protected abstract drawInternal(): void;
+    protected abstract clickInternal(x: number, y: number): void;
+    protected abstract mouseMoveInternal(x: number, y: number): void;
 
     public draw(): void {
-        if (!this._visible)
+        if (!this.isVisible())
             return;
 
         this.drawInternal();
+    }
+
+    public click(x: number, y: number): void {
+        if (!this.isVisible())
+            return;
+    
+        if (!this.isEnabled())
+            return;
+
+        this.clickInternal(x, y);
+    }
+
+    public mouseMove(x: number, y: number): void {
+        if (!this.isVisible())
+            return;
+    
+        if (!this.isEnabled())
+            return;
+
+        this.mouseMoveInternal(x, y);
     }
 
     public addComponent(name: string, component: Component): void {
@@ -103,5 +115,25 @@ export abstract class Component {
 
     public getComponent(name: string): Component | undefined {
         return this._components.get(name);
+    }
+
+    protected isEnabled(): boolean {
+        if (!this._parent)
+            return this._enabled;
+
+        if (!this._parent.isEnabled())
+            return false;
+
+        return this._enabled;
+    }
+
+    protected isVisible(): boolean {
+        if (!this._parent)
+            return this._visible;
+
+        if (!this._parent.isVisible())
+            return false;
+
+        return this._visible;
     }
 }

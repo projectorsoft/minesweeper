@@ -43,6 +43,11 @@ export class SettingsPopup extends Popup {
         this._components.forEach(component => component.draw());
     }
 
+    protected clickInternal(x: number, y: number): void {
+    }
+    protected mouseMoveInternal(x: number, y: number): void {
+    }
+
     protected createInputsInternal(): void {
         const easyModeBtn = new Button(this._context);
         easyModeBtn.parent = this;
@@ -136,7 +141,6 @@ export class SettingsPopup extends Popup {
     private clearStatistics(): void {
         this._statisticsService.clear();
 
-        (this.getComponent('clearStatisticsBtn') as Button).enabled = false;
         const alert = (this.getComponent('alert') as Alert);
         alert.type = AlertType.Success;
         alert.visible = true;

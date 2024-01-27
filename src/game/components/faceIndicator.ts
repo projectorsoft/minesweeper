@@ -19,7 +19,7 @@ export class FaceIndicator extends Component {
     }
 
     protected drawInternal(): void {
-        if (this.gameState === GameState.Started) {
+        if (this.gameState === GameState.NotStarted || this.gameState === GameState.Started) {
             this._context.clearRect(this.positionX, this.positionY, this._displaySize, this._displaySize)
             return;
         }
@@ -29,6 +29,11 @@ export class FaceIndicator extends Component {
         else
         if (this.gameState === GameState.Lost)
             this.drawImage(this._sadImage);
+    }
+
+    protected clickInternal(x: number, y: number): void {
+    }
+    protected mouseMoveInternal(x: number, y: number): void {
     }
 
     private drawImage(image: CanvasImageSource): void {
