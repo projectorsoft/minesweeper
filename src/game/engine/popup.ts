@@ -24,7 +24,7 @@ export abstract class Popup extends Component {
     public set height(value: number) {
         this._height = value;
 
-        this.positionY = Game.getHeight() / 2 - this.height / 2;
+        this.positionY = 20;
     }
 
     public constructor(context: CanvasRenderingContext2D) {

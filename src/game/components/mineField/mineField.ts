@@ -176,7 +176,7 @@ export class MineField {
 
     private checkWinningCondition(): void {
         //all empty fields have been revealed and all flags set on mines
-        if (this._uncoveredFieldsLeft === 0) {
+        if (this._uncoveredFieldsLeft === 0 && this._flagsNumber === 0) {
             this.stopTimer();
             this._statisticsService.updateLastGame(this._statisticsRecord);
             this._statisticsService.updateModeData(this._mode, this._statisticsRecord);

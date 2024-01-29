@@ -96,6 +96,7 @@ export class Game {
         this.createCustomBoardSizePopup();
         this.createStatisticsPopup();
         this.createSettingsPopup();
+        this.adjustCanvasSize();
         this.adjustComponentsToBoardSize();
         
         this.animate();
@@ -260,15 +261,18 @@ export class Game {
                 this.setCanvasSize(newWidth, newHeight);
         }
         else {
-            if (this._previousGameMode === GameMode.Custom)
-                this.setCanvasSize(Game.MinWidth, Game.MinHeight);
+            const newHeight: number = Field.FieldSize * this._mineField.ySize + 175;
+
+            if (this._canvas.width !== Game.MinWidth ||
+                this._canvas.height !== newHeight)
+                this.setCanvasSize(Game.MinWidth, newHeight);
         }
     }
 
     private newGame(): void {
-        this.adjustCanvasSize();
         this.setGameState(GameState.NotStarted);
         this.createMineField(this._customModeOptions);
+        this.adjustCanvasSize();
         this.adjustComponentsToBoardSize();
         
         this._isPaused = false;
