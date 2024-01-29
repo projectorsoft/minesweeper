@@ -316,6 +316,7 @@ export class Game {
     }
 
     private onTouchStart(event: TouchEvent): void {
+        event.preventDefault();
         this._currenPointerPossision.x = Math.floor(event.touches[0].pageX - this._canvas.offsetLeft);
         this._currenPointerPossision.y = Math.floor(event.touches[0].pageY - this._canvas.offsetTop);
 

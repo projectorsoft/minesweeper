@@ -53,6 +53,9 @@ export enum Colors {
     Danger = 'rgb(189, 53, 47)',
     Warning = 'rgb(248, 148, 7)',
     Info = 'rgb(47, 149, 179)',
+    RedHighlight = 'rgb(232, 65, 58)',
+    GreenHighlight = 'rgb(91, 184, 91)',
+    GrayHighlight = 'rgb(113, 125, 140)'
 }
 
 export enum MouseButtons {

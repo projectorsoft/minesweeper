@@ -57,6 +57,7 @@ export class CustomBoardSizePopup extends Popup {
         cancelBtn.width = 145;
         cancelBtn.height = 30;
         cancelBtn.backgroundColor = Colors.Danger;
+        cancelBtn.highlightColor = Colors.RedHighlight;
         cancelBtn.onClick = this.cancel.bind(this);
 
         const saveBtn = new Button(this._context);
@@ -68,6 +69,7 @@ export class CustomBoardSizePopup extends Popup {
         saveBtn.width = 145;
         saveBtn.height = 30;
         saveBtn.backgroundColor = Colors.Success;
+        saveBtn.highlightColor = Colors.GreenHighlight;
         saveBtn.onClick = this.save.bind(this);
 
         this.addComponent('xValueInput', xValueInput);

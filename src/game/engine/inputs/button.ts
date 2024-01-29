@@ -15,9 +15,9 @@ export class Button extends Component {
     public checked: boolean = false;
     public onClick: Function = () => null;
     public font: string = "15px sans-serif";
-    public highlightColor: Colors | string = Colors.LightBlue;
+    public highlightColor: Colors | string = Colors.GrayHighlight;
     public backgroundColor: Colors | string = Colors.DarkGrey;
-    public checkedColor: Colors | string = Colors.LightBlue;
+    public checkedColor: Colors | string = Colors.GrayHighlight;
 
     public constructor(context: CanvasRenderingContext2D) {
         super(context);
