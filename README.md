@@ -1,4 +1,4 @@
-#Minesweeper
+# Minesweeper
 This is online version of classic minesweeper.
 Written mainly in Typescript using Canvas as graphics api.
 Features:

@@ -40,10 +40,12 @@ header nav {
 
 header nav a {
 	text-decoration: none;
-	color: #918ca0;
+	color: #bebebe;
 	font-size: 14px;
 	font-style: normal;
 	font-weight: 400;
+	text-transform: uppercase;
+	font-variant: small-caps;
 }
 
 header nav a:hover {
@@ -63,10 +65,10 @@ main article {
 }
 
 main h2 {
-	color: #bebebe;
+	color: #918ca0;
 	margin-left: 142px;
 	font-size: 32px;
-	font-weight: 500;
+	margin-bottom: 5px;
 }
 
 main img {
@@ -75,9 +77,9 @@ main img {
 
 main p {
 	margin: 4px 0;
-	color: #918ca0;
+	color: #bebebe;
 	display: inline;
-	font-size: 18px;
+	font-size: 16px;
 	font-style: italic;
 	font-weight: 300;
 	width: 800px;
