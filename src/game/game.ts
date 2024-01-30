@@ -343,14 +343,14 @@ export class Game {
     }
 
     private addAssets(): void {
-        this._assetsManager.addFontAsset(Asset.PixelCodeFont, `${AssetsManager.Path}assets/fonts/pixelCode.woff`);
-        this._assetsManager.addImageAsset(Asset.SpritesImg, `${AssetsManager.Path}assets/images/sprites.png`);
-        this._assetsManager.addImageAsset(Asset.NewImgSvg, `${AssetsManager.Path}assets/images/new.svg`);
-        this._assetsManager.addImageAsset(Asset.PauseImgSvg, `${AssetsManager.Path}assets/images/pause.svg`);
-        this._assetsManager.addImageAsset(Asset.StatisticsImgSvg, `${AssetsManager.Path}assets/images/statistics.svg`);
-        this._assetsManager.addImageAsset(Asset.SettingsImgSvg, `${AssetsManager.Path}assets/images/settings.svg`);
-        this._assetsManager.addImageAsset(Asset.SmileImgSvg, `${AssetsManager.Path}assets/images/smile.svg`);
-        this._assetsManager.addImageAsset(Asset.SadImgSvg, `${AssetsManager.Path}assets/images/sad.svg`);
+        this._assetsManager.addFontAsset(Asset.PixelCodeFont, '/fonts/pixelCode.woff');
+        this._assetsManager.addImageAsset(Asset.SpritesImg, '/images/sprites.png');
+        this._assetsManager.addImageAsset(Asset.NewImgSvg, '/images/new.svg');
+        this._assetsManager.addImageAsset(Asset.PauseImgSvg, '/images/pause.svg');
+        this._assetsManager.addImageAsset(Asset.StatisticsImgSvg, '/images/statistics.svg');
+        this._assetsManager.addImageAsset(Asset.SettingsImgSvg, '/images/settings.svg');
+        this._assetsManager.addImageAsset(Asset.SmileImgSvg, '/images/smile.svg');
+        this._assetsManager.addImageAsset(Asset.SadImgSvg, '/images/sad.svg');
     }
 
     public static getWidth(): number {

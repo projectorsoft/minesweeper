@@ -9,7 +9,6 @@ import { EnvironmentHelper } from "../../helpers/environmentHelper";
 
 export class AssetsManager {
     private _assets: IAsset[] = [];
-    public static readonly Path = EnvironmentHelper.isDevelopment ? './src/' : './';
 
     public constructor() {
     }
