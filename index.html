@@ -15,46 +15,7 @@
 		<title>Minesweeper | free to play</title>
 	</head>
 	<body>
-		<header>
-			<img src="/images/flag.svg" width="25" height="25" />
-			<nav>
-				<a href="#app">Play</a> |
-				<a href="#howToPlay">Introduction and rules</a> |
-				<a href="#about">About</a>
-			</nav>
-		</header>
-		<main>
-			<div id="app"></div>
-			<article id="howToPlay">
-				<h2>Introduction and rules:</h2>
-				<img src="/images/rule.svg" width="140" height="140" />
-				<p>
-					First You need to choose game mode. There are four modes: 'easy', 'medium', 'difficult' and 'custom'.
-					You can choose game mode from settings popup. By default 'easy' mode is chosen when You load this page.
-					To reset game You have to click "New game" button or choose mode from settings popup. 
-					First click on the board starts the game. When You click on the field with mine - game is over.
-					In other cases cliked field become revealed. If filed has no mines in neighboring area than field is empty.
-					If field has at least one mine - number of mines in aera is shown. You can put flag on the filed if You think there is a mine. 
-					Flag can be set by right mouse click. Second right click on the field sets it as 'to consider' with question mark.  
-					Game is over when field with mine has been clicked (lost) or when all fields have been revealed and all mines have been flaged correctly.
-					In mobile devices short tap works as left mouse clik, long tap as right click.
-				</p>
-			</article>
-			<article id="about">
-				<h2>About:</h2>
-				<img src="/images/lightbulb.svg" width="140" height="140" />
-				<p>
-					This game is free online variation of classic minesweeper. It has original look and controls.
-					You can choose difficulty level from settings menu. There are three predefined modes and one custom.
-					In custom mode You can set bigger board by setting X and Y board size as well as mines number.
-					There is also statistics popup with info about won / lost games and best times in each mode.
-					If You need a break pause option can be selected.
-				</p>
-			</article>
-		</main>
-		<footer>
-			<p><a href="https://www.minesweeper-free.com">www.minesweeper-free.com</a></p>
-		</footer>
+		<div id="app"></div>
 		<script type="module" src="/src/main.ts"></script>
 	</body>
 </html>
