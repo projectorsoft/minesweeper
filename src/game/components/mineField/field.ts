@@ -4,7 +4,7 @@ import { Point } from "../../engine/point";
 import { Asset, Colors, FieldState, FieldType, Sprite } from "../../enums";
 
 export class Field {
-    public static readonly FieldSize: number = 29;
+    public static readonly FieldSize: number = 30;
     public static readonly MarginTop: number = 160;
 
     private readonly _halfFieldSize: number = Field.FieldSize / 2;

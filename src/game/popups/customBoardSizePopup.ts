@@ -1,9 +1,10 @@
 import { ICustomModeOptions } from "../components/mineField/mineFiledBuilder";
+import { Alert } from "../engine/inputs/alert";
 import { Button } from "../engine/inputs/button";
 import { InputNumber } from "../engine/inputs/inputNumber";
 import { Label } from "../engine/inputs/label";
 import { Popup } from "../engine/popup";
-import { Colors } from "../enums";
+import { AlertType, Colors } from "../enums";
 
 export class CustomBoardSizePopup extends Popup {
     public onCancel!: Function;
@@ -25,27 +26,27 @@ export class CustomBoardSizePopup extends Popup {
         xValueInput.parent = this;
         xValueInput.positionX = 240;
         xValueInput.positionY = Popup.HeaderSize + Popup.Padding;
-        xValueInput.minValue = 45;
+        xValueInput.minValue = 9;
         xValueInput.maxValue = 65;
-        xValueInput.value = 50;
+        xValueInput.value = 31;
         xValueInput.create();
 
         const yValueInput = new InputNumber(this._context);
         yValueInput.parent = this;
         yValueInput.positionX = 240;
         yValueInput.positionY = Popup.HeaderSize + Popup.Padding + 28;
-        yValueInput.minValue = 40;
+        yValueInput.minValue = 9;
         yValueInput.maxValue = 50;
-        yValueInput.value = 40;
+        yValueInput.value = 9;
         yValueInput.create();
 
         const minesValueInput = new InputNumber(this._context);
         minesValueInput.parent = this;
         minesValueInput.positionX = 240;
         minesValueInput.positionY = Popup.HeaderSize + Popup.Padding + 56;
-        minesValueInput.minValue = 40;
-        minesValueInput.maxValue = 1600;
-        minesValueInput.value = 500;
+        minesValueInput.minValue = 27;
+        minesValueInput.maxValue = 1300;
+        minesValueInput.value = 50;
         minesValueInput.create();
 
         const cancelBtn = new Button(this._context);
@@ -72,11 +73,15 @@ export class CustomBoardSizePopup extends Popup {
         saveBtn.highlightColor = Colors.GreenHighlight;
         saveBtn.onClick = this.save.bind(this);
 
+        const alert = new Alert(this._context);
+        alert.text = 'Cannot save changes';
+
         this.addComponent('xValueInput', xValueInput);
         this.addComponent('yValueInput', yValueInput);
         this.addComponent('minesValueInput', minesValueInput);
         this.addComponent('cancelBtn', cancelBtn);
         this.addComponent('saveBtn', saveBtn);
+        this.addComponent('saveAlert', alert);
     }
 
     protected clickInternal(x: number, y: number): void {
@@ -90,12 +95,24 @@ export class CustomBoardSizePopup extends Popup {
     }
 
     private save(): void {
-        if (this.onSave)
+        if (this.onSave) {
+            const xValue: number = (this.getComponent('xValueInput') as InputNumber).value;
+            const yValue: number = (this.getComponent('yValueInput') as InputNumber).value;
+            const minesValue: number = (this.getComponent('minesValueInput') as InputNumber).value;
+
+            if (minesValue <= (xValue * yValue) / 3)
             this.onSave({ 
-                xSize: (this.getComponent('xValueInput') as InputNumber).value, 
-                ySize: (this.getComponent('yValueInput') as InputNumber).value, 
-                mines: (this.getComponent('minesValueInput') as InputNumber).value 
+                xSize: xValue, 
+                ySize: yValue, 
+                mines: minesValue 
             } as ICustomModeOptions);
+            else {
+                const alert = (this.getComponent('saveAlert') as Alert);
+                alert.text = "Mines value must be not grater than 1/3 of board cells"
+                alert.type = AlertType.Danger;
+                alert.visible = true;
+            }
+        }
     }
 
     protected drawPopupInternal(): void {

@@ -4,8 +4,8 @@ import { Component } from "./component";
 import { Label } from "./label";
 
 export class InputNumber extends Component {
-    private _minValue: number = 30;
-    private _maxValue: number = 999;
+    private _minValue: number = 0;
+    private _maxValue: number = 100;
     private _value: number = 30;
     
     public onIncrease!: Function;
@@ -15,18 +15,12 @@ export class InputNumber extends Component {
         return this._minValue;
     }
     public set minValue(value: number) {
-        if (value < 30 || value > 999)
-            throw 'Wrong min value';
-
         this._minValue = value;
     }
     public get maxValue(): number {
         return this._maxValue;
     }
     public set maxValue(value: number) {
-        if (value < 30 || value > 1600)
-            throw 'Wrong max value';
-
         this._maxValue = value;
     }
     public get enabled(): boolean {
@@ -39,6 +33,9 @@ export class InputNumber extends Component {
         return this._value;
     }
     public set value(value: number) {
+        if (value < this._minValue || value > this._maxValue)
+            throw 'Wrong value';
+
         this._value = value;
     }
 

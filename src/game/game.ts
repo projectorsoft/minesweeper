@@ -21,8 +21,8 @@ import { StatisticsService } from "./services/statisticsService";
 
 export class Game {
     public static readonly TimerName: string = 'MainTimer';
-    public static readonly MinWidth: number = 960;
-    public static readonly MinHeight: number = 660;
+    public static readonly MinWidth: number = 390;
+    public static readonly MinHeight: number = 580;
 
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
@@ -93,10 +93,10 @@ export class Game {
         this.createMenuBar();
         this.createStatusBar();
         this.createMineField();
+        this.adjustCanvasSize();
         this.createCustomBoardSizePopup();
         this.createStatisticsPopup();
         this.createSettingsPopup();
-        this.adjustCanvasSize();
         this.adjustComponentsToBoardSize();
         
         this.animate();
@@ -228,6 +228,12 @@ export class Game {
     }
 
     private setCanvasSize(width: number, height: number): void {
+        if (width < Game.MinWidth)
+            width = Game.MinWidth;
+
+        if (height < Game.MinHeight)
+            height = Game.MinHeight;
+
         this._canvas.width = width;
         this._canvas.height = height;
     }
@@ -261,11 +267,12 @@ export class Game {
                 this.setCanvasSize(newWidth, newHeight);
         }
         else {
+            const newWidth: number = Field.FieldSize * this._mineField.xSize + 30;
             const newHeight: number = Field.FieldSize * this._mineField.ySize + 175;
 
-            if (this._canvas.width !== Game.MinWidth ||
+            if (this._canvas.width !== newWidth ||
                 this._canvas.height !== newHeight)
-                this.setCanvasSize(Game.MinWidth, newHeight);
+                this.setCanvasSize(newWidth, newHeight);
         }
     }
 
