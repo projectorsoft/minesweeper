@@ -305,7 +305,7 @@ export class MineField {
         return new Point(x, y);
     }
 
-    public uncover(x: number, y: number): void {
+    private uncover(x: number, y: number): void {
         const stack: Field[] = [];
         let currentField: Field | undefined;
 
