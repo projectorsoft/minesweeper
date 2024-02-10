@@ -21,14 +21,10 @@ export default defineComponent({
 				In statistics popup You can see Your results for each mode separately as well as number of games played
 				(won / lost).
 			</p>
-			<p class="lead">
-				Controls: Use left mouse button or short tap on mobile to uncover the field. Use right mouse button or
-				long tap on mobile to set flag or question mark.
-			</p>
 		</div>
 		<div class="col-md-5 text-center">
 			<img
-				src="/images/joystick.svg"
+				src="/images/strategy.svg"
 				class="bd-placeholder-img bd-placeholder-img-lg img-fluid mx-auto"
 				width="400"
 				height="400"

@@ -22,7 +22,7 @@ import { StatisticsService } from "./services/statisticsService";
 export class Game {
     public static readonly TimerName: string = 'MainTimer';
     public static readonly MinWidth: number = 390;
-    public static readonly MinHeight: number = 580;
+    public static readonly MinHeight: number = 450;
 
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;

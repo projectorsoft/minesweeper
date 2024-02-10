@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Controls from './Components/Controls.vue';
 import Footer from './Components/Footer.vue';
 import Gallery from './Components/Gallery.vue';
 import GameContainer from './Components/GameContainer.vue';
@@ -16,6 +17,7 @@ export enum Views {
 
 export default defineComponent({
   components: {
+    Controls,
     Footer,
     Gallery,
     GameContainer,
@@ -55,6 +57,7 @@ export default defineComponent({
 			<Rules />
 			<HowToPlay />
 			<Guide />
+			<Controls />
 		</div>
 	</main>
   <footer class="container">
