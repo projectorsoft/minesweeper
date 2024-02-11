@@ -7,8 +7,7 @@
 </script>
 
 <template>
-    <p class="float-end"><a href="#">Back to top</a></p>
-    <p>
-      <a href="https://www.minesweeper-free.com">www.minesweeper-free.com</a>
+    <p class="float-end">
+        Contact us at: contact@minesweeper-free.com
     </p>
 </template>

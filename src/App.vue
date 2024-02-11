@@ -1,18 +1,18 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Controls from './Components/Controls.vue';
-import Footer from './Components/Footer.vue';
-import Gallery from './Components/Gallery.vue';
-import GameContainer from './Components/GameContainer.vue';
-import Guide from './Components/Guide.vue';
-import HowToPlay from './Components/HowToPlay.vue';
-import NavigationBar from './Components/NavigationBar.vue';
-import Rules from './Components/Rules.vue';
+import Controls from './components/Controls.vue';
+import Footer from './components/Footer.vue';
+import Gallery from './components/Gallery.vue';
+import GameContainer from './components/GameContainer.vue';
+import Guide from './components/Guide.vue';
+import HowToPlay from './components/HowToPlay.vue';
+import NavigationBar from './components/NavigationBar.vue';
+import Rules from './components/Rules.vue';
 import { Game } from './game/game';
 
 export enum Views {
   Play = 0,
-  Info = 1,
+  Info = 1
 }
 
 export default defineComponent({

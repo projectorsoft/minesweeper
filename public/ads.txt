@@ -1,2 +1,2 @@
 #ADS.txt
-google.com, pub-8970501314872385, DIRECT, f08c47fec0942fa0
+google.com, pub-5402300763728745, DIRECT, f08c47fec0942fa0

@@ -25,8 +25,8 @@
         <div class="col-md-5 text-center">
             <img src="/images/rule.svg"
                 class="bd-placeholder-img bd-placeholder-img-lg img-fluid mx-auto"
-                width="400"
-                height="400"
+                width="380"
+                height="380"
                 role="img"
                 aria-label="Rules" />
         </div>
