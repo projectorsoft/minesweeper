@@ -7,7 +7,9 @@
 </script>
 
 <template>
-    <p class="float-end">
+    <div class="container">
+        <p class="float-end">
         Contact us at: contact@minesweeper-free.com
     </p>
+    </div>
 </template>

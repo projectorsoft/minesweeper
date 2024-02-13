@@ -12,7 +12,7 @@ import { Game } from './game/game';
 
 export enum Views {
   Play = 0,
-  Info = 1
+  Gallery = 1
 }
 
 export default defineComponent({
@@ -29,7 +29,7 @@ export default defineComponent({
 	data() {
 		return {
 			game: {},
-      currentView: Views.Info
+      currentView: Views.Play
 		};
 	},
 	mounted() {
@@ -53,14 +53,14 @@ export default defineComponent({
 	<main data-bs-theme="dark">
 		<Gallery v-show="showIf(1)" />
 		<GameContainer v-show="showIf(0)" />
-		<div v-show="showIf(1)" class="container">
+		<div class="container">
 			<Rules />
 			<HowToPlay />
 			<Guide />
 			<Controls />
 		</div>
 	</main>
-  <footer class="container">
+  <footer>
     <Footer />
   </footer>
 </template>

@@ -7,7 +7,7 @@
 </script>
 
 <template>
-    <div class="container-fluid text-center" style="margin-bottom: 40px;">
+    <div class="container-fluid text-center" style="margin-bottom: 33px;">
         <div class="row justify-content-xxl-center">
             <div class="col-xxl">
                 <canvas id="canvas" width="390" height="440">

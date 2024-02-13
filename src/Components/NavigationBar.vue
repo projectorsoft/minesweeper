@@ -1,13 +1,11 @@
 <script lang="ts">
 import { defineComponent, defineEmits } from 'vue';
 
-//const emit = defineEmits(['viewChanged']);
-
 export default defineComponent({
 	name: 'NavigationBar',
     emits: ['viewChanged'],
     methods: {
-        switchView(view: number) {
+        viewChanged(view: number) {
             this.$emit('viewChanged', view);
         }
     }
@@ -17,19 +15,19 @@ export default defineComponent({
 <template>
 	<nav class="navbar navbar-dark bg-dark shadow-xl">
 		<div class="container-xxl">
-			<a href="#" class="navbar-brand d-flex align-items-center">
+			<p class="navbar-brand d-flex align-items-center">
 				<img src="/images/flag.svg" width="20" height="20" style="margin-right: 10px" />
 				<strong>Minesweeper</strong>
-			</a>
+			</p>
 			<form>
-				<button @click="switchView(0)" class="btn btn-success btn-fixed-width me-2" type="button">Play</button>
+				<button @click="viewChanged(0)" 
+					class="btn btn-success btn-fixed-width me-2" 
+					type="button">Play</button>
 				<button
-					@click="switchView(1)"
+					@click="viewChanged(1)"
 					class="btn btn-sm btn-outline-secondary btn-fixed-width me-2"
 					type="button"
-				>
-					Information
-				</button>
+				>Gallery</button>
 			</form>
 			<button
 				class="navbar-toggler collapsed"
@@ -49,8 +47,10 @@ export default defineComponent({
 			<div class="row">
 				<div class="col-sm-8 col-xl-7 py-4">
 					<h4>About</h4>
-					<p class="text-body-secondary">This game is online version of classic retro Minesweeper.</p>
-					<p class="text-body-secondary">Play for free and have a fun :)</p>
+					<p class="text-body-secondary">This game is online version of classic retro game Minesweeper.</p>
+					<p class="text-body-secondary">It has been created to allow playing minesweeper in browser and mobile devices.</p>
+					<p class="text-body-secondary">No special requirements are expected.</p>
+					<p class="text-body-secondary">Any kind of device with access to the internet and simple input (mouse or touch screen) is enough.</p>
 				</div>
 			</div>
 		</div>
