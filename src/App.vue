@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import About from './components/About.vue';
 import Controls from './components/Controls.vue';
 import Footer from './components/Footer.vue';
 import Gallery from './components/Gallery.vue';
@@ -17,6 +18,7 @@ export enum Views {
 
 export default defineComponent({
   components: {
+    About,
     Controls,
     Footer,
     Gallery,
@@ -59,6 +61,7 @@ export default defineComponent({
 			<Guide />
 			<Controls />
 		</div>
+    <About />
 	</main>
   <footer>
     <Footer />

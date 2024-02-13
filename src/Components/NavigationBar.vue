@@ -3,12 +3,12 @@ import { defineComponent, defineEmits } from 'vue';
 
 export default defineComponent({
 	name: 'NavigationBar',
-    emits: ['viewChanged'],
-    methods: {
-        viewChanged(view: number) {
-            this.$emit('viewChanged', view);
-        }
-    }
+	emits: ['viewChanged'],
+	methods: {
+		viewChanged(view: number) {
+			this.$emit('viewChanged', view);
+		},
+	},
 });
 </script>
 
@@ -20,45 +20,24 @@ export default defineComponent({
 				<strong>Minesweeper</strong>
 			</p>
 			<form>
-				<button @click="viewChanged(0)" 
-					class="btn btn-success btn-fixed-width me-2" 
-					type="button">Play</button>
+				<button @click="viewChanged(0)" class="btn btn-success btn-fixed-width me-2" type="button">Play</button>
 				<button
 					@click="viewChanged(1)"
 					class="btn btn-sm btn-outline-secondary btn-fixed-width me-2"
 					type="button"
-				>Gallery</button>
+				>
+					Gallery
+				</button>
 			</form>
-			<button
-				class="navbar-toggler collapsed"
-				type="button"
-				data-bs-toggle="collapse"
-				data-bs-target="#navbarHeader"
-				aria-controls="navbarHeader"
-				aria-expanded="false"
-				aria-label="Toggle navigation"
-			>
-				<span class="navbar-toggler-icon"></span>
+			<button type="button" class="navbar-toggler" data-bs-toggle="modal" data-bs-target="#aboutModal">
+				<img src="/images/info-circle.svg" width="30" height="30" />
 			</button>
 		</div>
 	</nav>
-	<div class="text-bg-dark collapse" id="navbarHeader">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-8 col-xl-7 py-4">
-					<h4>About</h4>
-					<p class="text-body-secondary">This game is online version of classic retro game Minesweeper.</p>
-					<p class="text-body-secondary">It has been created to allow playing minesweeper in browser and mobile devices.</p>
-					<p class="text-body-secondary">No special requirements are expected.</p>
-					<p class="text-body-secondary">Any kind of device with access to the internet and simple input (mouse or touch screen) is enough.</p>
-				</div>
-			</div>
-		</div>
-	</div>
 </template>
 
 <style scoped>
-    .btn-fixed-width {
-        width: 130px;
-    }
+.btn-fixed-width {
+	width: 130px;
+}
 </style>
