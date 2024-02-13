@@ -1,8 +1,7 @@
 import { Component } from "../engine/inputs/component";
 import { ImageButton } from "../engine/inputs/imageButton";
 import { AssetsManager } from "../engine/managers/assetsManager";
-import { Asset, Colors, GameState } from "../enums";
-import { MineField } from "./mineField/mineField";
+import { Asset, Colors, ComponentAlign, GameState } from "../enums";
 
 export class MenuBar extends Component {
     public static readonly Height: number = 80;
@@ -25,24 +24,6 @@ export class MenuBar extends Component {
         pauseBtn.enabled = value === GameState.Started ? true : false;
         pauseBtn.checked = false;
     }
-    public get width(): number {
-        return this._width;
-    }
-    public set width(value: number) {
-        this._width = value;
-
-        if (this.getComponent('newGameBtn') as ImageButton)
-            (this.getComponent('newGameBtn') as ImageButton).positionX = -MineField.MinMarginLeft + 1;
-
-        if (this.getComponent('pauseBtn') as ImageButton)
-            (this.getComponent('pauseBtn') as ImageButton).positionX = value - 202;
-
-        if (this.getComponent('statisticsBtn') as ImageButton)
-            (this.getComponent('statisticsBtn') as ImageButton).positionX = value - 129;
-
-        if (this.getComponent('settingsBtn') as ImageButton)
-            (this.getComponent('settingsBtn') as ImageButton).positionX = value - 56;
-    }
 
     public constructor(context: CanvasRenderingContext2D,
         assetsManager: AssetsManager) {
@@ -58,7 +39,7 @@ export class MenuBar extends Component {
         this._context.beginPath();
         this._context.globalAlpha = 0.5;
         this._context.fillStyle = Colors.DarkGrey;
-        this._context.rect(this.positionX - MineField.MinMarginLeft, 0, this.width + 2 * MineField.MinMarginLeft, MenuBar.Height);
+        this._context.rect(this.positionX, 0, this.width, MenuBar.Height);
         this._context.fill();
         this._context.closePath();
         this._context.restore();
@@ -74,7 +55,7 @@ export class MenuBar extends Component {
     private createMenu(): void {
         const newGameBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.NewImgSvg });
         newGameBtn.parent = this;
-        newGameBtn.positionX = -MineField.MinMarginLeft;
+        newGameBtn.positionX = 0;
         newGameBtn.positionY = 0;
         newGameBtn.text = "New game";
         newGameBtn.font = "bold 12px sans-serif";
@@ -85,7 +66,8 @@ export class MenuBar extends Component {
 
         const pauseBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.PauseImgSvg });
         pauseBtn.parent = this;
-        pauseBtn.positionX = this.width - 270;
+        pauseBtn.componentlAlign = ComponentAlign.End;
+        pauseBtn.positionX = 150;
         pauseBtn.positionY = 0;
         pauseBtn.text = "Pause";
         pauseBtn.font = "bold 12px sans-serif";
@@ -96,7 +78,8 @@ export class MenuBar extends Component {
 
         const statisticsBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.StatisticsImgSvg });
         statisticsBtn.parent = this;
-        statisticsBtn.positionX = this.width - 190;
+        statisticsBtn.componentlAlign = ComponentAlign.End;
+        statisticsBtn.positionX = 75;
         statisticsBtn.positionY = 0;
         statisticsBtn.text = "Statistics";
         statisticsBtn.font = "bold 12px sans-serif";
@@ -106,7 +89,8 @@ export class MenuBar extends Component {
 
         const settingsBtn = new ImageButton(this._context, this._assetsManager, { asset: Asset.SettingsImgSvg });
         settingsBtn.parent = this;
-        settingsBtn.positionX = this.width - 110;
+        settingsBtn.componentlAlign = ComponentAlign.End;
+        settingsBtn.positionX = 0;
         settingsBtn.positionY = 0;
         settingsBtn.text = "Settings";
         settingsBtn.font = "bold 12px sans-serif";

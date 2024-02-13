@@ -1,18 +1,19 @@
+import { Component } from "@/game/engine/inputs/component";
+import { TimersManager } from "@/game/engine/managers/timersManager";
 import { Label } from "../../engine/inputs/label";
 import { AssetsManager } from "../../engine/managers/assetsManager";
 import { Point } from "../../engine/point";
 import { Colors, FieldState, FieldType, GameMode, GameState } from "../../enums";
-import { Field } from "./field";
 import { Game } from "../../game";
 import { Helpers } from "../../helpers/helpers";
 import { StatisticsRecord } from "../../services/statistics";
 import { StatisticsService } from "../../services/statisticsService";
-import { TimersManager } from "@/game/engine/managers/timersManager";
+import { Field } from "./field";
 
-export class MineField {
-    public static readonly MinMarginLeft: number = 15;
+export class MineField extends Component {
+    public static readonly Padding: number = 14;
+    public static readonly MarginTop: number = 20;
 
-    private _context: CanvasRenderingContext2D;
     private _timersManager: TimersManager;
     private _statisticsService: StatisticsService;
     private _fields: Field[][];
@@ -24,8 +25,6 @@ export class MineField {
     private _mode: GameMode;
     private _uncoveredFieldsLeft: number;
     private _statisticsRecord: StatisticsRecord;
-    private _marginLeft: number;
-    private _enabled: boolean = true;
 
     public onFieldChanged: (state: GameState) => void;
 
@@ -36,19 +35,10 @@ export class MineField {
         return this._ySize;
     }
     public get width(): number {
-        return Field.FieldSize * this.xSize;
+        return Field.FieldSize * this.xSize + 2 * MineField.Padding;
     }
     public get height(): number {
-        return Field.FieldSize * this.ySize;
-    }
-    public get marginLeft(): number {
-        return this._marginLeft;
-    }
-    public get enabled(): boolean {
-        return this._enabled;
-    }
-    public set enabled(value: boolean) {
-        this._enabled = value;
+        return Field.FieldSize * this.ySize + MineField.MarginTop + 5;
     }
 
     public constructor(context: CanvasRenderingContext2D,
@@ -57,16 +47,21 @@ export class MineField {
                         timersManager: TimersManager,
                         xSize: number, 
                         ySize: number) {
-        this._context = context;
+        super(context);
         this._statisticsService = statisticsService;
         this._timersManager = timersManager;
 
         this._xSize = xSize;
         this._ySize = ySize;
-        this._marginLeft = Math.floor((Game.MinWidth - this.width) / 2);
 
-        if (this._marginLeft <= 0)
-            this._marginLeft = MineField.MinMarginLeft;
+        const currentWidth: number = Game.getWidth() > this.width ? Game.MinWidth : Game.getWidth();
+
+        this._positionX = (currentWidth - this.width) / 2;
+        this._positionY = MineField.MarginTop + MineField.Padding + 98;
+
+        if (this._positionX <= 0) {
+            this._positionX = MineField.Padding;
+        }
 
         this._uncoveredFieldsLeft = this._xSize * this._ySize;
         this._fields = [];
@@ -79,31 +74,35 @@ export class MineField {
             this._fields[x] = [];
             for (let y = 0; y < this._ySize; y++) {
                 this._fields[x][y] = new Field(context, assetsManager, new Point(x, y));
-                this._fields[x][y].marginLeft = this._marginLeft;
+                this._fields[x][y].parent = this;
+                this._fields[x][y].positionX = this.positionX + x * Field.FieldSize + MineField.Padding;
+                this._fields[x][y].positionY = this.positionY + y * Field.FieldSize + MineField.MarginTop;
+                this.addComponent(`${x}_${y}`, this._fields[x][y]);
             }
         }
 
         this.onFieldChanged = () => null;
     }
 
-    public draw(): void {
+    protected drawInternal(): void {
         this.drawFrame();
         this.drawClocks();
 
-        for (let i = 0; i < this.xSize; i++) {
-            for (let j = 0; j < this.ySize; j++) {
-                this._fields[i][j]?.draw();
-            }
-        }
+        this._components.forEach(input => input.draw());
+    }
+
+    protected clickInternal(x: number, y: number): void {
+    }
+    protected mouseMoveInternal(x: number, y: number): void {
     }
 
     private drawClocks(): void {
-        this.drawText(this._flagsNumber.toString(), 42, new Point(-15, -40), Colors.Red, true, 'left');
+        this.drawText(this._flagsNumber.toString(), 42, new Point(0, this.positionY - 50), Colors.Red, true, 'left');
 
         if (this._statisticsRecord.time < 1000) //TODO: format time from miliseconds to full seconds
-            this.drawText(Helpers.zeroPad(this._statisticsRecord.time, 3), 42, new Point(this.width + 15, -40), Colors.Red, true, 'right');
+            this.drawText(Helpers.zeroPad(this._statisticsRecord.time, 3), 42, new Point(this.width, this.positionY - 50), Colors.Red, true, 'right');
         else
-            this.drawText('999', 42, new Point(this.width, -40), Colors.Red, true, 'right');
+            this.drawText('999', 42, new Point(this.width, this.positionY - 50), Colors.Red, true, 'right');
     }
 
     private drawFrame(): void {
@@ -112,7 +111,7 @@ export class MineField {
         this._context.globalAlpha = 0.3;
         this._context.strokeStyle = Colors.Gray;
         this._context.fillStyle = Colors.White;
-        this._context.roundRect(this._marginLeft - 14, Field.MarginTop - 14, this.width + 28, this.height + 28, [40]);
+        this._context.roundRect(this.positionX, this.positionY, this.width, this.height, [40]);
         this._context.strokeStyle = Colors.Black;
         this._context.stroke();
         this._context.fill();
@@ -293,8 +292,8 @@ export class MineField {
     }
 
     private getFieldCoordinates(mouseX: number, mouseY: number): Point | null {
-        const x = Math.floor((mouseX - this.marginLeft) / Field.FieldSize);
-        const y = Math.floor((mouseY - Field.MarginTop) / Field.FieldSize);
+        const x = Math.floor((mouseX - this.positionX - MineField.Padding - 1) / Field.FieldSize);
+        const y = Math.floor((mouseY - this.positionY - MineField.Padding + 1) / Field.FieldSize);
 
         if (x < 0 || x >= this.xSize)
             return null;
@@ -361,7 +360,7 @@ export class MineField {
         align: CanvasTextAlign = 'center'
     ): void {
         Label.drawText(this._context, 
-            text, position.x + this._marginLeft, position.y + Field.MarginTop, { 
+            text, position.x + this.positionX, position.y + MineField.MarginTop, { 
             size: size,
             family: 'pixelCode',
             bold: bold,

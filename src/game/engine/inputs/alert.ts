@@ -45,9 +45,9 @@ export class Alert extends Component {
     }
 
     protected drawInternal(): void {
-        const width: number = this._context.measureText(this.text).width + 2* Alert.Padding;
-        const xPos = Game.getWidth() - width - Alert.Padding;
-        const yPos = Alert.Padding;
+        const width: number = this._context.measureText(this.text).width + 2 * Alert.Padding;
+        const xPos = Game.getWidth() / 2- width / 2;
+        const yPos = 0;
 
         this._context.save();
         this._context.beginPath();

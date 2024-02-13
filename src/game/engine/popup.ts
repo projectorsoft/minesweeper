@@ -15,16 +15,12 @@ export abstract class Popup extends Component {
     }
     public set width(value: number) {
         this._width = value;
-
-        this.positionX = Game.getWidth() / 2 - this.width / 2;
     }
     public get height(): number {
         return this._height;
     }
     public set height(value: number) {
         this._height = value;
-
-        this.positionY = 20;
     }
 
     public constructor(context: CanvasRenderingContext2D) {
@@ -41,6 +37,11 @@ export abstract class Popup extends Component {
         this.drawPopup();
         this.drawTitleBar();
         this.drawPopupInternal();
+    }
+
+    public reposition(): void {
+        this.positionX = Game.getWidth() / 2 - this.width / 2;
+        this.positionY = 20;
     }
 
     private createInputs(): void {

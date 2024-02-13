@@ -1,6 +1,5 @@
 import { FaceIndicator } from "./components/faceIndicator";
 import { MenuBar } from "./components/menuBar";
-import { Field } from "./components/mineField/field";
 import { MineField } from "./components/mineField/mineField";
 import { ICustomModeOptions, MineFieldBuilder } from "./components/mineField/mineFiledBuilder";
 import { EventBus } from "./engine/events/eventBus";
@@ -22,7 +21,7 @@ import { StatisticsService } from "./services/statisticsService";
 export class Game {
     public static readonly TimerName: string = 'MainTimer';
     public static readonly MinWidth: number = 390;
-    public static readonly MinHeight: number = 450;
+    public static readonly MinHeight: number = 440;
 
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
@@ -92,12 +91,10 @@ export class Game {
         this.registerEvents();
         this.createMenuBar();
         this.createStatusBar();
-        this.createMineField();
-        this.adjustCanvasSize();
         this.createCustomBoardSizePopup();
         this.createStatisticsPopup();
         this.createSettingsPopup();
-        this.adjustComponentsToBoardSize();
+        this.newGame();
         
         this.animate();
     }
@@ -129,7 +126,6 @@ export class Game {
 
     private createMenuBar(): void {
         this._menuBar = new MenuBar(this._context, this._assetsManager);
-        this._menuBar.width = this._canvas.width;
         this._menuBar.gameState = this._gameState;
         this._menuBar.onNewGameClick = () => { this.newGame() };
         this._menuBar.onPauseClick = (paused: boolean) => { this.isPaused = paused };
@@ -140,7 +136,7 @@ export class Game {
     private createStatusBar(): void {
         this._faceIndicator = new FaceIndicator(this._context, this._assetsManager);
         this._faceIndicator.positionX = Game.MinWidth / 2 - 20;
-        this._faceIndicator.positionY = Field.MarginTop - 66;
+        this._faceIndicator.positionY = MineField.MarginTop - 66;
     }
 
     private createMineField(customOptions?: ICustomModeOptions): void {
@@ -252,26 +248,31 @@ export class Game {
     }
 
     private adjustComponentsToBoardSize(): void {
-        this._menuBar.positionX = this._mineField.marginLeft;
-        this._menuBar.width = this._mineField.width;
-        this._faceIndicator.positionX = Game.getWidth() / 2 - 20;
+        this._mineField.positionX = (this._canvas.width - this._mineField.width) / 2;
+        this._mineField.positionY = 140;
+        this._menuBar.width = this._canvas.width;
+        this._menuBar.positionX = (this._canvas.width - this._menuBar.width) / 2;
+        this._faceIndicator.positionX = this._canvas.width / 2 - 20;
+        this._faceIndicator.positionY = 85;
+        this._statisticsPopup.reposition();
+        this._settingsPopup.reposition();
+        this._customBoardSizePopup.reposition();
     }
 
     private adjustCanvasSize(): void {
         if (this._gameMode === GameMode.Custom) {
-            const newWidth: number = Field.FieldSize * this._customModeOptions.xSize + 30;
-            const newHeight: number = Field.FieldSize * this._customModeOptions.ySize + 175;
+            const newWidth: number = this._mineField.width + 30;
+            const newHeight: number = this._mineField.height + 150;
 
             if (this._canvas.width !== newWidth ||
                 this._canvas.height !== newHeight)
                 this.setCanvasSize(newWidth, newHeight);
         }
         else {
-            const newWidth: number = Field.FieldSize * this._mineField.xSize + 30;
-            const newHeight: number = Field.FieldSize * this._mineField.ySize + 175;
+            const newWidth: number = this._mineField.width + 30;
+            const newHeight: number = this._mineField.height + 150;
 
-            if (this._canvas.width !== newWidth ||
-                this._canvas.height !== newHeight)
+            if (this._gameMode !== this._previousGameMode)
                 this.setCanvasSize(newWidth, newHeight);
         }
     }
@@ -289,10 +290,6 @@ export class Game {
     private changeMode(mode: GameMode): void {
         this._previousGameMode = this._gameMode;
         this._gameMode = mode;
-
-        if (mode === GameMode.Custom) {
-            this.showCustomBoardSizePopup();
-        }
     }
 
     private onMouseUp(event: MouseEvent): void {

@@ -1,3 +1,5 @@
+import { ComponentAlign } from "@/game/enums";
+
 export abstract class Component {
     protected _context!: CanvasRenderingContext2D;
     protected _width: number = 100;
@@ -7,6 +9,7 @@ export abstract class Component {
     protected _positionY: number = 0;
     protected _enabled: boolean = true;
     protected _visible: boolean = true;
+    private _componentlAlign: ComponentAlign = ComponentAlign.Start;
     protected _components: Map<string, Component> = new Map<string, Component>();
 
     public roundedCorners: boolean = false;
@@ -30,33 +33,25 @@ export abstract class Component {
         this._parent = value;
     }
     public get positionX(): number {
-        return this._positionX;
+        const parentPosX: number = this._parent ? this._parent.positionX : 0;
+
+        if (this._componentlAlign === ComponentAlign.Start)
+            return parentPosX + this._positionX;
+        else {
+            const parentWidth: number = this._parent ? this._parent.width : 0;
+            return parentWidth - this._positionX - this._width;
+        }
     }
     public set positionX(value: number) {
-        const parentPosX: number = this._parent ? this._parent.positionX : 0;
-        this._positionX = parentPosX + value;
-        this._components.forEach(input => {
-            input._positionX += this._positionX;
-            
-            input._components.forEach(input => {
-                input._positionX += this._positionX;
-            });
-        });
+        this._positionX = value;
     }
     public get positionY(): number {
-        return this._positionY;
+        const parentPosY: number = this._parent ? this._parent.positionY : 0;
+
+        return parentPosY + this._positionY;
     }
     public set positionY(value: number) {
-        const parentPosY: number = this._parent ? this._parent.positionY : 0;
-        this._positionY = parentPosY + value;
-
-        this._components.forEach(input => {
-            input._positionY += this._positionY;
-
-            input._components.forEach(input => {
-                input._positionY += this._positionY;
-            });
-        });
+        this._positionY = value;
     }
     public get enabled(): boolean {
         return this.isEnabled();
@@ -69,6 +64,12 @@ export abstract class Component {
     }
     public set visible(value: boolean) {
         this._visible = value;
+    }
+    public get componentlAlign(): ComponentAlign {
+        return this._componentlAlign;
+    }
+    public set componentlAlign(value: ComponentAlign) {
+        this._componentlAlign = value;
     }
 
     public constructor(context: CanvasRenderingContext2D) {

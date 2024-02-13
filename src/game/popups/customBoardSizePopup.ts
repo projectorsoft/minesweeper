@@ -24,7 +24,7 @@ export class CustomBoardSizePopup extends Popup {
     protected createInputsInternal(): void {
         const xValueInput = new InputNumber(this._context);
         xValueInput.parent = this;
-        xValueInput.positionX = 240;
+        xValueInput.positionX = 220;
         xValueInput.positionY = Popup.HeaderSize + Popup.Padding;
         xValueInput.minValue = 9;
         xValueInput.maxValue = 65;
@@ -33,7 +33,7 @@ export class CustomBoardSizePopup extends Popup {
 
         const yValueInput = new InputNumber(this._context);
         yValueInput.parent = this;
-        yValueInput.positionX = 240;
+        yValueInput.positionX = 220;
         yValueInput.positionY = Popup.HeaderSize + Popup.Padding + 28;
         yValueInput.minValue = 9;
         yValueInput.maxValue = 50;
@@ -42,7 +42,7 @@ export class CustomBoardSizePopup extends Popup {
 
         const minesValueInput = new InputNumber(this._context);
         minesValueInput.parent = this;
-        minesValueInput.positionX = 240;
+        minesValueInput.positionX = 220;
         minesValueInput.positionY = Popup.HeaderSize + Popup.Padding + 56;
         minesValueInput.minValue = 27;
         minesValueInput.maxValue = 1300;
@@ -108,7 +108,7 @@ export class CustomBoardSizePopup extends Popup {
             } as ICustomModeOptions);
             else {
                 const alert = (this.getComponent('saveAlert') as Alert);
-                alert.text = "Mines value must be not grater than 1/3 of board cells"
+                alert.text = "Mines number must be not grater than 1/3 of board cells"
                 alert.type = AlertType.Danger;
                 alert.visible = true;
             }

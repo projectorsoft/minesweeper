@@ -1,11 +1,11 @@
+import { Component } from "@/game/engine/inputs/component";
 import { Label } from "../../engine/inputs/label";
 import { AssetsManager } from "../../engine/managers/assetsManager";
 import { Point } from "../../engine/point";
 import { Asset, Colors, FieldState, FieldType, Sprite } from "../../enums";
 
-export class Field {
+export class Field extends Component {
     public static readonly FieldSize: number = 30;
-    public static readonly MarginTop: number = 160;
 
     private readonly _halfFieldSize: number = Field.FieldSize / 2;
 
@@ -22,14 +22,10 @@ export class Field {
 
     private readonly _spriteSize: number = 108;
 
-    private _context!: CanvasRenderingContext2D;
     private _image: CanvasImageSource;
     private _imageIndex: number = 0;
     private _hasMine: boolean;
     private _minesNumber: number;
-    private _marginLeft: number = 0;
-    private _positionX: number; //X pos in pixels
-    private _positionY: number; //Y pos in puixels
     
     public fieldType: FieldType;
     public fieldState: FieldState;
@@ -47,16 +43,11 @@ export class Field {
     public set hasMine(value: boolean) {
         this._hasMine = value;
     }
-    public get marginLeft(): number {
-        return this._marginLeft;
-    }
-    public set marginLeft(value: number) {
-        this._marginLeft = value;
-    }
 
     public constructor(context: CanvasRenderingContext2D,
         assetsManager: AssetsManager,
         position: Point) {
+            super(context);
             this._context = context;
             this.position = position;
             this.fieldType = FieldType.Blank;
@@ -64,13 +55,15 @@ export class Field {
             this._minesNumber = 0;
             this._hasMine = false;
             this._image = assetsManager.getImage(Asset.SpritesImg);
-            this._positionX = position.x * Field.FieldSize;
-            this._positionY = position.y * Field.FieldSize;
             this.setImageIndex();
     }
 
-    public draw(): void {
+    protected drawInternal(): void {
         this.drawField();
+    }
+    protected clickInternal(x: number, y: number): void {
+    }
+    protected mouseMoveInternal(x: number, y: number): void {
     }
 
     private drawField(): void {
@@ -82,7 +75,7 @@ export class Field {
             } else
                 if (this.fieldType === FieldType.Tentative) {
                         Label.drawText(this._context, 
-                            '?', this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.MarginTop, { 
+                            '?', this._positionX + this._halfFieldSize, this._positionY + this._halfFieldSize, { 
                             size: 20,
                             family: 'pixelCode',
                             bold: true,
@@ -100,7 +93,7 @@ export class Field {
         else {
             if (this._minesNumber > 0) {
                     Label.drawText(this._context, 
-                        this._minesNumber.toString(), this._positionX + this._halfFieldSize + this._marginLeft, this._positionY + this._halfFieldSize + Field.MarginTop, { 
+                        this._minesNumber.toString(), this._positionX + this._halfFieldSize, this._positionY + this._halfFieldSize, { 
                         size: 20,
                         family: 'pixelCode',
                         bold: true,
@@ -117,8 +110,8 @@ export class Field {
             0, 
             this._spriteSize, 
             this._spriteSize,
-            this._positionX + this._marginLeft, 
-            this._positionY + Field.MarginTop,
+            this._positionX, 
+            this._positionY,
             Field.FieldSize, 
             Field.FieldSize
         );

@@ -1,9 +1,9 @@
+import { TimersManager } from "@/game/engine/managers/timersManager";
 import { AssetsManager } from "../../engine/managers/assetsManager";
 import { Point } from "../../engine/point";
 import { GameMode, GameState } from "../../enums";
-import { MineField } from "./mineField";
 import { StatisticsService } from "../../services/statisticsService";
-import { TimersManager } from "@/game/engine/managers/timersManager";
+import { MineField } from "./mineField";
 
 export interface ICustomModeOptions {
     xSize: number;

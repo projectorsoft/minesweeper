@@ -94,3 +94,8 @@ export enum AlertType {
     Warning = 2,
     Info = 3
 }
+
+export enum ComponentAlign {
+    Start = 0,
+    End = 1
+}

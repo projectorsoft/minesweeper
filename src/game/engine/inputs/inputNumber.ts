@@ -4,6 +4,8 @@ import { Component } from "./component";
 import { Label } from "./label";
 
 export class InputNumber extends Component {
+    private readonly _blankSpace: number = 20;
+
     private _minValue: number = 0;
     private _maxValue: number = 100;
     private _value: number = 30;
@@ -47,7 +49,10 @@ export class InputNumber extends Component {
     }
 
     protected drawInternal(): void {
-        this.drawValueInput();
+        // Button background
+        this._context.fillStyle = Colors.LightGray;
+        this._context.fillRect(this.positionX, this.positionY + 2, 45, 25);
+
         this._components.forEach(input => input.draw());
     }
 
@@ -56,24 +61,10 @@ export class InputNumber extends Component {
     protected mouseMoveInternal(x: number, y: number): void {
     }
 
-    private drawValueInput(): void {
-        // Button background
-        this._context.fillStyle = Colors.LightGray;
-        this._context.fillRect(this._positionX - 20, this._positionY + 2, 45, 25);
-
-        Label.drawText(this._context, 
-            this.value.toString(), this._positionX, this._positionY + 17, { 
-            size: 18,
-            align: 'center',
-            color: Colors.Red,
-            bold: true
-        });
-    }
-
     public create() {
         const decreseBtn = new Button(this._context);
         decreseBtn.parent = this;
-        decreseBtn.positionX = 30;
+        decreseBtn.positionX = this._blankSpace + 30;
         decreseBtn.positionY = 2;
         decreseBtn.text = "<";
         decreseBtn.font = "bold 15px sans-serif";
@@ -83,7 +74,7 @@ export class InputNumber extends Component {
 
         const increaseBtn = new Button(this._context);
         increaseBtn.parent = this;
-        increaseBtn.positionX = 55;
+        increaseBtn.positionX = this._blankSpace + 55;
         increaseBtn.positionY = 2;
         increaseBtn.text = ">";
         increaseBtn.font = "bold 15px sans-serif";
@@ -91,8 +82,19 @@ export class InputNumber extends Component {
         increaseBtn.height = 25;
         increaseBtn.onClick = this.increase.bind(this);
 
+        const valueLabel = new Label(this._context);
+        valueLabel.parent = this;
+        valueLabel.positionX = 22;
+        valueLabel.positionY = 17;
+        valueLabel.fontSize = 18;
+        valueLabel.align = 'center';
+        valueLabel.color = Colors.Red;
+        valueLabel.bold = true;
+        valueLabel.text = this.value.toString();
+
         this.addComponent('decreseBtn', decreseBtn);
         this.addComponent('increaseBtn', increaseBtn);
+        this.addComponent('valueLabel', valueLabel);
     }
 
     private increase(): void {
@@ -100,6 +102,8 @@ export class InputNumber extends Component {
             return;
 
         this._value++;
+        const valueLabel = (this.getComponent('valueLabel') as Label);
+        valueLabel.text = this.value.toString();
 
         if (this.onIncrease)
             this.onIncrease();
@@ -110,6 +114,8 @@ export class InputNumber extends Component {
             return;
 
         this._value--;
+        const valueLabel = (this.getComponent('valueLabel') as Label);
+        valueLabel.text = this.value.toString();
 
         if (this.onDecrease)
             this.onDecrease();
