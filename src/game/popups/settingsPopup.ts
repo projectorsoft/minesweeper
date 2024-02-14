@@ -11,6 +11,7 @@ export class SettingsPopup extends Popup {
 
     public onCancel: Function = () => null;
     public onSave: Function = (mode: GameMode) => null;
+    public onStatisticsCleard: Function = () => null;
 
     public constructor(context: CanvasRenderingContext2D,
         statisticsService: StatisticsService) {
@@ -148,6 +149,9 @@ export class SettingsPopup extends Popup {
         const alert = (this.getComponent('alert') as Alert);
         alert.type = AlertType.Success;
         alert.visible = true;
+
+        if (this.onStatisticsCleard)
+            this.onStatisticsCleard();
     }
 
     public changeGameMode(mode: GameMode): void {

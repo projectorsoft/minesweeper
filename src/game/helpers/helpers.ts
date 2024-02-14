@@ -12,4 +12,14 @@ export class Helpers {
     }
 
     public static zeroPad = (num: number, places: number) => String(num).padStart(places, '0');
+
+    public static roundTimeToSeconds(miliseconds: number): number {
+        return Math.floor(miliseconds / 1000);
+    }
+
+    public static formatMiliseconds(miliseconds: number): string {
+        const seconds = Helpers.roundTimeToSeconds(miliseconds);
+        const remainingMiliseconds = miliseconds - seconds * 1000;
+        return `${seconds}.${remainingMiliseconds}`;
+    }
 }

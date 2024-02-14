@@ -44,6 +44,9 @@ export class Game {
     private _settingsPopup: SettingsPopup;
     private _faceIndicator!: FaceIndicator;
 
+    public onGameStateChanged: Function = () => null;
+    public onStatisticsCleared: Function = () => null;
+
     public get isPaused(): boolean {
         return this._isPaused;
     }
@@ -112,7 +115,7 @@ export class Game {
     }
 
     private animate(): void {
-        setTimeout(() => requestAnimationFrame(() => this.animate()), 1000 / 10);
+        setTimeout(() => requestAnimationFrame(() => this.animate()), 100);
         this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
         this._menuBar.draw();
@@ -206,6 +209,10 @@ export class Game {
                 this.newGame();
             }
         };
+        this._settingsPopup.onStatisticsCleard = () => {
+            if (this.onStatisticsCleared)
+                this.onStatisticsCleared();
+        }
     }
 
     private showStatisticsPopup(): void {
@@ -245,6 +252,9 @@ export class Game {
         this._gameState = state;
         this._faceIndicator.gameState = this._gameState;
         this._menuBar.gameState = this._gameState;
+
+        if (this.onGameStateChanged)
+            this.onGameStateChanged(state);
     }
 
     private adjustComponentsToBoardSize(): void {

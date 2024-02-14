@@ -30,7 +30,7 @@ export default defineComponent({
 				</button>
 			</form>
 			<button type="button" class="navbar-toggler" data-bs-toggle="modal" data-bs-target="#aboutModal">
-				<img src="/images/info-circle.svg" width="30" height="30" />
+				<img src="/images/info-circle.svg" width="25" height="25" />
 			</button>
 		</div>
 	</nav>

@@ -1,3 +1,4 @@
+import { stat } from "fs/promises";
 import { StorageService } from "../engine/managers/storageService";
 import { GameMode, GameState } from "../enums";
 import { Helpers } from "../helpers/helpers";
@@ -5,6 +6,7 @@ import { Statistics, StatisticsRecord } from "./statistics";
 
 export class StatisticsService {
     public static readonly StatisticsLocalStorageKey: string = 'MinesweeperStartistics';
+    public static readonly BestScoresMaxNumber = 10;
 
     private _storageService: StorageService<Statistics>;
     
@@ -31,7 +33,11 @@ export class StatisticsService {
     }
 
     public clear(): void {
-        this._storageService.clear(StatisticsService.StatisticsLocalStorageKey);
+        const localStatistics = this.get();
+        let statistics = new Statistics();
+        statistics.currentName = localStatistics.currentName;
+
+        this._storageService.update(StatisticsService.StatisticsLocalStorageKey, statistics);
     }
 
     public updateLastGame(record: StatisticsRecord): void {
@@ -48,6 +54,8 @@ export class StatisticsService {
 
     public updateModeData(mode: GameMode, record: StatisticsRecord): void {
         let localStatistics = this.get();
+        record.date = Helpers.formatDate(new Date());
+        record.mode = mode;
 
         switch (mode) {
             case GameMode.Easy:
@@ -63,6 +71,33 @@ export class StatisticsService {
                 localStatistics.customModeBestTime = this.setStatisticsRecord(localStatistics.customModeBestTime, record);
             break;
         }
+
+        this._storageService.update(StatisticsService.StatisticsLocalStorageKey, localStatistics);
+    }
+
+    public updateBestScores(mode: GameMode, record: StatisticsRecord): void {
+        let localStatistics = this.get();
+
+        if (!localStatistics.bestGames)
+            localStatistics.bestGames = [];
+
+        record.date = Helpers.formatDate(new Date());
+        record.mode = mode;
+        record.name = localStatistics.currentName ?? 'Unknown';
+
+        localStatistics.bestGames.push(record);
+        localStatistics.bestGames.sort(this.sortBestScores);
+        localStatistics.bestGames = localStatistics.bestGames.slice(0, StatisticsService.BestScoresMaxNumber);
+
+        this._storageService.update(StatisticsService.StatisticsLocalStorageKey, localStatistics);
+    }
+
+    public updateName(name: string): void {
+        if (!name)
+            return;
+
+        let localStatistics = this.get();
+        localStatistics.currentName = name;
 
         this._storageService.update(StatisticsService.StatisticsLocalStorageKey, localStatistics);
     }
@@ -86,9 +121,21 @@ export class StatisticsService {
         if (!localStatistics.time || record.time <= localStatistics.time) {
             localStatistics.time = record.time;
             localStatistics.clicks = record.clicks;
-            localStatistics.date = Helpers.formatDate(new Date());
+            localStatistics.date = record.date;
         }
 
         return localStatistics;
+    }
+
+    private sortBestScores(a: StatisticsRecord, b: StatisticsRecord): number {
+        let result = a.time - b.time;
+
+        if (result === 0)
+            result = a.clicks - b.clicks;
+ 
+        if (result === 0)
+            result = (3 -a.mode) - (3 - b.mode);
+
+        return result;
     }
 }

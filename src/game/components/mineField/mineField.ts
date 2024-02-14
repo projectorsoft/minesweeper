@@ -99,8 +99,10 @@ export class MineField extends Component {
     private drawClocks(): void {
         this.drawText(this._flagsNumber.toString(), 42, new Point(0, this.positionY - 50), Colors.Red, true, 'left');
 
-        if (this._statisticsRecord.time < 1000) //TODO: format time from miliseconds to full seconds
-            this.drawText(Helpers.zeroPad(this._statisticsRecord.time, 3), 42, new Point(this.width, this.positionY - 50), Colors.Red, true, 'right');
+        const seconds = Helpers.roundTimeToSeconds(this._statisticsRecord.time);
+        if (seconds < 1000) {
+            this.drawText(Helpers.zeroPad(seconds, 3), 42, new Point(this.width, this.positionY - 50), Colors.Red, true, 'right');
+        }
         else
             this.drawText('999', 42, new Point(this.width, this.positionY - 50), Colors.Red, true, 'right');
     }
@@ -180,6 +182,7 @@ export class MineField extends Component {
             this._statisticsService.updateLastGame(this._statisticsRecord);
             this._statisticsService.updateModeData(this._mode, this._statisticsRecord);
             this._statisticsService.updateScores(GameState.Won);
+            this._statisticsService.updateBestScores(this._mode, this._statisticsRecord);
 
             if (this.onFieldChanged)
                 this.onFieldChanged(GameState.Won);
@@ -371,8 +374,8 @@ export class MineField extends Component {
 
     private createTimer(): void {
         this._timersManager.addInterval(Game.TimerName, () => {
-            this._statisticsRecord.time++
-        }, 1000);
+            this._statisticsRecord.time += 10;
+        }, 10);
     }
 
     private stopTimer(): void {

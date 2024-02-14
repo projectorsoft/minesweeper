@@ -8,7 +8,10 @@ import GameContainer from './components/GameContainer.vue';
 import Guide from './components/Guide.vue';
 import HowToPlay from './components/HowToPlay.vue';
 import NavigationBar from './components/NavigationBar.vue';
+import PlayerName from './components/PlayerName.vue';
 import Rules from './components/Rules.vue';
+import Scores from './components/Scores.vue';
+import { GameState } from './game/enums';
 import { Game } from './game/game';
 
 export enum Views {
@@ -26,16 +29,25 @@ export default defineComponent({
     Guide,
     HowToPlay,
     NavigationBar,
-    Rules
+    PlayerName,
+    Rules,
+    Scores
   },
 	data() {
 		return {
 			game: {},
-      currentView: Views.Play
+      currentView: Views.Play,
+      gameState: GameState.NotStarted
 		};
 	},
 	mounted() {
     this.game = new Game();
+    this.game.onGameStateChanged = (state: GameState) => {
+      this.gameState = state;
+    };
+    this.game.onStatisticsCleared = () => {
+      this.$refs.scores.clearStatistics();
+    }
 	},
 	methods: {
     switchView(view: Views) {
@@ -53,13 +65,17 @@ export default defineComponent({
 		<NavigationBar @view-changed="switchView" />
 	</header>
 	<main data-bs-theme="dark">
+    <PlayerName />
 		<Gallery v-show="showIf(1)" />
 		<GameContainer v-show="showIf(0)" />
 		<div class="container">
-			<Rules />
-			<HowToPlay />
-			<Guide />
-			<Controls />
+      <div class="accordion accordion-flush">
+        <Scores ref="scores" :game-state="gameState" />
+        <Rules />
+        <HowToPlay />
+        <Guide />
+        <Controls />
+      </div>
 		</div>
     <About />
 	</main>

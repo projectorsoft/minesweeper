@@ -2,6 +2,7 @@ import { Button } from "../engine/inputs/button";
 import { Label } from "../engine/inputs/label";
 import { Popup } from "../engine/popup";
 import { Colors } from "../enums";
+import { Helpers } from "../helpers/helpers";
 import { Statistics, StatisticsRecord } from "../services/statistics";
 import { StatisticsService } from "../services/statisticsService";
 
@@ -38,7 +39,7 @@ export class StatisticsPopup extends Popup {
         });
 
         Label.drawText(this._context, 
-            `Time: ${ this._statistics.lastGame ? this._statistics.lastGame.time : 0 }s`, 
+            `Time: ${ this._statistics.lastGame ? Helpers.roundTimeToSeconds(this._statistics.lastGame.time) : 0 }s`, 
             this.positionX + Popup.Padding, 
             this.positionY + Popup.HeaderSize + Popup.Padding + 25, { 
             size: 13,
@@ -162,7 +163,7 @@ export class StatisticsPopup extends Popup {
 
     private formatRecord(record: StatisticsRecord): string {
         if (!this.isEmptyRecord(record))
-            return `${record.time}s (${record.clicks}) clicks at ${record.date}`;
+            return `${Helpers.roundTimeToSeconds(record.time)}s (${record.clicks}) clicks at ${record.date}`;
 
         return 'none';
     }
