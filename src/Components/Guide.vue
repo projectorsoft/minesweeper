@@ -26,8 +26,8 @@ export default defineComponent({
 					<div class="col-md-7">
 						<p class="lead">Game has three standard modes: easy, medium and difficult.</p>
 						<p class="lead">
-							Each mode has constant board size and mines hidden. In esay mode board has 9x9 fields and
-							only 10 mines. To compare difficult mode has 31x16 fields and 99 mines.
+							Each mode has constant board size and mines hidden. In esay mode board has 8x8 fields and
+							only 10 mines. To compare difficult mode has 30x16 fields and 99 mines.
 						</p>
 						<p class="lead">
 							There is also custom mode in which You can define board size and number of mines.

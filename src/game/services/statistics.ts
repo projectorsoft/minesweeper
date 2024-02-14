@@ -18,4 +18,5 @@ export class Statistics {
     public difficultModeBestTime: StatisticsRecord = null;
     public customModeBestTime: StatisticsRecord = null;
     public bestGames: StatisticsRecord[] = [];
+    public bestScoresNumber: number = 10;
 }

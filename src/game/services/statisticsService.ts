@@ -1,4 +1,3 @@
-import { stat } from "fs/promises";
 import { StorageService } from "../engine/managers/storageService";
 import { GameMode, GameState } from "../enums";
 import { Helpers } from "../helpers/helpers";
@@ -6,12 +5,32 @@ import { Statistics, StatisticsRecord } from "./statistics";
 
 export class StatisticsService {
     public static readonly StatisticsLocalStorageKey: string = 'MinesweeperStartistics';
-    public static readonly BestScoresMaxNumber = 10;
-
+    public static readonly MinBestScoresNumber: number = 5;
+    public static readonly MaxBestScoresNumber: number = 20;
+    
     private _storageService: StorageService<Statistics>;
+
+    public get bestScoresNumber() {
+        return this.get().bestScoresNumber ?? StatisticsService.MaxBestScoresNumber;
+    }
+    public set bestScoresNumber(value: number) {
+        if (value < StatisticsService.MinBestScoresNumber || value > StatisticsService.MaxBestScoresNumber)
+            return;
+
+        this.updateBestScoresNumber(value);
+    }
     
     public constructor(storageService: StorageService<Statistics>) {
         this._storageService = storageService;
+    }
+
+    private updateBestScoresNumber(value: number): void {
+        const localStatistics = this.get();
+
+        localStatistics.bestScoresNumber = value;
+        localStatistics.bestGames = localStatistics.bestGames.slice(0, value);
+
+        this._storageService.update(StatisticsService.StatisticsLocalStorageKey, localStatistics);
     }
 
     public get(): Statistics {
@@ -34,6 +53,7 @@ export class StatisticsService {
 
     public clear(): void {
         const localStatistics = this.get();
+
         let statistics = new Statistics();
         statistics.currentName = localStatistics.currentName;
 
@@ -87,7 +107,7 @@ export class StatisticsService {
 
         localStatistics.bestGames.push(record);
         localStatistics.bestGames.sort(this.sortBestScores);
-        localStatistics.bestGames = localStatistics.bestGames.slice(0, StatisticsService.BestScoresMaxNumber);
+        localStatistics.bestGames = localStatistics.bestGames.slice(0, this.bestScoresNumber);
 
         this._storageService.update(StatisticsService.StatisticsLocalStorageKey, localStatistics);
     }

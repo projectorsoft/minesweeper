@@ -83,6 +83,9 @@ export default defineComponent({
 				aria-controls="collapseScores"
 			>
 				<strong>Best scores</strong>
+				<button @click="getBestScores()" class="btn btn-sm btn-outline-secondary mx-2" type="button">
+					<img src="/images/new.svg" width="20" height="20" />
+				</button>
 			</button>
 		</h2>
 		<div id="collapseScores" class="accordion-collapse collapse show">
@@ -90,25 +93,25 @@ export default defineComponent({
 				<div class="row d-flex flex-wrap align-items-center">
 					<div class="col">
 						<label v-if="showBestScores()" class="form-label fs-3 fw-bold">No scores yet</label>
-						<table v-else class="table table-striped">
+						<table v-else class="table table-striped table-bordered table-hover">
 							<thead>
 							  <tr>
 								<th scope="col">#</th>
 								<th scope="col">Name</th>
-								<th scope="col">Time</th>
-								<th scope="col">Clicks</th>
-								<th scope="col">Mode</th>
-								<th scope="col">Date</th>
+								<th class="text-center" scope="col">Time</th>
+								<th class="text-center" scope="col">Clicks</th>
+								<th class="text-center" scope="col">Mode</th>
+								<th class="text-center" scope="col">Date</th>
 							  </tr>
 							</thead>
 							<tbody>
 							  <tr v-for="(item, index) in getRawBestScores()" :key="index">
 								<th scope="row">{{ index + 1 }}</th>
-								<td>{{ item?.name ?? 'Unknown' }}</td>
-								<td>{{ formatTime(item?.time) }}</td>
-								<td>{{ item?.clicks ?? '-1' }}</td>
-								<td>{{ formatMode(item?.mode) }}</td>
-								<td>{{ item?.date ?? 'Unknown' }}</td>
+								<td class="text-break">{{ item?.name ?? 'Unknown' }}</td>
+								<td class="text-center">{{ formatTime(item?.time) }}</td>
+								<td class="text-center">{{ item?.clicks ?? '-1' }}</td>
+								<td class="text-center">{{ formatMode(item?.mode) }}</td>
+								<td class="text-center">{{ item?.date ?? 'Unknown' }}</td>
 							  </tr>
 							</tbody>
 						  </table>

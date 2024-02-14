@@ -4,31 +4,36 @@ import { StatisticsService } from '@/game/services/statisticsService';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-	name: 'PlayerName',
+	name: 'Settings',
 	data() {
 		return {
 			name: '',
 			currentName: '',
 			editMode: false,
-			statisticsService: null,
+			bestScoresNumber: null,
+			minBestScoresNumber: StatisticsService.MinBestScoresNumber,
+			maxBestScoresNumber: StatisticsService.MaxBestScoresNumber,
+			statisticsService: new StatisticsService(new StorageService())
 		};
 	},
+	watch: {
+		bestScoresNumber: {
+			handler(newValue) {
+				this.statisticsService.bestScoresNumber = newValue;
+			},
+			deep: true,
+			immediate: true
+		}
+	},
 	mounted() {
-		this.statisticsService = new StatisticsService(new StorageService());
-
 		this.currentName = this.statisticsService.get().currentName ?? 'Unknown';
+		this.bestScoresNumber = this.statisticsService.bestScoresNumber;
 	},
 	methods: {
 		setName() {
 			this.statisticsService.updateName(this.name);
 			this.currentName = this.name;
 			this.nameChangedMsgVisible = true;
-
-			/* setTimeout(() => {
-				this.nameChangedMsgVisible = false;
-				this.editMode = false;
-			}, 3000); */
-
 			this.editMode = false;
 		},
 		cancelSetName() {
@@ -43,13 +48,14 @@ export default defineComponent({
 </script>
 
 <template>
-	<div class="container mb-4">
+	<div class="container mb-4 collapse" id="settingsContainer">
 		<div class="row d-flex flex-wrap align-items-center">
 			<div class="col">
 				<div class="card">
-					<div v-if="!editMode" class="card-body">
-						<div class="input-group mb-3">
-							<span class="input-group-text" id="addon-wrapping">Name:</span>
+					<div class="card-body">
+						<label class="fw-bold mb-2">Player name:</label>
+						<div v-if="!editMode" class="input-group">
+							<span class="input-group-text">Name:</span>
 							<input
 								v-model="currentName"
 								type="text"
@@ -67,24 +73,36 @@ export default defineComponent({
 								Change
 							</button>
 						</div>
-					</div>
-					<div v-else class="card-body">
-						<label class="form-label fw-bold">Enter Your name:</label>
-						<div class="input-group flex-nowrap">
-							<span class="input-group-text" id="addon-wrapping">Name:</span>
+						<div v-else class="input-group flex-nowrap">
+							<span class="input-group-text">Name:</span>
 							<input
 								v-model="name"
 								type="text"
+								maxlength="30"
 								class="form-control"
 								placeholder="Player name"
 								aria-label="PlayerName"
 								aria-describedby="addon-wrapping"
 							/>
 							<button class="btn btn-outline-secondary" type="button" @click="setName">Set</button>
-							<button class="btn btn-outline-secondary" type="button" @click="cancelSetName">Cancel</button>
-							<!-- <span v-if="nameChangedMsgVisible" class="input-group-text text-success-emphasis"
-								>Name has been changed!</span
-							> -->
+							<button class="btn btn-outline-secondary" type="button" @click="cancelSetName">
+								Cancel
+							</button>
+						</div>
+						<div>
+							<label for="maxBestScoresNumber" class="fw-bold mt-4"
+								>Best scores number to display: {{ bestScoresNumber }}</label
+							>
+							<p class="fst-italic text-warning">This change will remove records above selected value!</p>
+							<input
+								v-model="bestScoresNumber"
+								type="range"
+								class="form-range"
+								:min="minBestScoresNumber"
+								:max="maxBestScoresNumber"
+								step="1"
+								id="maxBestScoresNumber"
+							/>
 						</div>
 					</div>
 				</div>

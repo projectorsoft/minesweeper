@@ -8,7 +8,7 @@ import GameContainer from './components/GameContainer.vue';
 import Guide from './components/Guide.vue';
 import HowToPlay from './components/HowToPlay.vue';
 import NavigationBar from './components/NavigationBar.vue';
-import PlayerName from './components/PlayerName.vue';
+import Settings from './components/Settings.vue';
 import Rules from './components/Rules.vue';
 import Scores from './components/Scores.vue';
 import { GameState } from './game/enums';
@@ -29,7 +29,7 @@ export default defineComponent({
     Guide,
     HowToPlay,
     NavigationBar,
-    PlayerName,
+    Settings,
     Rules,
     Scores
   },
@@ -65,7 +65,7 @@ export default defineComponent({
 		<NavigationBar @view-changed="switchView" />
 	</header>
 	<main data-bs-theme="dark">
-    <PlayerName />
+    <Settings />
 		<Gallery v-show="showIf(1)" />
 		<GameContainer v-show="showIf(0)" />
 		<div class="container">

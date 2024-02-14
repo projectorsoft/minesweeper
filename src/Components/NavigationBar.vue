@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, defineEmits } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
 	name: 'NavigationBar',
@@ -20,14 +20,20 @@ export default defineComponent({
 				<strong>Minesweeper</strong>
 			</p>
 			<form>
-				<button @click="viewChanged(0)" class="btn btn-success btn-fixed-width me-2" type="button">Play</button>
-				<button
-					@click="viewChanged(1)"
-					class="btn btn-sm btn-outline-secondary btn-fixed-width me-2"
-					type="button"
-				>
-					Gallery
+				<button @click="viewChanged(0)" class="btn btn-success me-2" type="button">
+					<img src="/images/play.svg" width="25" height="25" />
 				</button>
+				<button @click="viewChanged(1)" class="btn btn-sm btn-outline-secondary me-2" type="button">
+					<img src="/images/gallery.svg" width="25" height="25" />
+				</button>
+				<a
+					class="btn btn-sm btn-outline-secondary me-2"
+					type="button"
+					data-bs-toggle="collapse"
+					href="#settingsContainer"
+				>
+					<img src="/images/settings.svg" width="25" height="25" />
+				</a>
 			</form>
 			<button type="button" class="navbar-toggler" data-bs-toggle="modal" data-bs-target="#aboutModal">
 				<img src="/images/info-circle.svg" width="25" height="25" />
@@ -35,9 +41,3 @@ export default defineComponent({
 		</div>
 	</nav>
 </template>
-
-<style scoped>
-.btn-fixed-width {
-	width: 130px;
-}
-</style>
