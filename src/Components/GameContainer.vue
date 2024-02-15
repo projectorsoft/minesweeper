@@ -19,7 +19,7 @@ export default defineComponent({
 		<div class="container-fluid text-center mb-4">
 			<div class="row justify-content-xxl-center">
 				<div class="col-xxl">
-					<canvas id="canvas" width="370" height="440">
+					<canvas id="canvas" width="370" height="470">
 						Your browser does not support canvas element.
 					</canvas>
 				</div>

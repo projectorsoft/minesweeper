@@ -17,7 +17,7 @@ export class MineFieldBuilder {
     private _assetsManager: AssetsManager;
     private _timersManager: TimersManager;
     private _mineField!: MineField;
-    private _minesNumber: number[] = [10, 40, 99];
+    private readonly _minesNumberForMode: number[] = [10, 40, 99];
     
     public constructor(context: CanvasRenderingContext2D,
         assetsManager: AssetsManager,
@@ -29,17 +29,19 @@ export class MineFieldBuilder {
         this._timersManager = timersManager;
     }
 
-    public setDifficulty(mode: GameMode, customOptions?: ICustomModeOptions): MineFieldBuilder {
+    public setDifficulty(mode: GameMode, customOptions?: ICustomModeOptions, luckyGuess: boolean = false): MineFieldBuilder {
         let size = mode === GameMode.Custom ? new Point(customOptions.xSize, customOptions.ySize) : MineFieldBuilder.getBoardSize(mode);
-        let minesNumber = mode === GameMode.Custom ? customOptions.mines : this._minesNumber[mode];
+        let minesNumber = mode === GameMode.Custom ? customOptions.mines : this._minesNumberForMode[mode];
 
         this._mineField = new MineField(this._context, 
             this._assetsManager, 
             this._settingsService, 
             this._timersManager,
             size.x, 
-            size.y);
-        this._mineField.createMineField(mode, minesNumber);
+            size.y,
+            minesNumber,
+            mode,
+            luckyGuess);
 
         return this;
     }

@@ -14,14 +14,17 @@ export class MineField extends Component {
     public static readonly Padding: number = 14;
     public static readonly MarginTop: number = 20;
 
+    private _assetsManager: AssetsManager;
     private _timersManager: TimersManager;
     private _settingsService: SettingsService;
     private _fields: Field[][];
     private _xSize: number;
     private _ySize: number;
+    private _luckyGuess: boolean = false;
     private _mines: Map<string, Point> = new Map<string, Point>();
     private _flaggedFields: Map<string, Point> = new Map<string, Point>();
     private _flagsNumber: number = 0;
+    private _minesNumber: number;
     private _mode: GameMode;
     private _uncoveredFieldsLeft: number;
     private _statisticsRecord: StatisticsRecord;
@@ -46,14 +49,82 @@ export class MineField extends Component {
                         settingsService: SettingsService,
                         timersManager: TimersManager,
                         xSize: number, 
-                        ySize: number) {
+                        ySize: number,
+                        minesNumber: number,
+                        mode: GameMode,
+                        luckyGuess: boolean) {
         super(context);
+
+        this._assetsManager = assetsManager;
         this._settingsService = settingsService;
         this._timersManager = timersManager;
 
         this._xSize = xSize;
         this._ySize = ySize;
+        this._minesNumber = minesNumber;
+        this._mode = mode;
+        this._luckyGuess = luckyGuess;
+        this._flagsNumber = minesNumber;
+        this._uncoveredFieldsLeft = this._xSize * this._ySize;
+        this._statisticsRecord = new StatisticsRecord();
+        this._statisticsRecord.time = 0;
 
+        //delete timer if already exists
+        this._timersManager.delete(Game.TimerName);
+
+        this.adjustPosition();
+        this.createMineFiled();
+        this.onFieldChanged = () => null;
+    }
+
+    private createMineFiled(): void {
+        this._fields = [];
+
+        for (let x = 0; x < this._xSize; x++) {
+            this._fields[x] = [];
+            for (let y = 0; y < this._ySize; y++) {
+                this._fields[x][y] = new Field(this._context, this._assetsManager, new Point(x, y));
+                this._fields[x][y].parent = this;
+                this._fields[x][y].positionX = this.positionX + x * Field.FieldSize + MineField.Padding;
+                this._fields[x][y].positionY = this.positionY + y * Field.FieldSize + MineField.MarginTop;
+                this.addComponent(`${x}_${y}`, this._fields[x][y]);
+            }
+        }
+    }
+
+    private generateMines(mouseCoordinates: Point): void {
+        //generate mines
+        let x: number, y: number;
+
+        for (let i = 0; i < this._minesNumber; i++) {
+            x = Helpers.getRndInteger(0, this._xSize - 1);
+            y = Helpers.getRndInteger(0, this._ySize - 1);
+
+            let point = new Point(x, y);
+
+            let avoidMouseCoordinates = this._luckyGuess 
+                && mouseCoordinates.x === point.x 
+                && mouseCoordinates.y === point.y
+
+            while (this._mines.has(`${point.x},${point.y}`) 
+                || avoidMouseCoordinates) {
+                x = Helpers.getRndInteger(0, this._xSize - 1);
+                y = Helpers.getRndInteger(0, this._ySize - 1);
+
+                point = new Point(x, y);
+
+                avoidMouseCoordinates = this._luckyGuess 
+                    && mouseCoordinates.x === point.x 
+                    && mouseCoordinates.y === point.y
+            }
+
+            this._fields[x][y].hasMine = true;
+            this.incrementFieldMinesNumber(x, y)
+            this._mines.set(`${point.x},${point.y}`, point);
+        }
+    }
+
+    private adjustPosition(): void {
         const currentWidth: number = Game.getWidth() > this.width ? Game.MinWidth : Game.getWidth();
 
         this._positionX = (currentWidth - this.width) / 2;
@@ -62,26 +133,6 @@ export class MineField extends Component {
         if (this._positionX <= 0) {
             this._positionX = MineField.Padding;
         }
-
-        this._uncoveredFieldsLeft = this._xSize * this._ySize;
-        this._fields = [];
-
-        //delete if already exists
-        this._timersManager.delete(Game.TimerName);
-
-        //create mine field array
-        for (let x = 0; x < this._xSize; x++) {
-            this._fields[x] = [];
-            for (let y = 0; y < this._ySize; y++) {
-                this._fields[x][y] = new Field(context, assetsManager, new Point(x, y));
-                this._fields[x][y].parent = this;
-                this._fields[x][y].positionX = this.positionX + x * Field.FieldSize + MineField.Padding;
-                this._fields[x][y].positionY = this.positionY + y * Field.FieldSize + MineField.MarginTop;
-                this.addComponent(`${x}_${y}`, this._fields[x][y]);
-            }
-        }
-
-        this.onFieldChanged = () => null;
     }
 
     protected drawInternal(): void {
@@ -111,7 +162,6 @@ export class MineField extends Component {
         this._context.save();
         this._context.beginPath();
         this._context.globalAlpha = 0.3;
-        this._context.strokeStyle = Colors.Gray;
         this._context.fillStyle = Colors.White;
         this._context.roundRect(this.positionX, this.positionY, this.width, this.height, [40]);
         this._context.strokeStyle = Colors.Black;
@@ -119,34 +169,6 @@ export class MineField extends Component {
         this._context.fill();
         this._context.closePath();
         this._context.restore();
-    }
-
-    public createMineField(mode: GameMode, minesNumber: number): void {
-        this._mode = mode;
-        this._flagsNumber = minesNumber;
-        this._statisticsRecord = new StatisticsRecord();
-        this._statisticsRecord.time = 0;
-
-        //generate mines
-        let x: number, y: number;
-
-        for (let i = 0; i < minesNumber; i++) {
-            x = Helpers.getRndInteger(0, this._xSize - 1);
-            y = Helpers.getRndInteger(0, this._ySize - 1);
-
-            let point = new Point(x, y);
-
-            while (this._mines.has(`${point.x},${point.y}`)) {
-                x = Helpers.getRndInteger(0, this._xSize - 1);
-                y = Helpers.getRndInteger(0, this._ySize - 1);
-
-                point = new Point(x, y);
-            }
-
-            this._fields[x][y].hasMine = true;
-            this.incrementFieldMinesNumber(x, y)
-            this._mines.set(`${point.x},${point.y}`, point);
-        }
     }
 
     private incrementFieldMinesNumber(x: number, y: number): void {
@@ -230,6 +252,7 @@ export class MineField extends Component {
 
         //first click, start timer
         if (!this._timersManager.exists(Game.TimerName)) {
+            this.generateMines(coordinates);
             this.onFieldChanged(GameState.Started);
             this.createTimer();
         }

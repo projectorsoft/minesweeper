@@ -21,7 +21,7 @@ import { SettingsService } from "./services/settingsService";
 export class Game {
     public static readonly TimerName: string = 'MainTimer';
     public static readonly MinWidth: number = 370;
-    public static readonly MinHeight: number = 440;
+    public static readonly MinHeight: number = 470;
 
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
@@ -34,6 +34,7 @@ export class Game {
     private _gameMode: GameMode = GameMode.Easy;
     private _previousGameMode: GameMode = GameMode.Easy;
     private _isPaused: boolean = false;
+    private _luckyGuess: boolean = false;
     private _customModeOptions: ICustomModeOptions | null;
     private _currenPointerPossision: Point = new Point(0, 0);
 
@@ -142,12 +143,12 @@ export class Game {
         this._faceIndicator.positionY = MineField.MarginTop - 66;
     }
 
-    private createMineField(customOptions?: ICustomModeOptions): void {
+    private createMineField(customOptions?: ICustomModeOptions, luckyGuess: boolean = false): void {
         this._mineField = new MineFieldBuilder(this._context, 
             this._assetsManager, 
             this._settingsService,
             this._timersManager)
-            .setDifficulty(this._gameMode, customOptions)
+            .setDifficulty(this._gameMode, customOptions, luckyGuess)
             .setFiledChangedHandler(this.setGameState.bind(this))
             .Build();
     }
@@ -190,16 +191,18 @@ export class Game {
         this._settingsPopup = new SettingsPopup(this._context, this._settingsService);
         this._settingsPopup.title = "Settings";
         this._settingsPopup.width = 380;
-        this._settingsPopup.height = 420;
+        this._settingsPopup.height = 430;
         this._settingsPopup.roundedCorners = false;
         this._settingsPopup.visible = false;
         this._settingsPopup.onCancel = () => {
             this._settingsPopup.changeGameMode(this._previousGameMode);
+            this._settingsPopup.changeLuckyGuess(this._luckyGuess);
             this._settingsPopup.visible = false;
             this.setComponentsEnabled(true);
         };
-        this._settingsPopup.onSave = (mode: GameMode) => { 
+        this._settingsPopup.onSave = (mode: GameMode, luckyGuess: boolean) => { 
             this._settingsPopup.visible = false; 
+            this._luckyGuess = luckyGuess;
             this.changeMode(mode);
 
             if (mode === GameMode.Custom)
@@ -289,7 +292,7 @@ export class Game {
 
     private newGame(): void {
         this.setGameState(GameState.NotStarted);
-        this.createMineField(this._customModeOptions);
+        this.createMineField(this._customModeOptions, this._luckyGuess);
         this.adjustCanvasSize();
         this.adjustComponentsToBoardSize();
         

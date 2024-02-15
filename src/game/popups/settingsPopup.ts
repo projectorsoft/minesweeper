@@ -1,5 +1,6 @@
 import { Alert } from "../engine/inputs/alert";
 import { Button } from "../engine/inputs/button";
+import { CheckBox } from "../engine/inputs/checkBox";
 import { Label } from "../engine/inputs/label";
 import { Popup } from "../engine/popup";
 import { AlertType, Colors, GameMode } from "../enums";
@@ -8,9 +9,10 @@ import { SettingsService } from "../services/settingsService";
 export class SettingsPopup extends Popup {
     private _settingsService: SettingsService;
     private _mode: GameMode = GameMode.Easy;
+    private _luckyGuess: boolean = false;
 
     public onCancel: Function = () => null;
-    public onSave: Function = (mode: GameMode) => null;
+    public onSave: Function = (mode: GameMode, luckyGuess: boolean) => null;
     public onStatisticsCleard: Function = () => null;
 
     public constructor(context: CanvasRenderingContext2D,
@@ -90,16 +92,26 @@ export class SettingsPopup extends Popup {
         const clearStatisticsBtn = new Button(this._context);
         clearStatisticsBtn.parent = this;
         clearStatisticsBtn.positionX = Popup.Padding;
-        clearStatisticsBtn.positionY = Popup.HeaderSize + Popup.Padding + 245;
+        clearStatisticsBtn.positionY = Popup.HeaderSize + Popup.Padding + 240;
         clearStatisticsBtn.text = "Clear statistics";
         clearStatisticsBtn.font = "bold 15px sans-serif";
         clearStatisticsBtn.width = 340;
         clearStatisticsBtn.onClick = this.clearStatistics.bind(this);
 
+        const luckyGuessCheck = new CheckBox(this._context);
+        luckyGuessCheck.parent = this;
+        luckyGuessCheck.positionX = Popup.Padding;
+        luckyGuessCheck.positionY = Popup.HeaderSize + Popup.Padding + 290;
+        luckyGuessCheck.text = "First click safe";
+        luckyGuessCheck.font = "bold 15px sans-serif";
+        luckyGuessCheck.width = 20;
+        luckyGuessCheck.height = 20;
+        luckyGuessCheck.onClick = this.setLuckyGuess.bind(this);
+
         const cancelBtn = new Button(this._context);
         cancelBtn.parent = this;
         cancelBtn.positionX = Popup.Padding;
-        cancelBtn.positionY = Popup.HeaderSize + Popup.Padding + 310;
+        cancelBtn.positionY = Popup.HeaderSize + Popup.Padding + 325;
         cancelBtn.text = "Cancel";
         cancelBtn.font = "bold 15px sans-serif";
         cancelBtn.width = 165;
@@ -111,7 +123,7 @@ export class SettingsPopup extends Popup {
         const saveBtn = new Button(this._context);
         saveBtn.parent = this;
         saveBtn.positionX = 195;
-        saveBtn.positionY = Popup.HeaderSize + Popup.Padding + 310;
+        saveBtn.positionY = Popup.HeaderSize + Popup.Padding + 325;
         saveBtn.text = "Save";
         saveBtn.font = "bold 15px sans-serif";
         saveBtn.width = 165;
@@ -127,6 +139,7 @@ export class SettingsPopup extends Popup {
         this.addComponent('mediumModeBtn', mediumModeBtn);
         this.addComponent('difficultModeBtn', difficultModeBtn);
         this.addComponent('customModeBtn', customModeBtn);
+        this.addComponent('luckyGuessCheck', luckyGuessCheck);
         this.addComponent('clearStatisticsBtn', clearStatisticsBtn);
         this.addComponent('cancelBtn', cancelBtn);
         this.addComponent('saveBtn', saveBtn);
@@ -140,7 +153,7 @@ export class SettingsPopup extends Popup {
 
     private save(): void {
         if (this.onSave)
-            this.onSave(this._mode);
+            this.onSave(this._mode, this._luckyGuess);
     }
 
     private clearStatistics(): void {
@@ -154,9 +167,18 @@ export class SettingsPopup extends Popup {
             this.onStatisticsCleard();
     }
 
+    private setLuckyGuess(): void {
+        this._luckyGuess = (this.getComponent('luckyGuessCheck') as CheckBox).checked;
+    }
+
     public changeGameMode(mode: GameMode): void {
         this._mode = mode;
         this.refreshButtonsState();
+    }
+
+    public changeLuckyGuess(value: boolean): void {
+        this._luckyGuess = value;
+        (this.getComponent('luckyGuessCheck') as CheckBox).checked = value;
     }
 
     private refreshButtonsState(): void {
