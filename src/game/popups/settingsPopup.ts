@@ -102,7 +102,7 @@ export class SettingsPopup extends Popup {
         luckyGuessCheck.parent = this;
         luckyGuessCheck.positionX = Popup.Padding;
         luckyGuessCheck.positionY = Popup.HeaderSize + Popup.Padding + 290;
-        luckyGuessCheck.text = "First click safe";
+        luckyGuessCheck.text = "Safe first click";
         luckyGuessCheck.font = "bold 15px sans-serif";
         luckyGuessCheck.width = 20;
         luckyGuessCheck.height = 20;

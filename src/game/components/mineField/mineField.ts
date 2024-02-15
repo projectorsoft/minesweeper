@@ -93,8 +93,12 @@ export class MineField extends Component {
     }
 
     private generateMines(mouseCoordinates: Point): void {
-        //generate mines
         let x: number, y: number;
+
+        let siblings: Point[] = [];
+
+        if (this._luckyGuess)
+            siblings = this.getAllNeighbours(mouseCoordinates.x, mouseCoordinates.y);
 
         for (let i = 0; i < this._minesNumber; i++) {
             x = Helpers.getRndInteger(0, this._xSize - 1);
@@ -103,8 +107,7 @@ export class MineField extends Component {
             let point = new Point(x, y);
 
             let avoidMouseCoordinates = this._luckyGuess 
-                && mouseCoordinates.x === point.x 
-                && mouseCoordinates.y === point.y
+                && this.isPointInArray(siblings, x, y);
 
             while (this._mines.has(`${point.x},${point.y}`) 
                 || avoidMouseCoordinates) {
@@ -114,8 +117,7 @@ export class MineField extends Component {
                 point = new Point(x, y);
 
                 avoidMouseCoordinates = this._luckyGuess 
-                    && mouseCoordinates.x === point.x 
-                    && mouseCoordinates.y === point.y
+                    && this.isPointInArray(siblings, x, y);
             }
 
             this._fields[x][y].hasMine = true;
@@ -376,6 +378,47 @@ export class MineField extends Component {
 
     public static checkField(mineField: Field[][], x: number, y: number): boolean {
         return mineField[x] && mineField[x][y] !== undefined;
+    }
+
+    private isPointInArray(neighbours: Point[], x: number, y: number): boolean {
+        for (let i=0; i < neighbours.length; i++) {
+            if (neighbours[i].x === x && neighbours[i].y === y)
+                return true;
+        }
+
+        return false;
+    }
+
+    private getAllNeighbours(x: number, y: number): Point[] {
+        const positions: Point[] = [];
+
+        positions.push(new Point(x, y));
+
+        if (MineField.checkField(this._fields, x - 1, y - 1))
+            positions.push(new Point(x - 1, y - 1));
+
+        if (MineField.checkField(this._fields, x, y - 1))
+            positions.push(new Point(x, y - 1));
+
+        if (MineField.checkField(this._fields, x + 1, y - 1))
+            positions.push(new Point(x + 1, y - 1));
+
+        if (MineField.checkField(this._fields, x - 1, y))
+            positions.push(new Point(x - 1, y));
+
+        if (MineField.checkField(this._fields, x + 1, y))
+            positions.push(new Point(x + 1, y));
+
+        if (MineField.checkField(this._fields, x - 1, y + 1))
+            positions.push(new Point(x - 1, y + 1));
+
+        if (MineField.checkField(this._fields, x, y + 1))
+            positions.push(new Point(x, y + 1));
+
+        if (MineField.checkField(this._fields, x + 1, y + 1))
+            positions.push(new Point(x + 1, y + 1));
+
+        return positions;
     }
 
     private drawText(text: string,
