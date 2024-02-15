@@ -1,8 +1,8 @@
 <script lang="ts">
 import { GameMode, GameState } from '@/game/enums';
 import { Helpers } from '@/game/helpers/helpers';
-import { StatisticsService } from '@/game/services/statisticsService';
-import { defineComponent, reactive, isProxy, toRaw } from 'vue';
+import { SettingsService } from '@/game/services/settingsService';
+import { defineComponent, toRaw } from 'vue';
 
 export default defineComponent({
 	name: 'Scores',
@@ -32,10 +32,10 @@ export default defineComponent({
 	},
 	methods: {
 		getBestScores(): void {
-			const localStorageData = localStorage.getItem(StatisticsService.StatisticsLocalStorageKey);
+			const localStorageData = localStorage.getItem(SettingsService.SettingsLocalStorageKey);
 
 			if (localStorageData) {
-				this.bestScores = JSON.parse(localStorageData).bestGames;
+				this.bestScores = JSON.parse(localStorageData).statistics.bestGames;
 			}
 		},
 		clearStatistics() {

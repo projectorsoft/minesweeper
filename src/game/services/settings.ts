@@ -1,4 +1,3 @@
-import { GameMode } from "../enums";
 
 export class StatisticsRecord {
     time?: number = null;
@@ -9,7 +8,6 @@ export class StatisticsRecord {
 }
 
 export class Statistics {
-    public currentName: string = null;
     public gamesWon: number = 0;
     public gamesLost: number = 0;
     public lastGame: StatisticsRecord = null;
@@ -18,5 +16,10 @@ export class Statistics {
     public difficultModeBestTime: StatisticsRecord = null;
     public customModeBestTime: StatisticsRecord = null;
     public bestGames: StatisticsRecord[] = [];
+}
+
+export class Settings {
+    public currentName: string = null;
     public bestScoresNumber: number = 10;
+    public statistics: Statistics = null;
 }

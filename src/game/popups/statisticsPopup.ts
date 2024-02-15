@@ -3,12 +3,12 @@ import { Label } from "../engine/inputs/label";
 import { Popup } from "../engine/popup";
 import { Colors } from "../enums";
 import { Helpers } from "../helpers/helpers";
-import { Statistics, StatisticsRecord } from "../services/statistics";
-import { StatisticsService } from "../services/statisticsService";
+import { Settings, StatisticsRecord } from "../services/settings";
+import { SettingsService } from "../services/settingsService";
 
 export class StatisticsPopup extends Popup {
-    private _statisticsService: StatisticsService;
-    private _statistics: Statistics;
+    private _settingsService: SettingsService;
+    private _settings: Settings;
 
     public onClose: Function = () => null;
 
@@ -16,15 +16,15 @@ export class StatisticsPopup extends Popup {
         this._visible = value;
 
         if (value)
-            this._statistics = this._statisticsService.get();
+            this._settings = this._settingsService.get();
     }
 
     public constructor(context: CanvasRenderingContext2D,
-        statisticsService: StatisticsService) {
+        settingsService: SettingsService) {
         super(context);
 
-        this._statisticsService = statisticsService;
-        this._statistics = this._statisticsService.get();
+        this._settingsService = settingsService;
+        this._settings = this._settingsService.get();
     }
 
     protected drawPopupInternal(): void {
@@ -39,7 +39,7 @@ export class StatisticsPopup extends Popup {
         });
 
         Label.drawText(this._context, 
-            `Time: ${ this._statistics.lastGame ? Helpers.roundTimeToSeconds(this._statistics.lastGame.time) : 0 }s`, 
+            `Time: ${ this._settings.statistics.lastGame ? Helpers.roundTimeToSeconds(this._settings.statistics.lastGame.time) : 0 }s`, 
             this.positionX + Popup.Padding, 
             this.positionY + Popup.HeaderSize + Popup.Padding + 25, { 
             size: 13,
@@ -48,7 +48,7 @@ export class StatisticsPopup extends Popup {
         });
 
         Label.drawText(this._context, 
-            `Clicks: ${ this._statistics.lastGame ? this._statistics.lastGame.clicks : 0 }`, 
+            `Clicks: ${ this._settings.statistics.lastGame ? this._settings.statistics.lastGame.clicks : 0 }`, 
             this.positionX + Popup.Padding, 
             this.positionY + Popup.HeaderSize + Popup.Padding + 50, { 
             size: 13,
@@ -67,7 +67,7 @@ export class StatisticsPopup extends Popup {
         });
 
         Label.drawText(this._context, 
-            `Easy: ${ this._statistics.easyModeBestTime ? this.formatRecord(this._statistics.easyModeBestTime) : 'none' }`, 
+            `Easy: ${ this._settings.statistics.easyModeBestTime ? this.formatRecord(this._settings.statistics.easyModeBestTime) : 'none' }`, 
             this.positionX + Popup.Padding, 
             this.positionY + Popup.HeaderSize + Popup.Padding + 100, { 
             size: 13,
@@ -76,7 +76,7 @@ export class StatisticsPopup extends Popup {
         });
 
         Label.drawText(this._context, 
-            `Medium: ${ this._statistics.mediumModeBestTime ? this.formatRecord(this._statistics.mediumModeBestTime) : 'none' }`, 
+            `Medium: ${ this._settings.statistics.mediumModeBestTime ? this.formatRecord(this._settings.statistics.mediumModeBestTime) : 'none' }`, 
             this.positionX + Popup.Padding, 
             this.positionY + Popup.HeaderSize + Popup.Padding + 125, { 
             size: 13,
@@ -85,7 +85,7 @@ export class StatisticsPopup extends Popup {
         });
 
         Label.drawText(this._context, 
-            `Difficult: ${ this._statistics.difficultModeBestTime ? this.formatRecord(this._statistics.difficultModeBestTime) : 'none' }`, 
+            `Difficult: ${ this._settings.statistics.difficultModeBestTime ? this.formatRecord(this._settings.statistics.difficultModeBestTime) : 'none' }`, 
             this.positionX + Popup.Padding, 
             this.positionY + Popup.HeaderSize + Popup.Padding + 150, { 
             size: 13,
@@ -94,7 +94,7 @@ export class StatisticsPopup extends Popup {
         });
 
         Label.drawText(this._context, 
-            `Custom: ${ this._statistics.customModeBestTime ? this.formatRecord(this._statistics.customModeBestTime) : 'none' }`, 
+            `Custom: ${ this._settings.statistics.customModeBestTime ? this.formatRecord(this._settings.statistics.customModeBestTime) : 'none' }`, 
             this.positionX + Popup.Padding, 
             this.positionY + Popup.HeaderSize + Popup.Padding + 175, { 
             size: 13,
@@ -113,7 +113,7 @@ export class StatisticsPopup extends Popup {
         });
 
         Label.drawText(this._context, 
-            `Won: ${ this._statistics.gamesWon ? this._statistics.gamesWon : 0 }`, 
+            `Won: ${ this._settings.statistics.gamesWon ? this._settings.statistics.gamesWon : 0 }`, 
             this.positionX + Popup.Padding, 
             this.positionY + Popup.HeaderSize + Popup.Padding + 225, { 
             size: 13,
@@ -122,7 +122,7 @@ export class StatisticsPopup extends Popup {
         });
 
         Label.drawText(this._context, 
-            `Lost: ${ this._statistics.gamesLost ? this._statistics.gamesLost : 0 }`, 
+            `Lost: ${ this._settings.statistics.gamesLost ? this._settings.statistics.gamesLost : 0 }`, 
             this.positionX + Popup.Padding, 
             this.positionY + Popup.HeaderSize + Popup.Padding + 250, { 
             size: 13,

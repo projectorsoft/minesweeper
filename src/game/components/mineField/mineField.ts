@@ -6,8 +6,8 @@ import { Point } from "../../engine/point";
 import { Colors, FieldState, FieldType, GameMode, GameState } from "../../enums";
 import { Game } from "../../game";
 import { Helpers } from "../../helpers/helpers";
-import { StatisticsRecord } from "../../services/statistics";
-import { StatisticsService } from "../../services/statisticsService";
+import { StatisticsRecord } from "../../services/settings";
+import { SettingsService } from "../../services/settingsService";
 import { Field } from "./field";
 
 export class MineField extends Component {
@@ -15,7 +15,7 @@ export class MineField extends Component {
     public static readonly MarginTop: number = 20;
 
     private _timersManager: TimersManager;
-    private _statisticsService: StatisticsService;
+    private _settingsService: SettingsService;
     private _fields: Field[][];
     private _xSize: number;
     private _ySize: number;
@@ -43,12 +43,12 @@ export class MineField extends Component {
 
     public constructor(context: CanvasRenderingContext2D,
                         assetsManager: AssetsManager,
-                        statisticsService: StatisticsService,
+                        settingsService: SettingsService,
                         timersManager: TimersManager,
                         xSize: number, 
                         ySize: number) {
         super(context);
-        this._statisticsService = statisticsService;
+        this._settingsService = settingsService;
         this._timersManager = timersManager;
 
         this._xSize = xSize;
@@ -179,10 +179,10 @@ export class MineField extends Component {
         //all empty fields have been revealed and all flags set on mines
         if (this._uncoveredFieldsLeft === 0 && this._flagsNumber === 0) {
             this.stopTimer();
-            this._statisticsService.updateLastGame(this._statisticsRecord);
-            this._statisticsService.updateModeData(this._mode, this._statisticsRecord);
-            this._statisticsService.updateScores(GameState.Won);
-            this._statisticsService.updateBestScores(this._mode, this._statisticsRecord);
+            this._settingsService.updateLastGame(this._statisticsRecord);
+            this._settingsService.updateModeData(this._mode, this._statisticsRecord);
+            this._settingsService.updateScores(GameState.Won);
+            this._settingsService.updateBestScores(this._mode, this._statisticsRecord);
 
             if (this.onFieldChanged)
                 this.onFieldChanged(GameState.Won);
@@ -208,8 +208,8 @@ export class MineField extends Component {
                 this._fields[flagged.x][flagged.y].revealFlag();
         });
 
-        this._statisticsService.updateLastGame(this._statisticsRecord);
-        this._statisticsService.updateScores(GameState.Lost);
+        this._settingsService.updateLastGame(this._statisticsRecord);
+        this._settingsService.updateScores(GameState.Lost);
 
         if (this.onFieldChanged)
             this.onFieldChanged(GameState.Lost);

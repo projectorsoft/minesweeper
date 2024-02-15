@@ -1,6 +1,6 @@
 <script lang="ts">
 import { StorageService } from '@/game/engine/managers/storageService';
-import { StatisticsService } from '@/game/services/statisticsService';
+import { SettingsService } from '@/game/services/settingsService';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -11,27 +11,27 @@ export default defineComponent({
 			currentName: '',
 			editMode: false,
 			bestScoresNumber: null,
-			minBestScoresNumber: StatisticsService.MinBestScoresNumber,
-			maxBestScoresNumber: StatisticsService.MaxBestScoresNumber,
-			statisticsService: new StatisticsService(new StorageService())
+			minBestScoresNumber: SettingsService.MinBestScoresNumber,
+			maxBestScoresNumber: SettingsService.MaxBestScoresNumber,
+			settingsService: new SettingsService(new StorageService())
 		};
 	},
 	watch: {
 		bestScoresNumber: {
 			handler(newValue) {
-				this.statisticsService.bestScoresNumber = newValue;
+				this.settingsService.bestScoresNumber = newValue;
 			},
 			deep: true,
 			immediate: true
 		}
 	},
 	mounted() {
-		this.currentName = this.statisticsService.get().currentName ?? 'Unknown';
-		this.bestScoresNumber = this.statisticsService.bestScoresNumber;
+		this.currentName = this.settingsService.get().currentName ?? 'Unknown';
+		this.bestScoresNumber = this.settingsService.bestScoresNumber;
 	},
 	methods: {
 		setName() {
-			this.statisticsService.updateName(this.name);
+			this.settingsService.updateName(this.name);
 			this.currentName = this.name;
 			this.nameChangedMsgVisible = true;
 			this.editMode = false;
@@ -111,3 +111,4 @@ export default defineComponent({
 		</div>
 	</div>
 </template>
+@/game/services/settingsService

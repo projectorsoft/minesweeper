@@ -3,10 +3,10 @@ import { Button } from "../engine/inputs/button";
 import { Label } from "../engine/inputs/label";
 import { Popup } from "../engine/popup";
 import { AlertType, Colors, GameMode } from "../enums";
-import { StatisticsService } from "../services/statisticsService";
+import { SettingsService } from "../services/settingsService";
 
 export class SettingsPopup extends Popup {
-    private _statisticsService: StatisticsService;
+    private _settingsService: SettingsService;
     private _mode: GameMode = GameMode.Easy;
 
     public onCancel: Function = () => null;
@@ -14,10 +14,10 @@ export class SettingsPopup extends Popup {
     public onStatisticsCleard: Function = () => null;
 
     public constructor(context: CanvasRenderingContext2D,
-        statisticsService: StatisticsService) {
+        settingsService: SettingsService) {
         super(context);
 
-        this._statisticsService = statisticsService;
+        this._settingsService = settingsService;
     }
     
     protected drawPopupInternal(): void {
@@ -144,7 +144,7 @@ export class SettingsPopup extends Popup {
     }
 
     private clearStatistics(): void {
-        this._statisticsService.clear();
+        this._settingsService.clearStatistics();
 
         const alert = (this.getComponent('alert') as Alert);
         alert.type = AlertType.Success;

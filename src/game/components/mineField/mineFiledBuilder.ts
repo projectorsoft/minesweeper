@@ -2,7 +2,7 @@ import { TimersManager } from "@/game/engine/managers/timersManager";
 import { AssetsManager } from "../../engine/managers/assetsManager";
 import { Point } from "../../engine/point";
 import { GameMode, GameState } from "../../enums";
-import { StatisticsService } from "../../services/statisticsService";
+import { SettingsService } from "../../services/settingsService";
 import { MineField } from "./mineField";
 
 export interface ICustomModeOptions {
@@ -13,7 +13,7 @@ export interface ICustomModeOptions {
 
 export class MineFieldBuilder {
     private _context!: CanvasRenderingContext2D;
-    private _statisticsService: StatisticsService;
+    private _settingsService: SettingsService;
     private _assetsManager: AssetsManager;
     private _timersManager: TimersManager;
     private _mineField!: MineField;
@@ -21,10 +21,10 @@ export class MineFieldBuilder {
     
     public constructor(context: CanvasRenderingContext2D,
         assetsManager: AssetsManager,
-        statisticsService: StatisticsService,
+        settingsService: SettingsService,
         timersManager: TimersManager) {
         this._context = context;
-        this._statisticsService = statisticsService;
+        this._settingsService = settingsService;
         this._assetsManager = assetsManager;
         this._timersManager = timersManager;
     }
@@ -35,7 +35,7 @@ export class MineFieldBuilder {
 
         this._mineField = new MineField(this._context, 
             this._assetsManager, 
-            this._statisticsService, 
+            this._settingsService, 
             this._timersManager,
             size.x, 
             size.y);

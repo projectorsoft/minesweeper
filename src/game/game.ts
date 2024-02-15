@@ -15,8 +15,8 @@ import { TapHelper } from "./helpers/tapHelper";
 import { CustomBoardSizePopup } from "./popups/customBoardSizePopup";
 import { SettingsPopup } from "./popups/settingsPopup";
 import { StatisticsPopup } from "./popups/statisticsPopup";
-import { Statistics } from "./services/statistics";
-import { StatisticsService } from "./services/statisticsService";
+import { Settings } from "./services/settings";
+import { SettingsService } from "./services/settingsService";
 
 export class Game {
     public static readonly TimerName: string = 'MainTimer';
@@ -27,8 +27,8 @@ export class Game {
     private _context: CanvasRenderingContext2D;
     private _assetsManager: AssetsManager;
     private _timersManager: TimersManager;
-    private _statisticsService: StatisticsService;
-    private _storageService: StorageService<Statistics>;
+    private _settingsService: SettingsService;
+    private _storageService: StorageService<Settings>;
 
     private _gameState: GameState = GameState.NotStarted;
     private _gameMode: GameMode = GameMode.Easy;
@@ -89,7 +89,7 @@ export class Game {
 
         this._timersManager = new TimersManager();
         this._storageService = new StorageService();
-        this._statisticsService = new StatisticsService(this._storageService);
+        this._settingsService = new SettingsService(this._storageService);
 
         this.registerEvents();
         this.createMenuBar();
@@ -145,7 +145,7 @@ export class Game {
     private createMineField(customOptions?: ICustomModeOptions): void {
         this._mineField = new MineFieldBuilder(this._context, 
             this._assetsManager, 
-            this._statisticsService,
+            this._settingsService,
             this._timersManager)
             .setDifficulty(this._gameMode, customOptions)
             .setFiledChangedHandler(this.setGameState.bind(this))
@@ -174,7 +174,7 @@ export class Game {
     }
 
     private createStatisticsPopup(): void {
-        this._statisticsPopup = new StatisticsPopup(this._context, this._statisticsService);
+        this._statisticsPopup = new StatisticsPopup(this._context, this._settingsService);
         this._statisticsPopup.title = "Player's statistics";
         this._statisticsPopup.width = 320;
         this._statisticsPopup.height = 380;
@@ -187,7 +187,7 @@ export class Game {
     }
 
     private createSettingsPopup(): void {
-        this._settingsPopup = new SettingsPopup(this._context, this._statisticsService);
+        this._settingsPopup = new SettingsPopup(this._context, this._settingsService);
         this._settingsPopup.title = "Settings";
         this._settingsPopup.width = 380;
         this._settingsPopup.height = 420;
