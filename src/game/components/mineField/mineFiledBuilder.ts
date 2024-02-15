@@ -52,11 +52,11 @@ export class MineFieldBuilder {
     public static getBoardSize(mode: GameMode): Point {
         switch (mode) {
             case GameMode.Easy:
-                return new Point(9, 9);
+                return new Point(8, 8);
             case GameMode.Medium:
                 return new Point(16, 16);
             case GameMode.Difficult:
-                return new Point(31, 16);
+                return new Point(30, 16);
             default:
                 throw Error("Not supported GameMode");
         }

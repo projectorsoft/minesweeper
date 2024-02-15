@@ -2,20 +2,20 @@
 import { GameMode, GameState } from '@/game/enums';
 import { Helpers } from '@/game/helpers/helpers';
 import { StatisticsService } from '@/game/services/statisticsService';
-import { defineComponent, reactive, isProxy, toRaw} from 'vue';
+import { defineComponent, reactive, isProxy, toRaw } from 'vue';
 
 export default defineComponent({
 	name: 'Scores',
 	props: {
 		gameState: {
 			readonly: true,
-			default: GameState.NotStarted
+			default: GameState.NotStarted,
 		}
 	},
 	data() {
 		return {
-			bestScores: []
-		}
+			bestScores: [],
+		};
 	},
 	watch: {
 		gameState: {
@@ -24,7 +24,7 @@ export default defineComponent({
 					this.getBestScores();
 			},
 			deep: true,
-			immediate: true
+			immediate: true,
 		}
 	},
 	mounted() {
@@ -52,8 +52,7 @@ export default defineComponent({
 			return ms ? `${Helpers.formatMiliseconds(ms)}s` : 'Unknown';
 		},
 		formatMode(mode: number): string {
-			if (mode === undefined || mode === null)
-				return 'Unknown';
+			if (mode === undefined || mode === null) return 'Unknown';
 
 			switch(mode) {
 				case GameMode.Easy:
@@ -64,57 +63,65 @@ export default defineComponent({
 					return 'Difficult';
 				case GameMode.Custom:
 					return 'Custom';
-				default: 'Unknown'
+				default:
+					'Unknown';
 			}
-		}
-	}
+		},
+	},
 });
 </script>
 
 <template>
-	<div class="accordion-item">
-		<h2 class="accordion-header">
-			<button
-				class="accordion-button"
-				type="button"
-				data-bs-toggle="collapse"
-				data-bs-target="#collapseScores"
-				aria-expanded="true"
-				aria-controls="collapseScores"
-			>
-				<strong>Best scores</strong>
+	<div class="container mb-2">
+		<div class="row d-flex flex-wrap align-items-center">
+			<div class="col-12">
+				<label class="fw-bold mb-2">Best scores</label>
 				<button @click="getBestScores()" class="btn btn-sm btn-outline-secondary mx-2" type="button">
 					<img src="/images/new.svg" width="20" height="20" />
 				</button>
-			</button>
-		</h2>
-		<div id="collapseScores" class="accordion-collapse collapse show">
-			<div class="accordion-body">
-				<div class="row d-flex flex-wrap align-items-center">
-					<div class="col">
-						<label v-if="showBestScores()" class="form-label fs-3 fw-bold">No scores yet</label>
-						<table v-else class="table table-striped table-bordered table-hover">
-							<thead>
-							  <tr>
-								<th scope="col">#</th>
-								<th scope="col">Name</th>
-								<th class="text-center" scope="col">Time</th>
-								<th class="text-center" scope="col">Clicks</th>
-								<th class="text-center" scope="col">Mode</th>
-								<th class="text-center" scope="col">Date</th>
-							  </tr>
-							</thead>
-							<tbody>
-							  <tr v-for="(item, index) in getRawBestScores()" :key="index">
-								<th scope="row">{{ index + 1 }}</th>
-								<td class="text-break">{{ item?.name ?? 'Unknown' }}</td>
-								<td class="text-center">{{ formatTime(item?.time) }}</td>
-								<td class="text-center">{{ item?.clicks ?? '-1' }}</td>
-								<td class="text-center">{{ formatMode(item?.mode) }}</td>
-								<td class="text-center">{{ item?.date ?? 'Unknown' }}</td>
-							  </tr>
-							</tbody>
-						  </table>
+				<a
+					class="btn btn-sm btn-outline-secondary me-2 float-end"
+					type="button"
+					data-bs-toggle="collapse"
+					href="#bestScoresContainer"
+				>
+					<img src="/images/unfold.svg" width="25" height="25" />
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="container collapse show mb-4" id="bestScoresContainer">
+		<div class="row d-flex flex-wrap align-items-center">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-12">
+								<label v-if="showBestScores()" class="form-label fs-3 fw-bold">No scores yet</label>
+								<table v-else class="table table-striped table-hover">
+									<thead>
+										<tr>
+											<th scope="col">#</th>
+											<th scope="col">Name</th>
+											<th class="text-center" scope="col">Time</th>
+											<th class="text-center" scope="col">Clicks</th>
+											<th class="text-center" scope="col">Mode</th>
+											<th class="text-center" scope="col">Date</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="(item, index) in getRawBestScores()" :key="index">
+											<th scope="row">{{ index + 1 }}</th>
+											<td class="text-break">{{ item?.name ?? 'Unknown' }}</td>
+											<td class="text-center">{{ formatTime(item?.time) }}</td>
+											<td class="text-center">{{ item?.clicks ?? '-1' }}</td>
+											<td class="text-center">{{ formatMode(item?.mode) }}</td>
+											<td class="text-center">{{ item?.date ?? 'Unknown' }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

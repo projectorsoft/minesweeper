@@ -24,10 +24,10 @@ export default defineComponent({
 </script>
 
 <template>
-	<div class="container text-center" style="margin-bottom: 20px">
+	<div class="container text-center mb-2">
 		<div class="row justify-content-xxl-center">
 			<div class="col text-start">
-				<h2>Gallery</h2>
+				<label class="fw-bold">Gallery</label>
 				<hr />
 				<Splide :options="options" aria-label="My Favorite Images">
 					<SplideSlide>

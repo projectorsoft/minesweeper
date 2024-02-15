@@ -1,15 +1,13 @@
 <script lang="ts">
-    import { defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 
-    export default defineComponent({
-        name: 'Footer',
-    });
+export default defineComponent({
+	name: 'Footer',
+});
 </script>
 
 <template>
-    <div class="container mt-4">
-        <p class="text-center">
-        Contact us at: contact@minesweeper-free.com
-    </p>
-    </div>
+	<footer class="footer py-3 bg-body-tertiary mt-4">
+        <p class="text-center">Contact us at: contact@minesweeper-free.com</p>
+	</footer>
 </template>

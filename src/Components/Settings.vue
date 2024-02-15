@@ -51,6 +51,7 @@ export default defineComponent({
 	<div class="container mb-4 collapse" id="settingsContainer">
 		<div class="row d-flex flex-wrap align-items-center">
 			<div class="col">
+				<label class="fw-bold mb-2">Settings</label>
 				<div class="card">
 					<div class="card-body">
 						<label class="fw-bold mb-2">Player name:</label>

@@ -15,47 +15,47 @@ import { GameState } from './game/enums';
 import { Game } from './game/game';
 
 export enum Views {
-  Play = 0,
-  Gallery = 1
+	Play = 0,
+	Gallery = 1,
 }
 
 export default defineComponent({
-  components: {
-    About,
-    Controls,
-    Footer,
-    Gallery,
-    GameContainer,
-    Guide,
-    HowToPlay,
-    NavigationBar,
-    Settings,
-    Rules,
-    Scores
-  },
+	components: {
+		About,
+		Controls,
+		Footer,
+		Gallery,
+		GameContainer,
+		Guide,
+		HowToPlay,
+		NavigationBar,
+		Settings,
+		Rules,
+		Scores,
+	},
 	data() {
 		return {
 			game: {},
-      currentView: Views.Play,
-      gameState: GameState.NotStarted
+			currentView: Views.Play,
+			gameState: GameState.NotStarted,
 		};
 	},
 	mounted() {
-    this.game = new Game();
-    this.game.onGameStateChanged = (state: GameState) => {
-      this.gameState = state;
-    };
-    this.game.onStatisticsCleared = () => {
-      this.$refs.scores.clearStatistics();
-    }
+		this.game = new Game();
+		this.game.onGameStateChanged = (state: GameState) => {
+			this.gameState = state;
+		};
+		this.game.onStatisticsCleared = () => {
+			this.$refs.scores.clearStatistics();
+		};
 	},
 	methods: {
-    switchView(view: Views) {
-      this.currentView = view;
-    },
-    showIf(view: Views) {
-      return this.currentView == view;
-    }
+		switchView(view: Views) {
+			this.currentView = view;
+		},
+		showIf(view: Views) {
+			return this.currentView == view;
+		},
 	},
 });
 </script>
@@ -65,21 +65,15 @@ export default defineComponent({
 		<NavigationBar @view-changed="switchView" />
 	</header>
 	<main data-bs-theme="dark">
-    <Settings />
+		<Settings />
 		<Gallery v-show="showIf(1)" />
 		<GameContainer v-show="showIf(0)" />
-		<div class="container">
-      <div class="accordion accordion-flush">
-        <Scores ref="scores" :game-state="gameState" />
-        <Rules />
-        <HowToPlay />
-        <Guide />
-        <Controls />
-      </div>
-		</div>
-    <About />
+		<Scores ref="scores" :game-state="gameState" />
+		<Rules />
+		<HowToPlay />
+		<Guide />
+		<Controls />
+		<About />
 	</main>
-  <footer>
-    <Footer />
-  </footer>
+	<Footer />
 </template>

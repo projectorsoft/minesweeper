@@ -16,7 +16,7 @@ export default defineComponent({
 	<nav class="navbar navbar-dark bg-dark shadow-xl">
 		<div class="container-xxl">
 			<p class="navbar-brand d-flex align-items-center">
-				<img src="/images/flag.svg" width="20" height="20" style="margin-right: 10px" />
+				<img src="/images/flag.svg" width="20" height="20" class="me-2" />
 				<strong>Minesweeper</strong>
 			</p>
 			<form>
@@ -32,7 +32,7 @@ export default defineComponent({
 					data-bs-toggle="collapse"
 					href="#settingsContainer"
 				>
-					<img src="/images/settings.svg" width="25" height="25" />
+					<img src="/images/construction.svg" width="25" height="25" />
 				</a>
 			</form>
 			<button type="button" class="navbar-toggler" data-bs-toggle="modal" data-bs-target="#aboutModal">
