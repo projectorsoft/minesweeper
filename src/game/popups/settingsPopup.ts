@@ -10,9 +10,10 @@ export class SettingsPopup extends Popup {
     private _settingsService: SettingsService;
     private _mode: GameMode = GameMode.Easy;
     private _luckyGuess: boolean = false;
+    private _allowQuestionMark: boolean = true;
 
     public onCancel: Function = () => null;
-    public onSave: Function = (mode: GameMode, luckyGuess: boolean) => null;
+    public onSave: Function = (mode: GameMode, luckyGuess: boolean, allowQuestionMark: boolean) => null;
     public onStatisticsCleard: Function = () => null;
 
     public constructor(context: CanvasRenderingContext2D,
@@ -107,6 +108,19 @@ export class SettingsPopup extends Popup {
         luckyGuessCheck.width = 20;
         luckyGuessCheck.height = 20;
         luckyGuessCheck.onClick = this.setLuckyGuess.bind(this);
+        luckyGuessCheck.createComponents();
+
+        const allowQuestionMarkCheck = new CheckBox(this._context);
+        allowQuestionMarkCheck.parent = this;
+        allowQuestionMarkCheck.positionX = 195;
+        allowQuestionMarkCheck.positionY = Popup.HeaderSize + Popup.Padding + 290;
+        allowQuestionMarkCheck.text = "Allow question mark";
+        allowQuestionMarkCheck.font = "bold 15px sans-serif";
+        allowQuestionMarkCheck.width = 20;
+        allowQuestionMarkCheck.height = 20;
+        allowQuestionMarkCheck.checked = true;
+        allowQuestionMarkCheck.onClick = this.setAllowQuestionMark.bind(this);
+        allowQuestionMarkCheck.createComponents();
 
         const cancelBtn = new Button(this._context);
         cancelBtn.parent = this;
@@ -140,6 +154,7 @@ export class SettingsPopup extends Popup {
         this.addComponent('difficultModeBtn', difficultModeBtn);
         this.addComponent('customModeBtn', customModeBtn);
         this.addComponent('luckyGuessCheck', luckyGuessCheck);
+        this.addComponent('allowQuestionMarkCheck', allowQuestionMarkCheck);
         this.addComponent('clearStatisticsBtn', clearStatisticsBtn);
         this.addComponent('cancelBtn', cancelBtn);
         this.addComponent('saveBtn', saveBtn);
@@ -153,7 +168,7 @@ export class SettingsPopup extends Popup {
 
     private save(): void {
         if (this.onSave)
-            this.onSave(this._mode, this._luckyGuess);
+            this.onSave(this._mode, this._luckyGuess, this._allowQuestionMark);
     }
 
     private clearStatistics(): void {
@@ -171,14 +186,23 @@ export class SettingsPopup extends Popup {
         this._luckyGuess = (this.getComponent('luckyGuessCheck') as CheckBox).checked;
     }
 
-    public changeGameMode(mode: GameMode): void {
-        this._mode = mode;
-        this.refreshButtonsState();
-    }
-
     public changeLuckyGuess(value: boolean): void {
         this._luckyGuess = value;
         (this.getComponent('luckyGuessCheck') as CheckBox).checked = value;
+    }
+
+    private setAllowQuestionMark(): void {
+        this._allowQuestionMark = (this.getComponent('allowQuestionMarkCheck') as CheckBox).checked;
+    }
+
+    public changeAllowQuestionMark(value: boolean): void {
+        this._allowQuestionMark = value;
+        (this.getComponent('allowQuestionMarkCheck') as CheckBox).checked = value;
+    }
+
+    public changeGameMode(mode: GameMode): void {
+        this._mode = mode;
+        this.refreshButtonsState();
     }
 
     private refreshButtonsState(): void {

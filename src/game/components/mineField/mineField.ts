@@ -21,6 +21,7 @@ export class MineField extends Component {
     private _xSize: number;
     private _ySize: number;
     private _luckyGuess: boolean = false;
+    private _allowQuestionmark: boolean = true;
     private _mines: Map<string, Point> = new Map<string, Point>();
     private _flaggedFields: Map<string, Point> = new Map<string, Point>();
     private _flagsNumber: number = 0;
@@ -29,7 +30,7 @@ export class MineField extends Component {
     private _uncoveredFieldsLeft: number;
     private _statisticsRecord: StatisticsRecord;
 
-    public onFieldChanged: (state: GameState) => void;
+    public onFieldChanged: Function = (state: GameState) => null;
 
     public get xSize(): number {
         return this._xSize;
@@ -52,7 +53,8 @@ export class MineField extends Component {
                         ySize: number,
                         minesNumber: number,
                         mode: GameMode,
-                        luckyGuess: boolean) {
+                        luckyGuess: boolean,
+                        allowQuestionmark: boolean) {
         super(context);
 
         this._assetsManager = assetsManager;
@@ -64,6 +66,7 @@ export class MineField extends Component {
         this._minesNumber = minesNumber;
         this._mode = mode;
         this._luckyGuess = luckyGuess;
+        this._allowQuestionmark = allowQuestionmark;
         this._flagsNumber = minesNumber;
         this._uncoveredFieldsLeft = this._xSize * this._ySize - minesNumber;
         this._statisticsRecord = new StatisticsRecord();
@@ -301,7 +304,7 @@ export class MineField extends Component {
 
         this._statisticsRecord.clicks++;
 
-        this._fields[coordinates.x][coordinates.y].onRightClick(coordinates.x, coordinates.y);
+        this._fields[coordinates.x][coordinates.y].onRightClick(coordinates.x, coordinates.y, this._allowQuestionmark);
         
         if (this._fields[coordinates.x][coordinates.y].fieldType === FieldType.Blank)
             return;

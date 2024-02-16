@@ -17,6 +17,11 @@ export class MineFieldBuilder {
     private _assetsManager: AssetsManager;
     private _timersManager: TimersManager;
     private _mineField!: MineField;
+    private _luckyGuess: boolean = false;
+    private _allowQuestionmark: boolean = true;
+    private _mode: GameMode = GameMode.Easy;
+    private _customOptions?: ICustomModeOptions;
+    private _onChangeHandler: Function = (state: GameState) => null;
     private readonly _minesNumberForMode: number[] = [10, 40, 99];
     
     public constructor(context: CanvasRenderingContext2D,
@@ -29,25 +34,28 @@ export class MineFieldBuilder {
         this._timersManager = timersManager;
     }
 
-    public setDifficulty(mode: GameMode, customOptions?: ICustomModeOptions, luckyGuess: boolean = false): MineFieldBuilder {
-        let size = mode === GameMode.Custom ? new Point(customOptions.xSize, customOptions.ySize) : MineFieldBuilder.getBoardSize(mode);
-        let minesNumber = mode === GameMode.Custom ? customOptions.mines : this._minesNumberForMode[mode];
-
-        this._mineField = new MineField(this._context, 
-            this._assetsManager, 
-            this._settingsService, 
-            this._timersManager,
-            size.x, 
-            size.y,
-            minesNumber,
-            mode,
-            luckyGuess);
+    public setDifficulty(mode: GameMode, customOptions?: ICustomModeOptions): MineFieldBuilder {
+        this._mode = mode;
+        this._customOptions = customOptions;
 
         return this;
     }
 
-    public setFiledChangedHandler(handler: (state: GameState) => void): MineFieldBuilder {
-        this._mineField.onFieldChanged = handler;
+    public setLuckyGuess(value: boolean): MineFieldBuilder {
+        this._luckyGuess = value;
+
+        return this;
+    }
+
+    public setAllowQuestionmark(value: boolean): MineFieldBuilder {
+        this._allowQuestionmark = value;
+
+        return this;
+    }
+
+    public setFieldChangedHandler(handler: (state: GameState) => void): MineFieldBuilder {
+        this._onChangeHandler = handler;
+        
         return this;
     }
 
@@ -65,6 +73,27 @@ export class MineFieldBuilder {
     }
 
     public Build(): MineField {
+        let size = this._mode === GameMode.Custom 
+            ? new Point(this._customOptions.xSize, this._customOptions.ySize) 
+            : MineFieldBuilder.getBoardSize(this._mode);
+
+        let minesNumber = this._mode === GameMode.Custom 
+            ? this._customOptions.mines 
+            : this._minesNumberForMode[this._mode];
+
+        this._mineField = new MineField(this._context, 
+            this._assetsManager, 
+            this._settingsService, 
+            this._timersManager,
+            size.x, 
+            size.y,
+            minesNumber,
+            this._mode,
+            this._luckyGuess,
+            this._allowQuestionmark);
+
+        this._mineField.onFieldChanged = this._onChangeHandler;
+
         return this._mineField;
     }
 } 

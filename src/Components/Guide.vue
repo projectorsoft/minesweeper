@@ -72,6 +72,14 @@ export default defineComponent({
 									</div>
 									<div class="list-group-item">
 										<div class="d-flex w-100 justify-content-between">
+											<p class="mb-1">'<b>Allow question mark</b>' option enables setting question marks on fields.</p>
+										</div>
+										<p class="mb-1">
+											By default option is selected.
+										</p>
+									</div>
+									<div class="list-group-item">
+										<div class="d-flex w-100 justify-content-between">
 											<p class="mb-1">Game could be also paused if You need a break.</p>
 										</div>
 									</div>

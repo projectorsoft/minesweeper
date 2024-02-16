@@ -35,6 +35,7 @@ export class Game {
     private _previousGameMode: GameMode = GameMode.Easy;
     private _isPaused: boolean = false;
     private _luckyGuess: boolean = false;
+    private _allowQuestionMark: boolean = true;
     private _customModeOptions: ICustomModeOptions | null;
     private _currenPointerPossision: Point = new Point(0, 0);
 
@@ -80,7 +81,7 @@ export class Game {
                 pixelCodeFont.load().then(() => this.initialize());
             })
             .catch((error: Error) => {
-                alert(error); //TODO: show more sophisticated/user friendly message
+                console.log(error); //TODO: show more sophisticated/user friendly message
             });
     }
 
@@ -143,13 +144,15 @@ export class Game {
         this._faceIndicator.positionY = MineField.MarginTop - 66;
     }
 
-    private createMineField(customOptions?: ICustomModeOptions, luckyGuess: boolean = false): void {
+    private createMineField(): void {
         this._mineField = new MineFieldBuilder(this._context, 
             this._assetsManager, 
             this._settingsService,
             this._timersManager)
-            .setDifficulty(this._gameMode, customOptions, luckyGuess)
-            .setFiledChangedHandler(this.setGameState.bind(this))
+            .setDifficulty(this._gameMode, this._customModeOptions)
+            .setLuckyGuess(this._luckyGuess)
+            .setAllowQuestionmark(this._allowQuestionMark)
+            .setFieldChangedHandler(this.setGameState.bind(this))
             .Build();
     }
 
@@ -197,12 +200,14 @@ export class Game {
         this._settingsPopup.onCancel = () => {
             this._settingsPopup.changeGameMode(this._previousGameMode);
             this._settingsPopup.changeLuckyGuess(this._luckyGuess);
+            this._settingsPopup.changeAllowQuestionMark(this._allowQuestionMark);
             this._settingsPopup.visible = false;
             this.setComponentsEnabled(true);
         };
-        this._settingsPopup.onSave = (mode: GameMode, luckyGuess: boolean) => { 
+        this._settingsPopup.onSave = (mode: GameMode, luckyGuess: boolean, allowQuestionMark: boolean) => { 
             this._settingsPopup.visible = false; 
             this._luckyGuess = luckyGuess;
+            this._allowQuestionMark = allowQuestionMark;
             this.changeMode(mode);
 
             if (mode === GameMode.Custom)
@@ -292,7 +297,7 @@ export class Game {
 
     private newGame(): void {
         this.setGameState(GameState.NotStarted);
-        this.createMineField(this._customModeOptions, this._luckyGuess);
+        this.createMineField();
         this.adjustCanvasSize();
         this.adjustComponentsToBoardSize();
         

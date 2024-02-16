@@ -163,15 +163,19 @@ export class Field extends Component {
         this._imageIndex = Sprite.Danger;
     }
 
-    public onRightClick(x: number, y: number): void {
+    public onRightClick(x: number, y: number, allowQuestionmark: boolean): void {
         if (this.fieldState === FieldState.Uncovered)
             return;
 
         if (this.fieldType === FieldType.Blank)
             this.fieldType = FieldType.Flagged;
         else
-        if (this.fieldType === FieldType.Flagged)
-            this.fieldType = FieldType.Tentative;
+        if (this.fieldType === FieldType.Flagged) {
+            if (allowQuestionmark)
+                this.fieldType = FieldType.Tentative;
+            else
+                this.fieldType = FieldType.Blank;
+        }
         else
         if (this.fieldType === FieldType.Tentative)
             this.fieldType = FieldType.Blank;

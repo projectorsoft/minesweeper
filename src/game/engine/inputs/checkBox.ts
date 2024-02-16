@@ -1,9 +1,9 @@
+import { Colors, InputEvent, MouseButtons } from "@/game/enums";
 import { Helpers } from "@/game/helpers/helpers";
-import { Component } from "./component";
 import { EventBus } from "../events/eventBus";
 import { IMouseClickEvent } from "../events/types/IMouseClickEvent";
-import { Colors, InputEvent, MouseButtons } from "@/game/enums";
 import { IMouseMoveEvent } from "../events/types/IMouseMoveEvent";
+import { Component } from "./component";
 import { Label } from "./label";
 
 export class CheckBox extends Component {
@@ -33,15 +33,22 @@ export class CheckBox extends Component {
                 .subscribe(InputEvent.OnMouseMove, (event: IMouseMoveEvent) => this.mouseMove(event.x, event.y));
         }
     }
+
+    public createComponents(): void {
+        const label = new Label(this._context);
+        label.parent = this;
+        label.text = this.text;
+        label.positionX = this.width + 10;
+        label.positionY = 11;
+        label.fontSize = 15;
+        label.color = this._enabled ? Colors.Black : Colors.Gray;
+
+        this.addComponent('label', label);
+    }
     
     protected drawInternal(): void {
         this.drawFrame();
-        Label.drawText(this._context, 
-            this.text, this.positionX + this._width + 60, this.positionY + 11, { 
-            size: 15,
-            align: 'center',
-            color: this._enabled ? Colors.Black : Colors.Gray
-        });
+        this._components.forEach(component => component.draw());
     }
 
     protected drawFrame(): void {
