@@ -143,6 +143,11 @@ export class Field extends Component {
         this.fieldType = FieldType.Blank;
     }
 
+    public setFlag(): void {
+        this.fieldType = FieldType.Flagged;
+        this.setImageIndex();
+    }
+
     public onLeftClick(x: number, y: number): void {
         if (this.fieldState === FieldState.Uncovered ||
             this.fieldType === FieldType.Flagged)

@@ -65,7 +65,7 @@ export class MineField extends Component {
         this._mode = mode;
         this._luckyGuess = luckyGuess;
         this._flagsNumber = minesNumber;
-        this._uncoveredFieldsLeft = this._xSize * this._ySize;
+        this._uncoveredFieldsLeft = this._xSize * this._ySize - minesNumber;
         this._statisticsRecord = new StatisticsRecord();
         this._statisticsRecord.time = 0;
 
@@ -200,9 +200,12 @@ export class MineField extends Component {
     }
 
     private checkWinningCondition(): void {
-        //all empty fields have been revealed and all flags set on mines
-        if (this._uncoveredFieldsLeft === 0 && this._flagsNumber === 0) {
+        //all empty fields have been revealed
+        if (this._uncoveredFieldsLeft === 0) {
             this.stopTimer();
+            this._mines.forEach(field => {
+                this._fields[field.x][field.y].setFlag();
+            });
             this._settingsService.updateLastGame(this._statisticsRecord);
             this._settingsService.updateModeData(this._mode, this._statisticsRecord);
             this._settingsService.updateScores(GameState.Won);
@@ -222,7 +225,6 @@ export class MineField extends Component {
 
         //'blow' other mines
         this._mines.forEach(mine => {
-            if (this._fields[mine.x][mine.y].fieldType !== FieldType.Tentative)
                 this._fields[mine.x][mine.y].onLeftClick(coordinates.x, coordinates.y);
         });
 
@@ -286,13 +288,18 @@ export class MineField extends Component {
         if (!coordinates)
             return;
 
-        this._statisticsRecord.clicks++;
-
-        //first click, start timer
+        //first click
         if (!this._timersManager.exists(Game.TimerName)) {
+            //must be left click firs
+            if (this._luckyGuess)
+                return;
+
+            this.generateMines(coordinates);
             this.onFieldChanged(GameState.Started);
             this.createTimer();
         }
+
+        this._statisticsRecord.clicks++;
 
         this._fields[coordinates.x][coordinates.y].onRightClick(coordinates.x, coordinates.y);
         
@@ -302,17 +309,11 @@ export class MineField extends Component {
         if (this._fields[coordinates.x][coordinates.y].fieldType === FieldType.Flagged) {
             this._flagsNumber--;
             this._flaggedFields.set(`${coordinates.x},${coordinates.y}`, new Point(coordinates.x, coordinates.y));
-
-            if (this._fields[coordinates.x][coordinates.y].hasMine)
-                this._uncoveredFieldsLeft--;
         }
         else {
             if (this._flaggedFields.has(`${coordinates.x},${coordinates.y}`)) {
                 this._flaggedFields.delete(`${coordinates.x},${coordinates.y}`);
                 this._flagsNumber++;
-
-                if (this._fields[coordinates.x][coordinates.y].hasMine)
-                    this._uncoveredFieldsLeft++;
             }
         }
 
