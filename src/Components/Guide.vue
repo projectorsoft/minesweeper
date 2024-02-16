@@ -45,7 +45,7 @@ export default defineComponent({
 											<p class="mb-1">Each mode has constant board size and mines hidden.</p>
 										</div>
 										<p class="mb-1">In esay mode board has 8x8 fields and only 10 mines.</p>
-										<p class="mb-1">To compare difficult mode has 30x16 fields and 99 mines.</p>
+										<p class="mb-1">To compare: difficult mode has 30x16 fields and 99 mines.</p>
 									</div>
 									<div class="list-group-item">
 										<div class="d-flex w-100 justify-content-between">
@@ -61,8 +61,8 @@ export default defineComponent({
 									<div class="list-group-item">
 										<div class="d-flex w-100 justify-content-between">
 											<p class="mb-1">
-												If You want to avoid failure after first click You can select 'Safe firs
-												click' in settings.
+												If You want to avoid failure after first click You can select '<b>Safe firs
+												click</b>' in settings.
 											</p>
 										</div>
 										<p class="mb-1">

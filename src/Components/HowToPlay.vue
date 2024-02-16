@@ -55,10 +55,11 @@ export default defineComponent({
 											<img src="/images/empty_fields.png" alt="Empty field" />
 										</p>
 										<p class="mb-1">
-											This scenario works for evry empty tile which has been already discovered.
+											This scenario works for evry empty tile which has been already discovered
+											creating empty tiles 'island'.
 										</p>
 										<p class="mb-1">
-											It works especially when 'Safe first click' option is checked in settings
+											It works especially when <b>'Safe first click'</b> option is checked in settings
 											popup.
 										</p>
 									</div>
@@ -71,9 +72,9 @@ export default defineComponent({
 											</p>
 										</div>
 										<p class="mb-1">
-											For example: '1' means field has only one neighbour with hidden mine.
+											For example: tile with number '3' in the picture means field has three neighbours with hidden mines.
 										</p>
-										<p class="mb-1">And '8' means all surrounding fields have hidden mines.</p>
+										<p class="mb-1">In rare cases field could be surrounded by all 8 neighbours with mines.</p>
 									</div>
 									<div class="list-group-item">
 										<div class="d-flex w-100 justify-content-between">

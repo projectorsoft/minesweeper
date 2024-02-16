@@ -51,8 +51,8 @@ export default defineComponent({
 										<p class="mb-1 mx-3">a) Covered</p>
 										<p class="mb-1 mx-3">b) Uncovered and empty</p>
 										<p class="mb-1 mx-3">c) Uncovered with number</p>
-										<p class="mb-1 mx-3">d) With flag</p>
-										<p class="mb-1 mx-3">e) With question mark</p>
+										<p class="mb-1 mx-3">d) With flag set</p>
+										<p class="mb-1 mx-3">e) With question mark set</p>
 										<p class="mb-1 mx-3">f) With mine</p>
 									</div>
 									<div class="list-group-item">
