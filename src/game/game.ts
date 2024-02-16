@@ -22,6 +22,12 @@ export class Game {
     public static readonly TimerName: string = 'MainTimer';
     public static readonly MinWidth: number = 370;
     public static readonly MinHeight: number = 445;
+    public static readonly MinBoardXSize: number = 9;
+    public static readonly MaxBoardXSize: number = 65;
+    public static readonly MinBoardYSize: number = 9;
+    public static readonly MaxBoardYSize: number = 50;
+    public static readonly MinMinesNumber: number = 27;
+    public static readonly MaxMinesNumber: number = 1300;
 
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
@@ -83,6 +89,24 @@ export class Game {
             .catch((error: Error) => {
                 console.log(error); //TODO: show more sophisticated/user friendly message
             });
+    }
+
+    public startExternalCustomGame(options: ICustomModeOptions): void {
+        //ToDo: move to separeter validator
+        if (!options)
+            return;
+
+        if (options.mines > (options.xSize * options.ySize) / 3)
+            return;
+
+        this._customModeOptions = options;
+        this._customBoardSizePopup.updateValues(options);
+        this._customBoardSizePopup.visible = false;
+        this._settingsPopup.visible = false;
+        this._statisticsPopup.visible = false;
+        this.changeMode(GameMode.Custom);
+        this.newGame();
+        this.setComponentsEnabled(true);
     }
 
     private initialize(): void {

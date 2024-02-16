@@ -39,6 +39,10 @@ export class InputNumber extends Component {
             throw 'Wrong value';
 
         this._value = value;
+
+        const valueLabel = (this.getComponent('valueLabel') as Label);
+        if (valueLabel)
+            valueLabel.text = this.value.toString();
     }
 
     public constructor(context: CanvasRenderingContext2D) {
@@ -101,9 +105,7 @@ export class InputNumber extends Component {
         if (this.value >= this._maxValue)
             return;
 
-        this._value++;
-        const valueLabel = (this.getComponent('valueLabel') as Label);
-        valueLabel.text = this.value.toString();
+        this.value++;
 
         if (this.onIncrease)
             this.onIncrease();
@@ -113,9 +115,7 @@ export class InputNumber extends Component {
         if (this.value <= this._minValue)
             return;
 
-        this._value--;
-        const valueLabel = (this.getComponent('valueLabel') as Label);
-        valueLabel.text = this.value.toString();
+        this.value--;
 
         if (this.onDecrease)
             this.onDecrease();

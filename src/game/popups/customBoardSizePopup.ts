@@ -5,6 +5,7 @@ import { InputNumber } from "../engine/inputs/inputNumber";
 import { Label } from "../engine/inputs/label";
 import { Popup } from "../engine/popup";
 import { AlertType, Colors } from "../enums";
+import { Game } from "../game";
 
 export class CustomBoardSizePopup extends Popup {
     public onCancel!: Function;
@@ -21,13 +22,19 @@ export class CustomBoardSizePopup extends Popup {
         this.onSave = (x: number, y: number, mines: number) => null;
     }
 
+    public updateValues(options: ICustomModeOptions): void {
+        (this.getComponent('xValueInput') as InputNumber).value = options.xSize;
+        (this.getComponent('yValueInput') as InputNumber).value = options.ySize;
+        (this.getComponent('minesValueInput') as InputNumber).value = options.mines;
+    }
+
     protected createInputsInternal(): void {
         const xValueInput = new InputNumber(this._context);
         xValueInput.parent = this;
         xValueInput.positionX = 220;
         xValueInput.positionY = Popup.HeaderSize + Popup.Padding;
-        xValueInput.minValue = 9;
-        xValueInput.maxValue = 65;
+        xValueInput.minValue = Game.MinBoardXSize;
+        xValueInput.maxValue = Game.MaxBoardXSize;
         xValueInput.value = 31;
         xValueInput.create();
 
@@ -35,8 +42,8 @@ export class CustomBoardSizePopup extends Popup {
         yValueInput.parent = this;
         yValueInput.positionX = 220;
         yValueInput.positionY = Popup.HeaderSize + Popup.Padding + 28;
-        yValueInput.minValue = 9;
-        yValueInput.maxValue = 50;
+        yValueInput.minValue = Game.MinBoardYSize;
+        yValueInput.maxValue = Game.MaxBoardYSize;
         yValueInput.value = 9;
         yValueInput.create();
 
@@ -44,8 +51,8 @@ export class CustomBoardSizePopup extends Popup {
         minesValueInput.parent = this;
         minesValueInput.positionX = 220;
         minesValueInput.positionY = Popup.HeaderSize + Popup.Padding + 56;
-        minesValueInput.minValue = 27;
-        minesValueInput.maxValue = 1300;
+        minesValueInput.minValue = Game.MinMinesNumber;
+        minesValueInput.maxValue = Game.MaxMinesNumber;
         minesValueInput.value = 50;
         minesValueInput.create();
 
@@ -108,7 +115,7 @@ export class CustomBoardSizePopup extends Popup {
             } as ICustomModeOptions);
             else {
                 const alert = (this.getComponent('saveAlert') as Alert);
-                alert.text = "Mines number must be not grater than 1/3 of board cells"
+                alert.text = "Mines number value must be less than 1/3 of board cells";
                 alert.type = AlertType.Danger;
                 alert.visible = true;
             }

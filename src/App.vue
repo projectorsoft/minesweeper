@@ -13,6 +13,7 @@ import Rules from './components/Rules.vue';
 import Scores from './components/Scores.vue';
 import { GameState } from './game/enums';
 import { Game } from './game/game';
+import { ICustomModeOptions } from './game/components/mineField/mineFiledBuilder';
 
 export enum Views {
 	Play = 0,
@@ -56,6 +57,9 @@ export default defineComponent({
 		showIf(view: Views) {
 			return this.currentView == view;
 		},
+		boardSizeChanged(boardSizeOptions: ICustomModeOptions) {
+			this.game.startExternalCustomGame(boardSizeOptions);
+		}
 	},
 });
 </script>
@@ -65,7 +69,7 @@ export default defineComponent({
 		<NavigationBar @view-changed="switchView" />
 	</header>
 	<main data-bs-theme="dark">
-		<Settings />
+		<Settings @board-size-changed="boardSizeChanged" />
 		<Gallery v-show="showIf(1)" />
 		<GameContainer v-show="showIf(0)" />
 		<Scores ref="scores" :game-state="gameState" />
