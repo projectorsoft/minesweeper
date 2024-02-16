@@ -69,10 +69,10 @@ export default defineComponent({
 									</div>
 									<div class="list-group-item">
 										<div class="d-flex w-100 justify-content-between">
-											<p class="mb-1">6. Each game measures time.</p>
+											<p class="mb-1">6. Each game is timed.</p>
 										</div>
 										<p class="mb-1 mx-3">
-											If You were able to win, Your score will be saved in statistics and You can
+											If You won, Your score will be saved in statistics and You can
 											compare time with other games.
 										</p>
 									</div>

@@ -55,10 +55,6 @@ export default defineComponent({
 											<img src="/images/empty_fields.png" alt="Empty field" />
 										</p>
 										<p class="mb-1">
-											This scenario works for evry empty tile which has been already discovered
-											creating empty tiles 'island'.
-										</p>
-										<p class="mb-1">
 											It works especially when <b>'Safe first click'</b> option is checked in settings
 											popup.
 										</p>
