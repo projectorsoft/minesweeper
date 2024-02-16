@@ -21,7 +21,7 @@ import { SettingsService } from "./services/settingsService";
 export class Game {
     public static readonly TimerName: string = 'MainTimer';
     public static readonly MinWidth: number = 370;
-    public static readonly MinHeight: number = 470;
+    public static readonly MinHeight: number = 445;
 
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;

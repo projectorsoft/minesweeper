@@ -54,7 +54,6 @@ export default defineComponent({
 				</Splide>
 			</div>
 		</div>
-		<hr />
 	</div>
 </template>
 

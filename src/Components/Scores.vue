@@ -73,19 +73,20 @@ export default defineComponent({
 
 <template>
 	<div class="container mb-2">
+		<hr />
 		<div class="row d-flex flex-wrap align-items-center">
 			<div class="col-12">
-				<label class="fw-bold mb-2">Best scores</label>
+				<label class="fw-bold">Best scores</label>
 				<button @click="getBestScores()" class="btn btn-sm btn-outline-secondary mx-2" type="button">
-					<img src="/images/new.svg" width="20" height="20" />
+					<img src="/images/new.svg" width="22" height="22" />
 				</button>
 				<a
-					class="btn btn-sm btn-outline-secondary me-2 float-end"
+					class="btn btn-sm btn-outline-secondary float-end"
 					type="button"
 					data-bs-toggle="collapse"
 					href="#bestScoresContainer"
 				>
-					<img src="/images/unfold.svg" width="25" height="25" />
+					<img src="/images/unfold.svg" width="22" height="22" />
 				</a>
 			</div>
 		</div>

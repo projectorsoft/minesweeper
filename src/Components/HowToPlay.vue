@@ -10,14 +10,14 @@ export default defineComponent({
 	<div class="container mb-2">
 		<div class="row d-flex flex-wrap align-items-center">
 			<div class="col-12">
-				<label class="fw-bold mb-2">How to play minesweeper</label>
+				<label class="fw-bold">How to play minesweeper</label>
 				<a
-					class="btn btn-sm btn-outline-secondary me-2 float-end"
+					class="btn btn-sm btn-outline-secondary float-end"
 					type="button"
 					data-bs-toggle="collapse"
 					href="#howToPlayContainer"
 				>
-					<img src="/images/unfold.svg" width="25" height="25" />
+					<img src="/images/unfold.svg" width="22" height="22" />
 				</a>
 			</div>
 		</div>
@@ -29,28 +29,77 @@ export default defineComponent({
 					<div class="card-body">
 						<div class="row">
 							<div class="col-12">
-								<div class="list-group">
-									<p class="lead list-group-item list-group-item-light">
-										1. Click on the covered field.
-										<img src="/images/uncovered_field.png" alt="Uncovered field" />
-									</p>
-									<p class="lead list-group-item list-group-item-light">
-										2. If there are no mines in the neighbourhood - filed is empty.
-										<img src="/images/empty_fields.png" alt="Empty field" />
-									</p>
-									<p class="lead list-group-item list-group-item-light">
-										3. If there is at lest one mine in the neighbourhood - number of mines is shown. Number
-										'1' means field has only one neighbour with hidden mine.
-										<img src="/images/numbers.png" alt="Numbers" />
-									</p>
-									<p class="lead list-group-item list-group-item-light">
-										4. You can mark field by flag if You think thre is a mine.
-										<img src="/images/flagged_field.png" alt="Flagged field" />
-									</p>
-									<p class="lead list-group-item list-group-item-light">
-										5. If You are uncertain filed could be marked by '?'.
-										<img src="/images/uncertained_field.png" alt="Uncertain field" />
-									</p>
+								<div class="list-group list-group-flush fw-light">
+									<div class="list-group-item">
+										<div class="d-flex w-100 justify-content-between">
+											<p class="mb-1">
+												1. At the beginning all fileds are coverd.
+												<img src="/images/uncovered_field.png" alt="Uncovered field" />
+											</p>
+										</div>
+									</div>
+									<div class="list-group-item">
+										<div class="d-flex w-100 justify-content-between">
+											<p class="mb-1">
+												2. Game starts when player clicks choosen filed for the first time.
+											</p>
+										</div>
+										<p class="mb-1">
+											From this moment timer located in right top corner of the board is ticking.
+										</p>
+									</div>
+									<div class="list-group-item">
+										<p class="mb-1">
+											3. If choosen field is empty and all surrounding filelds are empty then it
+											discoveres all adjascent empty tiles.
+											<img src="/images/empty_fields.png" alt="Empty field" />
+										</p>
+										<p class="mb-1">
+											This scenario works for evry empty tile which has been already discovered.
+										</p>
+										<p class="mb-1">
+											It works especially when 'Safe first click' option is checked in settings
+											popup.
+										</p>
+									</div>
+									<div class="list-group-item">
+										<div class="d-flex w-100 justify-content-between">
+											<p class="mb-1">
+												4. If choosen field has at least one mine in surrounding area than
+												number of mines is shown.
+												<img src="/images/numbers.png" alt="Numbers" />
+											</p>
+										</div>
+										<p class="mb-1">
+											For example: '1' means field has only one neighbour with hidden mine.
+										</p>
+										<p class="mb-1">And '8' means all surrounding fields have hidden mines.</p>
+									</div>
+									<div class="list-group-item">
+										<div class="d-flex w-100 justify-content-between">
+											<p class="mb-1">
+												5. Player can set flag on covered field to mark it as danger.
+												<img src="/images/flagged_field.png" alt="Flagged field" />
+											</p>
+										</div>
+										<p class="mb-1">
+											It means field is no longer clickable so it is safe way to solve the game.
+										</p>
+										<p class="mb-1">
+											When flag is set on tile than number shown in left top corner of the board
+											is decreased.
+										</p>
+									</div>
+									<div class="list-group-item">
+										<div class="d-flex w-100 justify-content-between">
+											<p class="mb-1">
+												6. In some cases it is useful to mark field with question mark if player
+												is uncertain.
+												<img src="/images/uncertained_field.png" alt="Uncertain field" />
+											</p>
+										</div>
+										<p class="mb-1">In this state field is clickable.</p>
+									</div>
 								</div>
 							</div>
 						</div>

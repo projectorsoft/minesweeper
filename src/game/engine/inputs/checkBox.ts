@@ -50,12 +50,12 @@ export class CheckBox extends Component {
         this._context.beginPath();
         this._context.fillStyle = this.checked ? this.checkedColor : this.color;
         this._context.strokeStyle = Colors.DarkGrey;
-        this._context.lineWidth = 4;
+        this._context.lineWidth = 5;
 
         if (!this._enabled)
             this._context.fillStyle = this.disabledColor;
 
-        this._context.roundRect(this.positionX, this.positionY, this._width, this._height, [3]);
+        this._context.roundRect(this.positionX + 2, this.positionY, this._width, this._height, [3]);
 
         this._context.stroke();
         this._context.fill();
