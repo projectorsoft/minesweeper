@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.minesweeper-free.com/sitemap.xml
+Sitemap: https://minesweeper-free.com/sitemap.xml

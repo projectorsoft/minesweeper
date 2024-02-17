@@ -72,7 +72,7 @@ export default defineComponent({
 									</div>
 									<div class="list-group-item">
 										<div class="d-flex w-100 justify-content-between">
-											<p class="mb-1">'<b>Allow question mark</b>' option enables setting question marks on fields.</p>
+											<p class="mb-1">'<b>Allow question mark</b>' option enables question marks on fields.</p>
 										</div>
 										<p class="mb-1">
 											By default option is selected.
