@@ -263,12 +263,6 @@ export class Game {
     }
 
     private setCanvasSize(width: number, height: number): void {
-        if (width < Game.MinWidth)
-            width = Game.MinWidth;
-
-        if (height < Game.MinHeight)
-            height = Game.MinHeight;
-
         this._canvas.width = width;
         this._canvas.height = height;
     }
@@ -302,18 +296,21 @@ export class Game {
     }
 
     private adjustCanvasSize(): void {
-        if (this._gameMode === GameMode.Custom) {
-            const newWidth: number = this._mineField.width + 30;
-            const newHeight: number = this._mineField.height + 150;
+        let newWidth: number = this._mineField.width + 30;
+        let newHeight: number = this._mineField.height + 150;
 
+        if (newWidth < Game.MinWidth)
+            newWidth = Game.MinWidth;
+
+        if (newHeight < Game.MinHeight)
+            newHeight = Game.MinHeight;
+
+        if (this._gameMode === GameMode.Custom) {
             if (this._canvas.width !== newWidth ||
                 this._canvas.height !== newHeight)
                 this.setCanvasSize(newWidth, newHeight);
         }
         else {
-            const newWidth: number = this._mineField.width + 30;
-            const newHeight: number = this._mineField.height + 150;
-
             if (this._gameMode !== this._previousGameMode)
                 this.setCanvasSize(newWidth, newHeight);
         }
