@@ -262,11 +262,6 @@ export class Game {
         this._settingsPopup.visible = true;
     }
 
-    private setCanvasSize(width: number, height: number): void {
-        this._canvas.width = width;
-        this._canvas.height = height;
-    }
-
     private setComponentsEnabled(value: boolean): void {
         this._menuBar.enabled = value;
 
@@ -283,24 +278,24 @@ export class Game {
             this.onGameStateChanged(state);
     }
 
-    private adjustComponentsToBoardSize(): void {
-        this._mineField.positionX = (this._canvas.width - this._mineField.width) / 2;
-        this._mineField.positionY = 140;
-        this._menuBar.width = this._canvas.width;
-        this._menuBar.positionX = (this._canvas.width - this._menuBar.width) / 2;
-        this._faceIndicator.positionX = this._canvas.width / 2 - 20;
-        this._faceIndicator.positionY = 85;
-        this._statisticsPopup.reposition();
-        this._settingsPopup.reposition();
-        this._customBoardSizePopup.reposition();
+    private newGame(): void {
+        this.setGameState(GameState.NotStarted);
+        this.createMineField();
+        this.adjustCanvasSize();
+        this.adjustComponentsToBoardSize();
+        
+        this._isPaused = false;
+        this._previousGameMode = this._gameMode;
     }
 
     private adjustCanvasSize(): void {
-        let newWidth: number = this._mineField.width + 30;
+        let newWidth: number = this._mineField.width;
         let newHeight: number = this._mineField.height + 150;
 
         if (newWidth < Game.MinWidth)
             newWidth = Game.MinWidth;
+        else
+            newWidth += 28;
 
         if (newHeight < Game.MinHeight)
             newHeight = Game.MinHeight;
@@ -316,14 +311,21 @@ export class Game {
         }
     }
 
-    private newGame(): void {
-        this.setGameState(GameState.NotStarted);
-        this.createMineField();
-        this.adjustCanvasSize();
-        this.adjustComponentsToBoardSize();
-        
-        this._isPaused = false;
-        this._previousGameMode = this._gameMode;
+    private adjustComponentsToBoardSize(): void {
+        this._mineField.positionX = (this._canvas.width - this._mineField.width) / 2;
+        this._mineField.positionY = 140;
+        this._menuBar.width = this._canvas.width;
+        this._menuBar.positionX = (this._canvas.width - this._menuBar.width) / 2;
+        this._faceIndicator.positionX = this._canvas.width / 2 - 20;
+        this._faceIndicator.positionY = 85;
+        this._statisticsPopup.reposition();
+        this._settingsPopup.reposition();
+        this._customBoardSizePopup.reposition();
+    }
+
+    private setCanvasSize(width: number, height: number): void {
+        this._canvas.width = width;
+        this._canvas.height = height;
     }
 
     private changeMode(mode: GameMode): void {
