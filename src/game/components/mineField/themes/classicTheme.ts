@@ -5,6 +5,7 @@ import { IThemeParams, ThemeBase } from './themeBase';
 import { Game } from '@/game/game';
 import { Label } from '@/game/engine/inputs/label';
 import { Helpers } from '@/game/helpers/helpers';
+import { ClockHelper } from '@/game/helpers/clockHelper';
 
 export class ClassicTheme extends ThemeBase {
 	private static readonly _backgroundColor: string = '#BDBDBD';
@@ -57,7 +58,7 @@ export class ClassicTheme extends ThemeBase {
     protected drawClocks(params: IThemeParams): void {
 		const currentWidth = params.width < Game.MinWidth ? Game.MinWidth - 50 : params.width;
 
-		Label.drawText(this._context, Helpers.zeroPad(params.flagsNumber, 3), params.positionX + 5, params.positionY - 45, {
+		Label.drawText(this._context, ClockHelper.formatFlagsNumber(params.flagsNumber), params.positionX + 5, params.positionY - 45, {
 			size: 30,
 			family: 'pixelCode',
 			bold: true,

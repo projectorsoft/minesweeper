@@ -5,6 +5,7 @@ import { IThemeParams, ThemeBase } from './themeBase';
 import { Game } from '@/game/game';
 import { Helpers } from '@/game/helpers/helpers';
 import { Label } from '@/game/engine/inputs/label';
+import { ClockHelper } from '@/game/helpers/clockHelper';
 
 export class ModernTheme extends ThemeBase {
 	public constructor(context: CanvasRenderingContext2D, assetsManager: AssetsManager) {
@@ -28,7 +29,7 @@ export class ModernTheme extends ThemeBase {
 	protected drawClocks(params: IThemeParams): void {
 		const currentWidth = params.width < Game.MinWidth ? Game.MinWidth - 50 : params.width;
 
-		Label.drawText(this._context, Helpers.zeroPad(params.flagsNumber, 3), params.positionX - MineField.Padding, params.positionY - 60, {
+		Label.drawText(this._context, ClockHelper.formatFlagsNumber(params.flagsNumber), params.positionX - MineField.Padding, params.positionY - 60, {
 			size: 42,
 			family: 'pixelCode',
 			bold: true,

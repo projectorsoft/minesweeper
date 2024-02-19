@@ -310,8 +310,15 @@ export class MineField extends Component {
 
         this._fields[coordinates.x][coordinates.y].onRightClick(coordinates.x, coordinates.y, this._allowQuestionmark);
         
-        if (this._fields[coordinates.x][coordinates.y].fieldType === FieldType.Blank)
+        if (this._fields[coordinates.x][coordinates.y].fieldType === FieldType.Blank) {
+            if (!this._allowQuestionmark 
+                && this._flaggedFields.has(`${coordinates.x},${coordinates.y}`)) {
+                this._flaggedFields.delete(`${coordinates.x},${coordinates.y}`);
+                this._flagsNumber++;
+            }
+
             return;
+        }
 
         if (this._fields[coordinates.x][coordinates.y].fieldType === FieldType.Flagged) {
             this._flagsNumber--;
