@@ -212,6 +212,7 @@ export class MineField extends Component {
             this._mines.forEach(field => {
                 this._fields[field.x][field.y].setFlag();
             });
+            this._flagsNumber = 0;
             this._settingsService.updateLastGame(this._statisticsRecord);
             this._settingsService.updateModeData(this._mode, this._statisticsRecord);
             this._settingsService.updateScores(GameState.Won);
@@ -231,7 +232,7 @@ export class MineField extends Component {
 
         //'blow' other mines
         this._mines.forEach(mine => {
-                this._fields[mine.x][mine.y].onLeftClick(coordinates.x, coordinates.y);
+            this._fields[mine.x][mine.y].onLeftClick(coordinates.x, coordinates.y);
         });
 
         //reveal flag if mine is not on the field
