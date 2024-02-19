@@ -11,7 +11,7 @@ import NavigationBar from './components/NavigationBar.vue';
 import Settings from './components/Settings.vue';
 import Rules from './components/Rules.vue';
 import Scores from './components/Scores.vue';
-import { GameState } from './game/enums';
+import { GameState, Theme } from './game/enums';
 import { Game } from './game/game';
 import { ICustomModeOptions } from './game/components/mineField/mineFiledBuilder';
 
@@ -59,6 +59,9 @@ export default defineComponent({
 		},
 		boardSizeChanged(boardSizeOptions: ICustomModeOptions) {
 			this.game.startExternalCustomGame(boardSizeOptions);
+		},
+		themeChanged(theme: Theme) {
+			this.game.updateTheme(theme);
 		}
 	},
 });
@@ -69,7 +72,9 @@ export default defineComponent({
 		<NavigationBar @view-changed="switchView" />
 	</header>
 	<main data-bs-theme="dark">
-		<Settings @board-size-changed="boardSizeChanged" />
+		<Settings 
+			@board-size-changed="boardSizeChanged" 
+			@theme-changed="themeChanged" />
 		<Gallery v-show="showIf(1)" />
 		<GameContainer v-show="showIf(0)" />
 		<Scores ref="scores" :game-state="gameState" />

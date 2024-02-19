@@ -1,9 +1,10 @@
 import { TimersManager } from "@/game/engine/managers/timersManager";
 import { AssetsManager } from "../../engine/managers/assetsManager";
 import { Point } from "../../engine/point";
-import { GameMode, GameState } from "../../enums";
+import { GameMode, GameState, Theme } from "../../enums";
 import { SettingsService } from "../../services/settingsService";
 import { MineField } from "./mineField";
+import { ThemeFactory } from "./themes/themeFactory";
 
 export interface ICustomModeOptions {
     xSize: number;
@@ -12,26 +13,32 @@ export interface ICustomModeOptions {
 }
 
 export class MineFieldBuilder {
+    private readonly _minesNumberForMode: number[] = [10, 40, 99];
+
     private _context!: CanvasRenderingContext2D;
     private _settingsService: SettingsService;
     private _assetsManager: AssetsManager;
     private _timersManager: TimersManager;
+    private _themeFactory: ThemeFactory;
+
     private _mineField!: MineField;
     private _luckyGuess: boolean = false;
     private _allowQuestionmark: boolean = true;
     private _mode: GameMode = GameMode.Easy;
     private _customOptions?: ICustomModeOptions;
     private _onChangeHandler: Function = (state: GameState) => null;
-    private readonly _minesNumberForMode: number[] = [10, 40, 99];
+    private _theme: Theme;
     
     public constructor(context: CanvasRenderingContext2D,
         assetsManager: AssetsManager,
         settingsService: SettingsService,
-        timersManager: TimersManager) {
+        timersManager: TimersManager,
+        themeFactory: ThemeFactory) {
         this._context = context;
         this._settingsService = settingsService;
         this._assetsManager = assetsManager;
         this._timersManager = timersManager;
+        this._themeFactory = themeFactory;
     }
 
     public setDifficulty(mode: GameMode, customOptions?: ICustomModeOptions): MineFieldBuilder {
@@ -56,6 +63,12 @@ export class MineFieldBuilder {
     public setFieldChangedHandler(handler: (state: GameState) => void): MineFieldBuilder {
         this._onChangeHandler = handler;
         
+        return this;
+    }
+
+    public setTheme(theme: Theme): MineFieldBuilder {
+        this._theme = theme;
+
         return this;
     }
 
@@ -85,6 +98,7 @@ export class MineFieldBuilder {
             this._assetsManager, 
             this._settingsService, 
             this._timersManager,
+            this._themeFactory,
             size.x, 
             size.y,
             minesNumber,
@@ -92,6 +106,7 @@ export class MineFieldBuilder {
             this._luckyGuess,
             this._allowQuestionmark);
 
+        this._mineField.setTheme(this._theme);
         this._mineField.onFieldChanged = this._onChangeHandler;
 
         return this._mineField;

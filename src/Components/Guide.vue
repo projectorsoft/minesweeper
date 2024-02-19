@@ -67,7 +67,7 @@ export default defineComponent({
 										</div>
 										<p class="mb-1">
 											It will allow You to choose any field without selecting mine and by the way
-											uncover more sorrounding fields wich leads to simplify gameplay.
+											uncover more surrounding fields wich leads to simplify gameplay.
 										</p>
 									</div>
 									<div class="list-group-item">

@@ -1,21 +1,30 @@
 <script lang="ts">
 import { ICustomModeOptions } from '@/game/components/mineField/mineFiledBuilder';
+import { Theme } from '@/game/enums';
 import { defineComponent } from 'vue';
 import BestScoresEdit from './BestScoresEdit.vue';
 import CustomBoardSizeEdit from './CustomBoardSizeEdit.vue';
 import PlayerNameEdit from './PlayerNameEdit.vue';
+import ThemeEdit from './ThemeEdit.vue';
 
 export default defineComponent({
 	name: 'Settings',
-	emits: ['boardSizeChanged'],
+	emits: [
+		'boardSizeChanged',
+		'themeChanged'
+	],
 	components: {
 		BestScoresEdit,
 		CustomBoardSizeEdit,
-		PlayerNameEdit
+		PlayerNameEdit,
+		ThemeEdit
 	},
 	methods: {
 		boardSizeChanged(boardSizeOptions: ICustomModeOptions) {
 			this.$emit('boardSizeChanged', boardSizeOptions);
+		},
+		themeChanged(theme: Theme) {
+			this.$emit('themeChanged', theme);
 		}
 	},
 });
@@ -30,6 +39,7 @@ export default defineComponent({
 					<div class="card-body">
 						<PlayerNameEdit />
 						<BestScoresEdit />
+						<ThemeEdit @theme-changed="themeChanged" />
 						<CustomBoardSizeEdit @board-size-changed="boardSizeChanged" />
 					</div>
 				</div>

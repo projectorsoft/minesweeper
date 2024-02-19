@@ -28,8 +28,6 @@ export enum Asset {
     SettingsImgSvg = 'settingsImgSvg',
     NewImgSvg = 'newImgSvg',
     StatisticsImgSvg = 'statisticsImgSvg',
-    SmileImgSvg = 'smileImgSvg',
-    SadImgSvg = 'sadImgSvg',
     PauseImgSvg = 'pauseImgSvg',
     PixelCodeFont = 'pixelCodeFont'
 }
@@ -98,4 +96,9 @@ export enum AlertType {
 export enum ComponentAlign {
     Start = 0,
     End = 1
+}
+
+export enum Theme {
+    Modern = 0,
+    Classic = 1
 }

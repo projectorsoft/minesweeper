@@ -3,7 +3,8 @@ import { Component } from "./component";
 
 export interface ILabelOptions {
     size: number, 
-    color: Colors | string, 
+    color: Colors | string,
+    backgroundColor: Colors | string | undefined,
     family: string,
     align: CanvasTextAlign,
     baseline: CanvasTextBaseline,
@@ -36,10 +37,10 @@ export class Label extends Component {
             this.positionX, 
             this.positionY, { 
             size: this.fontSize, 
-            color: this.color, 
+            color: this.color,
             family: this.fontFamily, 
             align: this.align, 
-            bold: this.bold 
+            bold: this.bold
         });
     }
 
@@ -54,6 +55,16 @@ export class Label extends Component {
         y: number, 
         options: Partial<ILabelOptions>): void {
             context.font = `${ options?.bold ? 'bold' : '' } ${ options?.size ? options.size : Label.FontSize }px ${ options?.family ? options.family : Label.FontFamily }`;
+            const size = context.measureText(text);
+            
+            if (options.backgroundColor) {
+                context.beginPath();
+                context.fillStyle = options.backgroundColor;
+                context.rect(x, y, size.width, 30);
+                context.fill();
+                context.closePath();
+            }
+
             context.textAlign = options?.align ? options.align : 'left';
             context.textBaseline = options?.baseline ? options.baseline : "middle";
             context.fillStyle = options?.color ? options.color : Colors.Black;

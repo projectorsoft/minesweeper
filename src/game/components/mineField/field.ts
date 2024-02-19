@@ -2,7 +2,7 @@ import { Component } from "@/game/engine/inputs/component";
 import { Label } from "../../engine/inputs/label";
 import { AssetsManager } from "../../engine/managers/assetsManager";
 import { Point } from "../../engine/point";
-import { Asset, Colors, FieldState, FieldType, Sprite } from "../../enums";
+import { Asset, Colors, FieldState, FieldType, Sprite, Theme } from "../../enums";
 
 export class Field extends Component {
     public static readonly FieldSize: number = 30;
@@ -30,6 +30,7 @@ export class Field extends Component {
     public fieldType: FieldType;
     public fieldState: FieldState;
     public position: Point; //position in grid
+    public theme: Theme = Theme.Modern;
     
     public get minesNumber(): number {
         return this._minesNumber;
@@ -105,9 +106,10 @@ export class Field extends Component {
     }
 
     private drawImage(imageIndex: number): void {
+        this._context.save();
         this._context.drawImage(this._image, 
             imageIndex * this._spriteSize, //mine
-            0, 
+            this.theme * this._spriteSize, 
             this._spriteSize, 
             this._spriteSize,
             this._positionX, 
@@ -115,6 +117,7 @@ export class Field extends Component {
             Field.FieldSize, 
             Field.FieldSize
         );
+        this._context.restore();
     }
 
     private setImageIndex(): void {

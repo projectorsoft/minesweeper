@@ -1,51 +1,30 @@
 import { Component } from "../engine/inputs/component";
-import { AssetsManager } from "../engine/managers/assetsManager";
-import { Asset, GameState } from "../enums";
+import { GameState, Theme } from "../enums";
+import { ThemeBase } from "./mineField/themes/themeBase";
+import { ThemeFactory } from "./mineField/themes/themeFactory";
 
 export class FaceIndicator extends Component {
-    private readonly _spriteSize: number = 24;
-    private readonly _displaySize = 48;
-
-    private _smileImage: CanvasImageSource;
-    private _sadImage: CanvasImageSource;
-
+    private _themeFactory: ThemeFactory;
+    private _theme: ThemeBase;
+    
     public gameState: GameState = GameState.Started;
 
+    public set theme(value: Theme) {
+        this._theme = this._themeFactory.Create(value);
+    }
+
     public constructor(context: CanvasRenderingContext2D,
-        assetsManager: AssetsManager) {
+        themeFactory: ThemeFactory) {
             super(context);
-            this._smileImage = assetsManager.getImage(Asset.SmileImgSvg);
-            this._sadImage = assetsManager.getImage(Asset.SadImgSvg);
+            this._themeFactory = themeFactory;
     }
 
     protected drawInternal(): void {
-        if (this.gameState === GameState.NotStarted || this.gameState === GameState.Started) {
-            this._context.clearRect(this.positionX, this.positionY, this._displaySize, this._displaySize)
-            return;
-        }
-
-        if (this.gameState === GameState.Won)
-            this.drawImage(this._smileImage);
-        else
-        if (this.gameState === GameState.Lost)
-            this.drawImage(this._sadImage);
+        this._theme.drawFace(this.positionX, this.positionY, this.gameState)
     }
 
     protected clickInternal(x: number, y: number): void {
     }
     protected mouseMoveInternal(x: number, y: number): void {
-    }
-
-    private drawImage(image: CanvasImageSource): void {
-        this._context.drawImage(image, 
-            0,
-            0, 
-            this._spriteSize, 
-            this._spriteSize,
-            this.positionX, 
-            this.positionY,
-            this._displaySize, 
-            this._displaySize
-        );
     }
 }

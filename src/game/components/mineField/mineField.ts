@@ -3,12 +3,16 @@ import { TimersManager } from "@/game/engine/managers/timersManager";
 import { Label } from "../../engine/inputs/label";
 import { AssetsManager } from "../../engine/managers/assetsManager";
 import { Point } from "../../engine/point";
-import { Colors, FieldState, FieldType, GameMode, GameState } from "../../enums";
+import { Colors, FieldState, FieldType, GameMode, GameState, Theme } from "../../enums";
 import { Game } from "../../game";
 import { Helpers } from "../../helpers/helpers";
 import { StatisticsRecord } from "../../services/settings";
 import { SettingsService } from "../../services/settingsService";
 import { Field } from "./field";
+import { ModernTheme } from "./themes/modernTheme";
+import { ClassicTheme } from "./themes/classicTheme";
+import { ThemeBase } from "./themes/themeBase";
+import { ThemeFactory } from "./themes/themeFactory";
 
 export class MineField extends Component {
     public static readonly Padding: number = 14;
@@ -17,6 +21,7 @@ export class MineField extends Component {
     private _assetsManager: AssetsManager;
     private _timersManager: TimersManager;
     private _settingsService: SettingsService;
+    private _themeFactory: ThemeFactory;
     private _fields: Field[][];
     private _xSize: number;
     private _ySize: number;
@@ -29,6 +34,7 @@ export class MineField extends Component {
     private _mode: GameMode;
     private _uncoveredFieldsLeft: number;
     private _statisticsRecord: StatisticsRecord;
+    private _theme: ThemeBase;
 
     public onFieldChanged: Function = (state: GameState) => null;
 
@@ -42,13 +48,14 @@ export class MineField extends Component {
         return Field.FieldSize * this.xSize + 2 * MineField.Padding;
     }
     public get height(): number {
-        return Field.FieldSize * this.ySize + MineField.MarginTop + 5;
+        return Field.FieldSize * this.ySize + MineField.MarginTop;
     }
 
     public constructor(context: CanvasRenderingContext2D,
                         assetsManager: AssetsManager,
                         settingsService: SettingsService,
                         timersManager: TimersManager,
+                        themeFactory: ThemeFactory,
                         xSize: number, 
                         ySize: number,
                         minesNumber: number,
@@ -60,6 +67,9 @@ export class MineField extends Component {
         this._assetsManager = assetsManager;
         this._settingsService = settingsService;
         this._timersManager = timersManager;
+        this._themeFactory = themeFactory;
+
+        this._theme = new ModernTheme(context, assetsManager);
 
         this._xSize = xSize;
         this._ySize = ySize;
@@ -80,6 +90,16 @@ export class MineField extends Component {
         this.onFieldChanged = () => null;
     }
 
+    public setTheme(theme: Theme): void {
+        this._theme = this._themeFactory.Create(theme);
+
+        for (let x = 0; x < this._xSize; x++) {
+            for (let y = 0; y < this._ySize; y++) {
+                this._fields[x][y].theme = theme;
+            }
+        }
+    }
+
     private createMineFiled(): void {
         this._fields = [];
 
@@ -88,6 +108,7 @@ export class MineField extends Component {
             for (let y = 0; y < this._ySize; y++) {
                 this._fields[x][y] = new Field(this._context, this._assetsManager, new Point(x, y));
                 this._fields[x][y].parent = this;
+                this._fields[x][y].theme = Theme.Modern;
                 this._fields[x][y].positionX = this.positionX + x * Field.FieldSize + MineField.Padding;
                 this._fields[x][y].positionY = this.positionY + y * Field.FieldSize + MineField.MarginTop;
                 this.addComponent(`${x}_${y}`, this._fields[x][y]);
@@ -141,8 +162,14 @@ export class MineField extends Component {
     }
 
     protected drawInternal(): void {
-        this.drawFrame();
-        this.drawClocks();
+        this._theme.draw({
+            flagsNumber: this._flagsNumber, 
+            time: this._statisticsRecord.time,
+            positionX: this.positionX, 
+            positionY: this.positionY, 
+            width: this.width, 
+            height: this.height
+        });
 
         this._components.forEach(input => input.draw());
     }
@@ -150,30 +177,6 @@ export class MineField extends Component {
     protected clickInternal(x: number, y: number): void {
     }
     protected mouseMoveInternal(x: number, y: number): void {
-    }
-
-    private drawClocks(): void {
-        this.drawText(this._flagsNumber.toString(), 42, new Point(0, this.positionY - 50), Colors.Red, true, 'left');
-
-        const seconds = Helpers.roundTimeToSeconds(this._statisticsRecord.time);
-        if (seconds < 1000) {
-            this.drawText(Helpers.zeroPad(seconds, 3), 42, new Point(this.width, this.positionY - 50), Colors.Red, true, 'right');
-        }
-        else
-            this.drawText('999', 42, new Point(this.width, this.positionY - 50), Colors.Red, true, 'right');
-    }
-
-    private drawFrame(): void {
-        this._context.save();
-        this._context.beginPath();
-        this._context.globalAlpha = 0.3;
-        this._context.fillStyle = Colors.White;
-        this._context.roundRect(this.positionX, this.positionY, this.width, this.height, [40]);
-        this._context.strokeStyle = Colors.Black;
-        this._context.stroke();
-        this._context.fill();
-        this._context.closePath();
-        this._context.restore();
     }
 
     private incrementFieldMinesNumber(x: number, y: number): void {
@@ -423,23 +426,6 @@ export class MineField extends Component {
             positions.push(new Point(x + 1, y + 1));
 
         return positions;
-    }
-
-    private drawText(text: string,
-        size: number,
-        position: Point, 
-        color: string = 'white',
-        bold: boolean = false, 
-        align: CanvasTextAlign = 'center'
-    ): void {
-        Label.drawText(this._context, 
-            text, position.x + this.positionX, position.y + MineField.MarginTop, { 
-            size: size,
-            family: 'pixelCode',
-            bold: bold,
-            align: align,
-            color: color
-        });
     }
 
     private createTimer(): void {
