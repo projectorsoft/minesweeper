@@ -77,7 +77,7 @@ export class Field extends Component {
                 if (this.fieldType === FieldType.Tentative) {
                         Label.drawText(this._context, 
                             '?', this._positionX + this._halfFieldSize, this._positionY + this._halfFieldSize, { 
-                            size: 20,
+                            size: 25,
                             family: 'pixelCode',
                             bold: true,
                             align: 'center',
@@ -95,7 +95,7 @@ export class Field extends Component {
             if (this._minesNumber > 0) {
                     Label.drawText(this._context, 
                         this._minesNumber.toString(), this._positionX + this._halfFieldSize, this._positionY + this._halfFieldSize, { 
-                        size: 20,
+                        size: 25,
                         family: 'pixelCode',
                         bold: true,
                         align: 'center',

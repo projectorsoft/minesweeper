@@ -7,9 +7,9 @@ export default defineComponent({
 	emits: ['boardSizeChanged'],
 	data() {
 		return {
-			xSize: 31,
-			ySize: 9,
-			minesNumber: 50,
+			xSize: Game.CustomBoardDefaultXSize,
+			ySize: Game.CustomBoardDefaultYSize,
+			minesNumber: Game.CustomBoardDefaultMinesNumber,
 		};
 	},
 	methods: {

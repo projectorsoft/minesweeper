@@ -29,6 +29,9 @@ export class Game {
     public static readonly MaxBoardYSize: number = 50;
     public static readonly MinMinesNumber: number = 27;
     public static readonly MaxMinesNumber: number = 999;
+    public static readonly CustomBoardDefaultXSize: number = 14;
+    public static readonly CustomBoardDefaultYSize: number = 14;
+    public static readonly CustomBoardDefaultMinesNumber: number = 65;
 
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
@@ -105,8 +108,9 @@ export class Game {
         this._customModeOptions = options;
         this._customBoardSizePopup.updateValues(options);
         this._customBoardSizePopup.visible = false;
-        this._settingsPopup.visible = false;
         this._statisticsPopup.visible = false;
+        this._settingsPopup.visible = false;
+        this._settingsPopup.changeGameMode(GameMode.Custom);
         this.changeMode(GameMode.Custom);
         this.newGame();
         this.setComponentsEnabled(true);

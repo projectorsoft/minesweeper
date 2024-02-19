@@ -35,7 +35,7 @@ export class CustomBoardSizePopup extends Popup {
         xValueInput.positionY = Popup.HeaderSize + Popup.Padding;
         xValueInput.minValue = Game.MinBoardXSize;
         xValueInput.maxValue = Game.MaxBoardXSize;
-        xValueInput.value = 31;
+        xValueInput.value = Game.CustomBoardDefaultXSize;
         xValueInput.create();
 
         const yValueInput = new InputNumber(this._context);
@@ -44,7 +44,7 @@ export class CustomBoardSizePopup extends Popup {
         yValueInput.positionY = Popup.HeaderSize + Popup.Padding + 28;
         yValueInput.minValue = Game.MinBoardYSize;
         yValueInput.maxValue = Game.MaxBoardYSize;
-        yValueInput.value = 9;
+        yValueInput.value = Game.CustomBoardDefaultYSize;
         yValueInput.create();
 
         const minesValueInput = new InputNumber(this._context);
@@ -53,7 +53,7 @@ export class CustomBoardSizePopup extends Popup {
         minesValueInput.positionY = Popup.HeaderSize + Popup.Padding + 56;
         minesValueInput.minValue = Game.MinMinesNumber;
         minesValueInput.maxValue = Game.MaxMinesNumber;
-        minesValueInput.value = 50;
+        minesValueInput.value = Game.CustomBoardDefaultMinesNumber;
         minesValueInput.create();
 
         const cancelBtn = new Button(this._context);
