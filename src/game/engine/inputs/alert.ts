@@ -1,5 +1,5 @@
 import { AlertType, Colors } from "@/game/enums";
-import { Game } from "@/game/game";
+import { Minesweeper } from "@/game/minesweeper";
 import { Component } from "./component";
 import { Label } from "./label";
 
@@ -46,7 +46,7 @@ export class Alert extends Component {
 
     protected drawInternal(): void {
         const width: number = this._context.measureText(this.text).width + 2 * Alert.Padding;
-        const xPos = Game.getWidth() / 2- width / 2;
+        const xPos = Minesweeper.getWidth() / 2- width / 2;
         const yPos = 0;
 
         this._context.save();

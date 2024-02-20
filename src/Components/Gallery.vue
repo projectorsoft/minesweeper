@@ -17,6 +17,7 @@ export default defineComponent({
 				pagination: true,
 				cover: true,
 				autoplay: true,
+				lazy: true,
 			},
 		};
 	},
@@ -58,7 +59,7 @@ export default defineComponent({
 </template>
 
 <style scoped>
-	.splide__slide {
+.splide__slide {
 	border-radius: 15px;
-	}
+}
 </style>

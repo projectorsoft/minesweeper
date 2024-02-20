@@ -5,7 +5,7 @@ import { InputNumber } from "../engine/inputs/inputNumber";
 import { Label } from "../engine/inputs/label";
 import { Popup } from "../engine/popup";
 import { AlertType, Colors } from "../enums";
-import { Game } from "../game";
+import { Minesweeper } from "../minesweeper";
 
 export class CustomBoardSizePopup extends Popup {
     public onCancel!: Function;
@@ -33,27 +33,27 @@ export class CustomBoardSizePopup extends Popup {
         xValueInput.parent = this;
         xValueInput.positionX = 220;
         xValueInput.positionY = Popup.HeaderSize + Popup.Padding;
-        xValueInput.minValue = Game.MinBoardXSize;
-        xValueInput.maxValue = Game.MaxBoardXSize;
-        xValueInput.value = Game.CustomBoardDefaultXSize;
+        xValueInput.minValue = Minesweeper.MinBoardXSize;
+        xValueInput.maxValue = Minesweeper.MaxBoardXSize;
+        xValueInput.value = Minesweeper.CustomBoardDefaultXSize;
         xValueInput.create();
 
         const yValueInput = new InputNumber(this._context);
         yValueInput.parent = this;
         yValueInput.positionX = 220;
         yValueInput.positionY = Popup.HeaderSize + Popup.Padding + 28;
-        yValueInput.minValue = Game.MinBoardYSize;
-        yValueInput.maxValue = Game.MaxBoardYSize;
-        yValueInput.value = Game.CustomBoardDefaultYSize;
+        yValueInput.minValue = Minesweeper.MinBoardYSize;
+        yValueInput.maxValue = Minesweeper.MaxBoardYSize;
+        yValueInput.value = Minesweeper.CustomBoardDefaultYSize;
         yValueInput.create();
 
         const minesValueInput = new InputNumber(this._context);
         minesValueInput.parent = this;
         minesValueInput.positionX = 220;
         minesValueInput.positionY = Popup.HeaderSize + Popup.Padding + 56;
-        minesValueInput.minValue = Game.MinMinesNumber;
-        minesValueInput.maxValue = Game.MaxMinesNumber;
-        minesValueInput.value = Game.CustomBoardDefaultMinesNumber;
+        minesValueInput.minValue = Minesweeper.MinMinesNumber;
+        minesValueInput.maxValue = Minesweeper.MaxMinesNumber;
+        minesValueInput.value = Minesweeper.CustomBoardDefaultMinesNumber;
         minesValueInput.create();
 
         const cancelBtn = new Button(this._context);

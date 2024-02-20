@@ -2,7 +2,7 @@ import { AssetsManager } from '@/game/engine/managers/assetsManager';
 import { Asset, Colors, GameState, Sprite, Theme } from '@/game/enums';
 import { MineField } from '../mineField';
 import { IThemeParams, ThemeBase } from './themeBase';
-import { Game } from '@/game/game';
+import { Minesweeper } from '@/game/minesweeper';
 import { Helpers } from '@/game/helpers/helpers';
 import { Label } from '@/game/engine/inputs/label';
 import { ClockHelper } from '@/game/helpers/clockHelper';
@@ -27,7 +27,7 @@ export class ModernTheme extends ThemeBase {
 	}
 
 	protected drawClocks(params: IThemeParams): void {
-		const currentWidth = params.width < Game.MinWidth ? Game.MinWidth - 50 : params.width;
+		const currentWidth = params.width < Minesweeper.MinWidth ? Minesweeper.MinWidth - 50 : params.width;
 
 		Label.drawText(this._context, ClockHelper.formatFlagsNumber(params.flagsNumber), params.positionX - MineField.Padding, params.positionY - 60, {
 			size: 42,

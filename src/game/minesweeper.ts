@@ -19,7 +19,7 @@ import { StatisticsPopup } from "./popups/statisticsPopup";
 import { Settings } from "./services/settings";
 import { SettingsService } from "./services/settingsService";
 
-export class Game {
+export class Minesweeper {
     public static readonly TimerName: string = 'MainTimer';
     public static readonly MinWidth: number = 370;
     public static readonly MinHeight: number = 445;
@@ -67,7 +67,7 @@ export class Game {
     public set isPaused(value: boolean) {
         this._isPaused = value;
 
-        const timer = this._timersManager.get(Game.TimerName);
+        const timer = this._timersManager.get(Minesweeper.TimerName);
 
         if (!timer)
             return;
@@ -82,19 +82,7 @@ export class Game {
     }
 
     constructor() {
-        this._assetsManager = new AssetsManager();
-
-        this.addAssets();
-        this._assetsManager
-            .loadAll()
-            .then(() => {
-                const pixelCodeFont = this._assetsManager.getFont(Asset.PixelCodeFont);
-                (document as any).fonts.add(pixelCodeFont);
-                pixelCodeFont.load().then(() => this.initialize());
-            })
-            .catch((error: Error) => {
-                console.log(error); //TODO: show more sophisticated/user friendly message
-            });
+        this.load();
     }
 
     public startExternalCustomGame(options: ICustomModeOptions): void {
@@ -122,8 +110,34 @@ export class Game {
         this._faceIndicator.theme = theme;
     }
 
+    private load(): void {
+        this._assetsManager = new AssetsManager();
+
+        this.addAssets();
+        this._assetsManager
+            .loadAll()
+            .then(() => {
+                const pixelCodeFont = this._assetsManager.getFont(Asset.PixelCodeFont);
+                (document as any).fonts.add(pixelCodeFont);
+                pixelCodeFont.load().then(() => this.initialize());
+            })
+            .catch((error: Error) => {
+                console.log(error); //TODO: show more sophisticated/user friendly message
+            });
+    }
+
     private initialize(): void {
-        this._canvas = document.getElementById('canvas') as HTMLCanvasElement;
+        const container = document.getElementById('minesweeperContainer');
+
+        if (!container)
+            return;
+
+        this._canvas = document.createElement("canvas") as HTMLCanvasElement;
+        this._canvas.id = 'minesweeperCanvas';
+        this._canvas.width = Minesweeper.MinWidth;
+        this._canvas.height = Minesweeper.MinHeight;
+        container.appendChild(this._canvas);
+
         this._context = this._canvas.getContext('2d') as CanvasRenderingContext2D;
 
         this._timersManager = new TimersManager();
@@ -178,7 +192,7 @@ export class Game {
 
     private createStatusBar(): void {
         this._faceIndicator = new FaceIndicator(this._context, this._themeFactory);
-        this._faceIndicator.positionX = Game.MinWidth / 2;
+        this._faceIndicator.positionX = Minesweeper.MinWidth / 2;
         this._faceIndicator.positionY = MineField.MarginTop - 70;
         this._faceIndicator.theme = this._currentTheme;
     }
@@ -309,13 +323,13 @@ export class Game {
         let newWidth: number = this._mineField.width;
         let newHeight: number = this._mineField.height + 150;
 
-        if (newWidth < Game.MinWidth)
-            newWidth = Game.MinWidth;
+        if (newWidth < Minesweeper.MinWidth)
+            newWidth = Minesweeper.MinWidth;
         else
             newWidth += 28;
 
-        if (newHeight < Game.MinHeight)
-            newHeight = Game.MinHeight;
+        if (newHeight < Minesweeper.MinHeight)
+            newHeight = Minesweeper.MinHeight;
 
         if (this._gameMode === GameMode.Custom) {
             if (this._canvas.width !== newWidth ||
@@ -415,10 +429,10 @@ export class Game {
     }
 
     public static getWidth(): number {
-        return (document.getElementById('canvas') as HTMLCanvasElement).width;
+        return (document.getElementById('minesweeperCanvas') as HTMLCanvasElement).width;
     }
 
     public static getHeight(): number {
-        return (document.getElementById('canvas') as HTMLCanvasElement).height;
+        return (document.getElementById('minesweeperCanvas') as HTMLCanvasElement).height;
     }
 }

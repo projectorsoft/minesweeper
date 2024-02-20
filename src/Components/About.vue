@@ -7,7 +7,14 @@ export default defineComponent({
 </script>
 
 <template>
-	<div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
+	<div
+		class="modal"
+		id="aboutModal"
+		tabindex="-1"
+		aria-labelledby="aboutModalLabel"
+		aria-hidden="true"
+		data-bs-backdrop="false"
+	>
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -25,9 +32,19 @@ export default defineComponent({
 						Any kind of device with access to the internet and simple input (mouse or touch screen) is
 						enough.
 					</p>
-                    <hr />
-                    <p class="text-body-secondary">If You want to share Your opinion, request a bug or write in any other case:</p>
-                    <a href="mailto:contact@minesweeper-free.com" class="link-secondary link-offset-2">contact@minesweeper-free.com</a>
+					<hr />
+					<p class="text-body-secondary">
+						If You want to share Your opinion, request a bug or write in any other case:
+					</p>
+					<a href="mailto:contact@minesweeper-free.com" class="link-secondary link-offset-2"
+						>contact@minesweeper-free.com</a
+					>
+					<hr />
+					<p class="text-body-secondary mb-0">Author:</p>
+					<p class="text-body-secondary mb-0">Konrad Łowczak Solutions</p>
+					<p class="text-body-secondary mb-0">Jana Kazimierza 47A/46</p>
+					<p class="text-body-secondary mb-0">01-267 Warszawa</p>
+					<p class="text-body-secondary mb-0">Poland</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

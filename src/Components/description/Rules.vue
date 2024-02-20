@@ -17,7 +17,7 @@ export default defineComponent({
 					data-bs-toggle="collapse"
 					href="#rulesContainer"
 				>
-					<img src="/images/unfold.svg" width="22" height="22" />
+					<img src="/images/unfold.svg" width="22" height="22" alt="unfold" />
 				</a>
 			</div>
 		</div>

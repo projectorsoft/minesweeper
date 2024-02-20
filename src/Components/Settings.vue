@@ -2,22 +2,19 @@
 import { ICustomModeOptions } from '@/game/components/mineField/mineFiledBuilder';
 import { Theme } from '@/game/enums';
 import { defineComponent } from 'vue';
-import BestScoresEdit from './BestScoresEdit.vue';
-import CustomBoardSizeEdit from './CustomBoardSizeEdit.vue';
-import PlayerNameEdit from './PlayerNameEdit.vue';
-import ThemeEdit from './ThemeEdit.vue';
+import BestScoresEdit from './settings/BestScoresEdit.vue';
+import CustomBoardSizeEdit from './settings/CustomBoardSizeEdit.vue';
+import PlayerNameEdit from './settings/PlayerNameEdit.vue';
+import ThemeEdit from './settings/ThemeEdit.vue';
 
 export default defineComponent({
 	name: 'Settings',
-	emits: [
-		'boardSizeChanged',
-		'themeChanged'
-	],
+	emits: ['boardSizeChanged', 'themeChanged'],
 	components: {
 		BestScoresEdit,
 		CustomBoardSizeEdit,
 		PlayerNameEdit,
-		ThemeEdit
+		ThemeEdit,
 	},
 	methods: {
 		boardSizeChanged(boardSizeOptions: ICustomModeOptions) {
@@ -25,13 +22,13 @@ export default defineComponent({
 		},
 		themeChanged(theme: Theme) {
 			this.$emit('themeChanged', theme);
-		}
+		},
 	},
 });
 </script>
 
 <template>
-	<div class="container mb-4 collapse show" id="settingsContainer">
+	<div class="container mb-4 collapse" id="settingsContainer">
 		<div class="row d-flex flex-wrap align-items-center">
 			<div class="col">
 				<label class="fw-bold mb-2">Settings</label>

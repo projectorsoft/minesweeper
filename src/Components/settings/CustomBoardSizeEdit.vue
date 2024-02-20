@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Game } from '@/game/game';
+import { Minesweeper } from '@/game/minesweeper';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -7,14 +7,14 @@ export default defineComponent({
 	emits: ['boardSizeChanged'],
 	data() {
 		return {
-			xSize: Game.CustomBoardDefaultXSize,
-			ySize: Game.CustomBoardDefaultYSize,
-			minesNumber: Game.CustomBoardDefaultMinesNumber,
+			xSize: Minesweeper.CustomBoardDefaultXSize,
+			ySize: Minesweeper.CustomBoardDefaultYSize,
+			minesNumber: Minesweeper.CustomBoardDefaultMinesNumber,
 		};
 	},
 	methods: {
 		changeBoardSize(): void {
-			if (this.minesNumber < Game.MinMinesNumber || this.minesNumber > Game.MaxMinesNumber) {
+			if (this.minesNumber < Minesweeper.MinMinesNumber || this.minesNumber > Minesweeper.MaxMinesNumber) {
 				return;
 			}
 
@@ -90,3 +90,4 @@ export default defineComponent({
 		<p class="fst-italic text-warning mt-2">Mines number value must be less than 1/3 of board cells.</p>
 	</div>
 </template>
+@/game/minesweeper

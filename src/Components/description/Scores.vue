@@ -78,7 +78,7 @@ export default defineComponent({
 			<div class="col-12">
 				<label class="fw-bold">Best scores</label>
 				<button @click="getBestScores()" class="btn btn-sm btn-outline-secondary mx-2" type="button">
-					<img src="/images/new.svg" width="22" height="22" />
+					<img src="/images/new.svg" width="22" height="22" alt="unfold" />
 				</button>
 				<a
 					class="btn btn-sm btn-outline-secondary float-end"
@@ -86,7 +86,7 @@ export default defineComponent({
 					data-bs-toggle="collapse"
 					href="#bestScoresContainer"
 				>
-					<img src="/images/unfold.svg" width="22" height="22" />
+					<img src="/images/unfold.svg" width="22" height="22" alt="unfold" />
 				</a>
 			</div>
 		</div>

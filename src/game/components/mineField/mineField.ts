@@ -4,7 +4,7 @@ import { Label } from "../../engine/inputs/label";
 import { AssetsManager } from "../../engine/managers/assetsManager";
 import { Point } from "../../engine/point";
 import { Colors, FieldState, FieldType, GameMode, GameState, Theme } from "../../enums";
-import { Game } from "../../game";
+import { Minesweeper } from "../../minesweeper";
 import { Helpers } from "../../helpers/helpers";
 import { StatisticsRecord } from "../../services/settings";
 import { SettingsService } from "../../services/settingsService";
@@ -83,7 +83,7 @@ export class MineField extends Component {
         this._statisticsRecord.time = 0;
 
         //delete timer if already exists
-        this._timersManager.delete(Game.TimerName);
+        this._timersManager.delete(Minesweeper.TimerName);
 
         this.adjustPosition();
         this.createMineFiled();
@@ -151,7 +151,7 @@ export class MineField extends Component {
     }
 
     private adjustPosition(): void {
-        const currentWidth: number = Game.getWidth() > this.width ? Game.MinWidth : Game.getWidth();
+        const currentWidth: number = Minesweeper.getWidth() > this.width ? Minesweeper.MinWidth : Minesweeper.getWidth();
 
         this._positionX = (currentWidth - this.width) / 2;
         this._positionY = MineField.MarginTop + MineField.Padding + 98;
@@ -262,7 +262,7 @@ export class MineField extends Component {
         this._statisticsRecord.clicks++;
 
         //first click, start timer
-        if (!this._timersManager.exists(Game.TimerName)) {
+        if (!this._timersManager.exists(Minesweeper.TimerName)) {
             this.generateMines(coordinates);
             this.onFieldChanged(GameState.Started);
             this.createTimer();
@@ -296,7 +296,7 @@ export class MineField extends Component {
             return;
 
         //first click
-        if (!this._timersManager.exists(Game.TimerName)) {
+        if (!this._timersManager.exists(Minesweeper.TimerName)) {
             //must be left click firs
             if (this._luckyGuess)
                 return;
@@ -437,12 +437,12 @@ export class MineField extends Component {
     }
 
     private createTimer(): void {
-        this._timersManager.addInterval(Game.TimerName, () => {
+        this._timersManager.addInterval(Minesweeper.TimerName, () => {
             this._statisticsRecord.time += 10;
         }, 10);
     }
 
     private stopTimer(): void {
-        this._timersManager.delete(Game.TimerName);
+        this._timersManager.delete(Minesweeper.TimerName);
     }
 }

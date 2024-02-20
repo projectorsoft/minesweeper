@@ -1,5 +1,5 @@
 import { Colors } from "../enums";
-import { Game } from "../game";
+import { Minesweeper } from "../minesweeper";
 import { Component } from "./inputs/component";
 import { Label } from "./inputs/label";
 
@@ -40,7 +40,7 @@ export abstract class Popup extends Component {
     }
 
     public reposition(): void {
-        this.positionX = Game.getWidth() / 2 - this.width / 2;
+        this.positionX = Minesweeper.getWidth() / 2 - this.width / 2;
         this.positionY = 20;
     }
 
@@ -52,7 +52,7 @@ export abstract class Popup extends Component {
         this._context.save();
         this._context.globalAlpha = 0.3;
         this._context.beginPath();
-        this._context.rect(0, 0, Game.getWidth(), Game.getHeight());
+        this._context.rect(0, 0, Minesweeper.getWidth(), Minesweeper.getHeight());
         this._context.fillStyle = Colors.White;
         this._context.fill();
         this._context.closePath();
