@@ -1,5 +1,7 @@
 <script lang="ts">
+import { StorageService } from '@/game/engine/managers/storageService';
 import { Theme } from '@/game/enums';
+import { SettingsService } from '@/game/services/settingsService';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -7,41 +9,26 @@ export default defineComponent({
 	emits: ['themeChanged'],
 	data() {
 		return {
+			settingsService: new SettingsService(new StorageService()),
 			selectedTheme: Theme.Modern,
-			themes: []
+			themes: [
+				{
+					text: 'Modern',
+					value: Theme.Modern,
+				},
+				{
+					text: 'Classic',
+					value: Theme.Classic,
+				},
+			],
 		};
 	},
-	watch: {
-		selectedTheme: {
-			handler(newValue) {
-				this.$emit('themeChanged', newValue)
-			},
-			deep: true
-		}
-	},
 	mounted() {
-		this.themes = [{
-			text: 'Modern',
-			value: Theme.Modern
-		},
-		{
-			text: 'Classic',
-			value: Theme.Classic
-		}];
+		this.selectedTheme = this.settingsService.get().theme ?? Theme.Modern;
 	},
 	methods: {
-		setName(): void {
-			this.settingsService.updateName(this.name);
-			this.currentName = this.name;
-			this.nameChangedMsgVisible = true;
-			this.editMode = false;
-		},
-		cancelSetName(): void {
-			this.editMode = false;
-		},
-		showEditForm(): void {
-			this.name = this.currentName;
-			this.editMode = true;
+		onChange() {
+			this.$emit('themeChanged', this.selectedTheme);
 		}
 	}
 });
@@ -50,8 +37,8 @@ export default defineComponent({
 <template>
 	<div class="mb-2">
 		<label class="fw-bold mb-2">Theme</label>
-		<select v-model="selectedTheme" class="form-select form-select" aria-label="Small select example">
+		<select v-model="selectedTheme" @change="onChange()" class="form-select form-select" aria-label="Small select example">
 			<option v-for="theme in themes" :value="theme.value" selected>{{ theme.text }}</option>
-		  </select>
+		</select>
 	</div>
 </template>

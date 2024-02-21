@@ -6,6 +6,7 @@ import { Label } from "../engine/inputs/label";
 import { Popup } from "../engine/popup";
 import { AlertType, Colors } from "../enums";
 import { Minesweeper } from "../minesweeper";
+import { SettingsService } from "../services/settingsService";
 
 export class CustomBoardSizePopup extends Popup {
     public onCancel!: Function;
@@ -15,8 +16,9 @@ export class CustomBoardSizePopup extends Popup {
         this._visible = value;
     }
 
-    public constructor(context: CanvasRenderingContext2D) {
-        super(context);
+    public constructor(context: CanvasRenderingContext2D,
+        settingsService: SettingsService) {
+        super(context, settingsService);
 
         this.onCancel = () => null;
         this.onSave = (x: number, y: number, mines: number) => null;
@@ -29,13 +31,15 @@ export class CustomBoardSizePopup extends Popup {
     }
 
     protected createInputsInternal(): void {
+        const settings = this._settingsService.get();
+
         const xValueInput = new InputNumber(this._context);
         xValueInput.parent = this;
         xValueInput.positionX = 220;
         xValueInput.positionY = Popup.HeaderSize + Popup.Padding;
         xValueInput.minValue = Minesweeper.MinBoardXSize;
         xValueInput.maxValue = Minesweeper.MaxBoardXSize;
-        xValueInput.value = Minesweeper.CustomBoardDefaultXSize;
+        xValueInput.value = settings.customBoardSizeX ?? Minesweeper.CustomBoardDefaultXSize;
         xValueInput.create();
 
         const yValueInput = new InputNumber(this._context);
@@ -44,7 +48,7 @@ export class CustomBoardSizePopup extends Popup {
         yValueInput.positionY = Popup.HeaderSize + Popup.Padding + 28;
         yValueInput.minValue = Minesweeper.MinBoardYSize;
         yValueInput.maxValue = Minesweeper.MaxBoardYSize;
-        yValueInput.value = Minesweeper.CustomBoardDefaultYSize;
+        yValueInput.value = settings.customBoardSizeY ?? Minesweeper.CustomBoardDefaultYSize;
         yValueInput.create();
 
         const minesValueInput = new InputNumber(this._context);
@@ -53,7 +57,7 @@ export class CustomBoardSizePopup extends Popup {
         minesValueInput.positionY = Popup.HeaderSize + Popup.Padding + 56;
         minesValueInput.minValue = Minesweeper.MinMinesNumber;
         minesValueInput.maxValue = Minesweeper.MaxMinesNumber;
-        minesValueInput.value = Minesweeper.CustomBoardDefaultMinesNumber;
+        minesValueInput.value = settings.customBoardMinesNumber ?? Minesweeper.CustomBoardDefaultMinesNumber;
         minesValueInput.create();
 
         const cancelBtn = new Button(this._context);

@@ -93,6 +93,7 @@ export class Minesweeper {
         if (options.mines > (options.xSize * options.ySize) / 3)
             return;
 
+        this._settingsService.updateCustomBoardSize(options);
         this._customModeOptions = options;
         this._customBoardSizePopup.updateValues(options);
         this._customBoardSizePopup.visible = false;
@@ -105,6 +106,7 @@ export class Minesweeper {
     }
 
     public updateTheme(theme: Theme): void {
+        this._settingsService.updateTheme(theme);
         this._currentTheme = theme;
         this._mineField.setTheme(theme);
         this._faceIndicator.theme = theme;
@@ -144,6 +146,8 @@ export class Minesweeper {
         this._storageService = new StorageService();
         this._settingsService = new SettingsService(this._storageService);
         this._themeFactory = new ThemeFactory(this._context, this._assetsManager);
+
+        this._currentTheme = this._settingsService.get().theme ?? Theme.Modern;
 
         this.registerEvents();
         this.createMenuBar();
@@ -212,7 +216,7 @@ export class Minesweeper {
     }
 
     private createCustomBoardSizePopup(): void {
-        this._customBoardSizePopup = new CustomBoardSizePopup(this._context);
+        this._customBoardSizePopup = new CustomBoardSizePopup(this._context, this._settingsService);
         this._customBoardSizePopup.title = "Custom board settings";
         this._customBoardSizePopup.width = 340;
         this._customBoardSizePopup.height = 200;

@@ -1,5 +1,6 @@
+import { ICustomModeOptions } from "../components/mineField/mineFiledBuilder";
 import { StorageService } from "../engine/managers/storageService";
-import { GameMode, GameState } from "../enums";
+import { GameMode, GameState, Theme } from "../enums";
 import { Helpers } from "../helpers/helpers";
 import { Settings, Statistics, StatisticsRecord } from "./settings";
 
@@ -109,6 +110,25 @@ export class SettingsService {
 
         let settings = this.get();
         settings.currentName = name;
+
+        this._storageService.update(SettingsService.SettingsLocalStorageKey, settings);
+    }
+
+    public updateTheme(theme: Theme | undefined): void {
+        let settings = this.get();
+        settings.theme = theme;
+
+        this._storageService.update(SettingsService.SettingsLocalStorageKey, settings);
+    }
+
+    public updateCustomBoardSize(options: ICustomModeOptions): void {
+        if (!options)
+            return;
+
+        let settings = this.get();
+        settings.customBoardSizeX = options.xSize;
+        settings.customBoardSizeY = options.ySize;
+        settings.customBoardMinesNumber = options.mines;
 
         this._storageService.update(SettingsService.SettingsLocalStorageKey, settings);
     }

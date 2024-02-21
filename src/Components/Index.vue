@@ -36,11 +36,10 @@ export default defineComponent({
 		return {
 			currentView: Views.Play,
 			gameState: GameState.NotStarted,
-			minesweeper: {},
+			minesweeper: new Minesweeper(),
 		};
 	},
 	mounted() {
-		this.minesweeper = new Minesweeper();
 		this.minesweeper.onGameStateChanged = (state: GameState) => {
 			this.gameState = state;
 		};

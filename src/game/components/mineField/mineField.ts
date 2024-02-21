@@ -1,16 +1,14 @@
 import { Component } from "@/game/engine/inputs/component";
 import { TimersManager } from "@/game/engine/managers/timersManager";
-import { Label } from "../../engine/inputs/label";
 import { AssetsManager } from "../../engine/managers/assetsManager";
 import { Point } from "../../engine/point";
-import { Colors, FieldState, FieldType, GameMode, GameState, Theme } from "../../enums";
-import { Minesweeper } from "../../minesweeper";
+import { FieldState, FieldType, GameMode, GameState, Theme } from "../../enums";
 import { Helpers } from "../../helpers/helpers";
+import { Minesweeper } from "../../minesweeper";
 import { StatisticsRecord } from "../../services/settings";
 import { SettingsService } from "../../services/settingsService";
 import { Field } from "./field";
 import { ModernTheme } from "./themes/modernTheme";
-import { ClassicTheme } from "./themes/classicTheme";
 import { ThemeBase } from "./themes/themeBase";
 import { ThemeFactory } from "./themes/themeFactory";
 

@@ -1,5 +1,7 @@
 <script lang="ts">
+import { StorageService } from '@/game/engine/managers/storageService';
 import { Minesweeper } from '@/game/minesweeper';
+import { SettingsService } from '@/game/services/settingsService';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -10,7 +12,13 @@ export default defineComponent({
 			xSize: Minesweeper.CustomBoardDefaultXSize,
 			ySize: Minesweeper.CustomBoardDefaultYSize,
 			minesNumber: Minesweeper.CustomBoardDefaultMinesNumber,
+			settingsService: new SettingsService(new StorageService())
 		};
+	},
+	mounted() {
+		this.xSize = this.settingsService.get().customBoardSizeX ?? Minesweeper.CustomBoardDefaultXSize;
+		this.ySize = this.settingsService.get().customBoardSizeY ?? Minesweeper.CustomBoardDefaultYSize;
+		this.minesNumber = this.settingsService.get().customBoardMinesNumber ?? Minesweeper.CustomBoardDefaultMinesNumber;
 	},
 	methods: {
 		changeBoardSize(): void {

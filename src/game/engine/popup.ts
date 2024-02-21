@@ -1,5 +1,6 @@
 import { Colors } from "../enums";
 import { Minesweeper } from "../minesweeper";
+import { SettingsService } from "../services/settingsService";
 import { Component } from "./inputs/component";
 import { Label } from "./inputs/label";
 
@@ -7,6 +8,8 @@ export abstract class Popup extends Component {
     protected static readonly CornerRadius: number = 10;
     protected static readonly Padding: number = 20;
     protected static readonly HeaderSize: number = 40;
+
+    protected _settingsService: SettingsService;
 
     public title: string = 'Popup';
 
@@ -23,9 +26,11 @@ export abstract class Popup extends Component {
         this._height = value;
     }
 
-    public constructor(context: CanvasRenderingContext2D) {
+    public constructor(context: CanvasRenderingContext2D,
+        settingsService: SettingsService) {
         super(context);
 
+        this._settingsService = settingsService;
         this.createInputs();
     }
 

@@ -1,3 +1,5 @@
+import { Theme } from "../enums";
+import { Minesweeper } from "../minesweeper";
 
 export class StatisticsRecord {
     time?: number = null;
@@ -21,5 +23,9 @@ export class Statistics {
 export class Settings {
     public currentName: string = null;
     public bestScoresNumber: number = 10;
+    public theme: Theme = Theme.Modern;
+    public customBoardSizeX: number = Minesweeper.CustomBoardDefaultXSize;
+    public customBoardSizeY: number = Minesweeper.CustomBoardDefaultYSize;
+    public customBoardMinesNumber: number = Minesweeper.CustomBoardDefaultMinesNumber;
     public statistics: Statistics = null;
 }
