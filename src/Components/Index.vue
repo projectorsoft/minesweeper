@@ -4,7 +4,7 @@ import Controls from './description/Controls.vue';
 import Footer from './Footer.vue';
 import Gallery from './Gallery.vue';
 import GameContainer from './GameContainer.vue';
-import Guide from './description/Guide.vue';
+import Features from './description/Features.vue';
 import HowToPlay from './description/HowToPlay.vue';
 import NavigationBar from './NavigationBar.vue';
 import Settings from './Settings.vue';
@@ -25,7 +25,7 @@ export default defineComponent({
 		Footer,
 		Gallery,
 		GameContainer,
-		Guide,
+		Features,
 		HowToPlay,
 		NavigationBar,
 		Settings,
@@ -70,6 +70,6 @@ export default defineComponent({
 	<Scores ref="scores" :game-state="gameState" />
 	<Rules />
 	<HowToPlay />
-	<Guide />
+	<Features />
 	<Controls />
 </template>

@@ -15,7 +15,7 @@ export default defineComponent({
 			</div>
 		</div>
 		<div class="row justify-content-xxl-center">
-			<div class="col text-start">
+			<div class="col text-start content">
 				<p>Last updated: February 20, 2024</p>
 				<p>
 					This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of
@@ -432,3 +432,10 @@ export default defineComponent({
 		</div>
 	</div>
 </template>
+
+<style scoped>
+	.content {
+		user-select: none;
+		-webkit-user-select: none;
+	}
+</style>

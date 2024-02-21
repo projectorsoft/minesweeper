@@ -29,51 +29,59 @@ export default defineComponent({
 					<div class="card-body">
 						<div class="row">
 							<div class="col-12">
-								<div class="list-group list-group-flush fw-light">
+								<div class="list-group list-group-flush fw-normal">
 									<div class="list-group-item">
-										<div class="d-flex w-100 justify-content-between">
-											<p class="mb-1">1. Minesweeper is classic logic game.</p>
-										</div>
+										<p class="mb-1">
+											Minesweeper is a classic logic game. It was created in 1981 and added to
+											Microsoft Windows as a standard. The game consists of fields arranged in
+											rows and columns. The player's goal is to discover all the fields to avoid
+											"falling" on a mine. To make the game easier, numbers appear on the
+											uncovered fields, which indicate the number of mines in the immediate
+											vicinity. On this basis, it is necessary to deduce where there are mines and
+											where they are not.
+										</p>
 									</div>
 									<div class="list-group-item">
-										<div class="d-flex w-100 justify-content-between">
-											<p class="mb-1">
-												2. Your purpose is to clear the mine field without detonating hidden mines.
-											</p>
-										</div>
+										<p class="mb-1">- Fields can be in multiple states.</p>
+										<p class="mb-1">- Covered</p>
+										<p class="mb-1">
+											- Uncovered and empty- no mines in this field or in its vicinity
+										</p>
+										<p class="mb-1">
+											- Revealed with a number – there is a mine adjacent to this square
+										</p>
+										<p class="mb-1">- Field marked with a flag</p>
+										<p class="mb-1">- Field marked with a question mark</p>
+										<p class="mb-1">- Field mined</p>
 									</div>
 									<div class="list-group-item">
-										<div class="d-flex w-100 justify-content-between">
-											<p class="mb-1">
-												3. Mine field is built from tiles. Each tile can be in 6 states:
-											</p>
-										</div>
-										<p class="mb-1 mx-3">a) Covered</p>
-										<p class="mb-1 mx-3">b) Uncovered and empty</p>
-										<p class="mb-1 mx-3">c) Uncovered with number</p>
-										<p class="mb-1 mx-3">d) With flag set</p>
-										<p class="mb-1 mx-3">e) With question mark set</p>
-										<p class="mb-1 mx-3">f) With mine</p>
+										<p class="mb-1">
+											The game has three default game modes, differing in the size of the board
+											and the number of hidden mines. In 'easy' mode, the board is the smallest
+											and contains the fewest mines. The size is 8x8 fields and only 10 min. In
+											'medium' mode, the board size is 16x16 fields and 40 minutes. 'Hard' mode is
+											31x16 fields and 99 minutes. As you can see, the difficulty level increases,
+											requiring more concentration from the player.
+										</p>
 									</div>
 									<div class="list-group-item">
-										<div class="d-flex w-100 justify-content-between">
-											<p class="mb-1">4. When You choose field with mine - game is over.</p>
-										</div>
+										<p class="mb-1">
+											There is also a fourth game mode available, in which the player can set the
+											size of the board and the number of mines. In this mode, the difficulty
+											level is definitely the highest due to the possible size of the board and
+											the number of mines.
+										</p>
 									</div>
 									<div class="list-group-item">
-										<div class="d-flex w-100 justify-content-between">
-											<p class="mb-1">
-												5. If You uncover all fields without detonating any mine - game is won.
-											</p>
-										</div>
-									</div>
-									<div class="list-group-item">
-										<div class="d-flex w-100 justify-content-between">
-											<p class="mb-1">6. Each game is timed.</p>
-										</div>
-										<p class="mb-1 mx-3">
-											If You won, Your score will be saved in statistics and You can
-											compare time with other games.
+										<p class="mb-1">
+											The goal of the game is, of course, to discover all the fields without
+											hitting a mine. However, it is possible to compete with other players based
+											on measured times and the number of clicks needed to win the game. Each game
+											measures time in milliseconds, and when you win the current game, this time
+											is recorded in your statistics. These statistics can later be compared in a
+											summary table, sorted by time, number of clicks and game mode. If two
+											players have the same time and the same number of clicks, the one with the
+											more difficult game mode wins.
 										</p>
 									</div>
 								</div>

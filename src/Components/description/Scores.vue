@@ -98,7 +98,11 @@ export default defineComponent({
 					<div class="card-body">
 						<div class="row">
 							<div class="col-12">
-								<label v-if="showBestScores()" class="form-label fs-3 fw-bold">No scores yet</label>
+								<div v-if="showBestScores()">
+									<label class="form-label fs-3 fw-bold d-block">No scores yet</label>
+									<p class="d-block fw-medium">The results will appear when the game is won.</p>
+									<p class="d-block fw-medium">The number of results can be changed in the settings from the website navigation menu.</p>
+								</div>
 								<table v-else class="table table-striped table-hover">
 									<thead>
 										<tr>

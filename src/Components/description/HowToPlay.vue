@@ -29,73 +29,46 @@ export default defineComponent({
 					<div class="card-body">
 						<div class="row">
 							<div class="col-12">
-								<div class="list-group list-group-flush fw-light">
+								<div class="list-group list-group-flush fw-normal">
 									<div class="list-group-item">
-										<div class="d-flex w-100 justify-content-between">
-											<p class="mb-1">
-												1. At the beginning all fileds are coverd.
-												<img src="/images/uncovered_field.png" alt="Uncovered field" />
-											</p>
-										</div>
-									</div>
-									<div class="list-group-item">
-										<div class="d-flex w-100 justify-content-between">
-											<p class="mb-1">
-												2. Game starts when player clicks choosen filed for the first time.
-											</p>
-										</div>
 										<p class="mb-1">
-											From this moment timer located in right top corner of the board is ticking.
+											1. At the beginning all squares are covered.
+											<img src="/images/covered_field.png" alt="Uncovered field" />
 										</p>
 									</div>
 									<div class="list-group-item">
 										<p class="mb-1">
-											3. If choosen field is empty and all surrounding filelds are empty then it
-											discoveres all adjascent empty tiles.
+											2. The game starts when the player clicks on the selected box for the first
+											time. From this moment time begins to be measured.
+										</p>
+									</div>
+									<div class="list-group-item">
+										<p class="mb-1">
+											3. If the selected field is empty and all surrounding fields are empty, all
+											neighbors are revealed. If neighbors also have empty squares nearby, they
+											are revealed.
 											<img src="/images/empty_fields.png" alt="Empty field" />
 										</p>
+									</div>
+									<div class="list-group-item">
 										<p class="mb-1">
-											It works especially when <b>'Safe first click'</b> option is checked in settings
-											popup.
+											4. If the field is empty but has at least one mine nearby, a number appears on
+											the field indicating the number of mines in the adjacent fields. For
+											example: '1' means that a given field has only one mine in its vicinity. The
+											picture shows that the field with the number '3' has three mines nearby. In
+											a rare case, a square may be surrounded by 8 mined squares.
+											<img src="/images/numbers.png" alt="Numbers" />
 										</p>
 									</div>
 									<div class="list-group-item">
-										<div class="d-flex w-100 justify-content-between">
-											<p class="mb-1">
-												4. If choosen field has at least one mine in surrounding area than
-												number of mines is shown.
-												<img src="/images/numbers.png" alt="Numbers" />
-											</p>
-										</div>
 										<p class="mb-1">
-											For example: tile with number '3' in the picture means field has three neighbours with hidden mines.
-										</p>
-										<p class="mb-1">In rare cases field could be surrounded by all 8 neighbours with mines.</p>
-									</div>
-									<div class="list-group-item">
-										<div class="d-flex w-100 justify-content-between">
-											<p class="mb-1">
-												5. Player can set flag on covered field to mark it as danger.
-												<img src="/images/flagged_field.png" alt="Flagged field" />
-											</p>
-										</div>
-										<p class="mb-1">
-											It means field is no longer clickable so it is safe way to solve the game.
-										</p>
-										<p class="mb-1">
-											When flag is set on tile than number shown in left top corner of the board
-											is decreased.
+											5. The field may be marked with a flag. The flag is used to mark a field as potentially mined. Such a field cannot be clicked and unhidden, which makes the game easier. Setting a flag on a field reduces the number of flags displayed in the UI. As a rule, the game is won if all empty squares are revealed and the number of flags set is equal to the number of mines (but you can also play without setting flags).
+											<img src="/images/flagged_field.png" alt="Flagged field" />
 										</p>
 									</div>
 									<div class="list-group-item">
-										<div class="d-flex w-100 justify-content-between">
-											<p class="mb-1">
-												6. In some cases it is useful to mark field with question mark if player
-												is uncertain.
-												<img src="/images/uncertained_field.png" alt="Uncertain field" />
-											</p>
-										</div>
-										<p class="mb-1">In this state field is clickable.</p>
+										<p class="mb-1">6. A field may be marked with a question mark if the player is not sure whether the field is safe/mined. The box marked with a question mark is still clickable.</p>
+										<img src="/images/uncertained_field.png" alt="Uncertain field" />
 									</div>
 								</div>
 							</div>

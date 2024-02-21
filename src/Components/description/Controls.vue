@@ -29,7 +29,7 @@ export default defineComponent({
 					<div class="card-body">
 						<div class="row">
 							<div class="col-12">
-								<div class="list-group list-group-flush fw-light">
+								<div class="list-group list-group-flush fw-normal">
 									<p class="list-group-item list-group-item-light">
 										<img src="/images/mouse.svg" width="22" height="22" />
 										On computers:
