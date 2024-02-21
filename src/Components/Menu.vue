@@ -36,9 +36,15 @@ export default defineComponent({
 				>
 					<img class="me-3" src="/images/preferences.svg" width="32" height="32" />Settings
 				</a>
-				<router-link to="/gallery" class="icon-link link-body-emphasis d-block fs-5 mb-2"
-					><img class="me-3" src="/images/gallery.svg" width="32" height="32" />Gallery
-				</router-link>
+				<a
+					class="icon-link link-body-emphasis d-block fs-5 mb-2"
+					type="button"
+					v-if="enableSettings()"
+					data-bs-toggle="collapse"
+					href="#galleryContainer"
+				>
+					<img class="me-3" src="/images/gallery.svg" width="32" height="32" />Gallery
+				</a>
 				<hr />
 				<router-link to="/devNotes" class="icon-link link-body-emphasis d-block fs-5 mb-2"
 					><img class="me-3" src="/images/code.svg" width="32" height="32" />Developer notes

@@ -67,6 +67,7 @@ export default defineComponent({
 <template>
 	<Settings @board-size-changed="boardSizeChanged" @theme-changed="themeChanged" />
 	<GameContainer />
+	<Gallery />
 	<Scores ref="scores" :game-state="gameState" />
 	<Rules />
 	<HowToPlay />

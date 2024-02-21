@@ -22,7 +22,7 @@ export default defineComponent({
 			</div>
 		</div>
 	</div>
-	<div class="container collapse mb-4" id="rulesContainer">
+	<div class="container collapse mb-4 show" id="rulesContainer">
 		<div class="row d-flex flex-wrap align-items-center">
 			<div class="col-12">
 				<div class="card">
@@ -42,7 +42,7 @@ export default defineComponent({
 										</p>
 									</div>
 									<div class="list-group-item">
-										<p class="mb-1">- Fields can be in multiple states.</p>
+										<p class="mb-1">Fields can be in multiple states:</p>
 										<p class="mb-1">- Covered</p>
 										<p class="mb-1">
 											- Uncovered and empty- no mines in this field or in its vicinity

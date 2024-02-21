@@ -25,7 +25,7 @@ export default defineComponent({
 </script>
 
 <template>
-	<div class="container text-center mb-2">
+	<div class="container show text-center mb-2" id="galleryContainer">
 		<div class="row justify-content-xxl-center">
 			<div class="col text-start">
 				<label class="fw-bold">Gallery</label>

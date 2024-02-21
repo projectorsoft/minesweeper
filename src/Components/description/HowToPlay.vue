@@ -22,7 +22,7 @@ export default defineComponent({
 			</div>
 		</div>
 	</div>
-	<div class="container collapse mb-4" id="howToPlayContainer">
+	<div class="container collapse mb-4 show" id="howToPlayContainer">
 		<div class="row d-flex flex-wrap align-items-center">
 			<div class="col-12">
 				<div class="card">
@@ -33,7 +33,7 @@ export default defineComponent({
 									<div class="list-group-item">
 										<p class="mb-1">
 											1. At the beginning all squares are covered.
-											<img src="/images/covered_field.png" alt="Uncovered field" />
+											<img class="img-thumbnail" src="/images/covered_field.png" alt="Uncovered field" />
 										</p>
 									</div>
 									<div class="list-group-item">
@@ -47,7 +47,7 @@ export default defineComponent({
 											3. If the selected field is empty and all surrounding fields are empty, all
 											neighbors are revealed. If neighbors also have empty squares nearby, they
 											are revealed.
-											<img src="/images/empty_fields.png" alt="Empty field" />
+											<img class="img-thumbnail" src="/images/empty_fields.png" alt="Empty field" />
 										</p>
 									</div>
 									<div class="list-group-item">
@@ -57,18 +57,18 @@ export default defineComponent({
 											example: '1' means that a given field has only one mine in its vicinity. The
 											picture shows that the field with the number '3' has three mines nearby. In
 											a rare case, a square may be surrounded by 8 mined squares.
-											<img src="/images/numbers.png" alt="Numbers" />
+											<img class="img-thumbnail" src="/images/numbers.png" alt="Numbers" />
 										</p>
 									</div>
 									<div class="list-group-item">
 										<p class="mb-1">
 											5. The field may be marked with a flag. The flag is used to mark a field as potentially mined. Such a field cannot be clicked and unhidden, which makes the game easier. Setting a flag on a field reduces the number of flags displayed in the UI. As a rule, the game is won if all empty squares are revealed and the number of flags set is equal to the number of mines (but you can also play without setting flags).
-											<img src="/images/flagged_field.png" alt="Flagged field" />
+											<img class="img-thumbnail" src="/images/flagged_field.png" alt="Flagged field" />
 										</p>
 									</div>
 									<div class="list-group-item">
 										<p class="mb-1">6. A field may be marked with a question mark if the player is not sure whether the field is safe/mined. The box marked with a question mark is still clickable.</p>
-										<img src="/images/uncertained_field.png" alt="Uncertain field" />
+										<img class="img-thumbnail" src="/images/uncertained_field.png" alt="Uncertain field" />
 									</div>
 								</div>
 							</div>
