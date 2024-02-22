@@ -22,7 +22,7 @@ export default defineComponent({
 			</div>
 		</div>
 	</div>
-	<div class="container collapse mb-4 show" id="controlsContainer">
+	<div class="container collapse mb-4" id="controlsContainer">
 		<div class="row d-flex flex-wrap align-items-center">
 			<div class="col-12">
 				<div class="card">

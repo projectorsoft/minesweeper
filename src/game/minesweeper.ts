@@ -129,17 +129,7 @@ export class Minesweeper {
     }
 
     private initialize(): void {
-        const container = document.getElementById('minesweeperContainer');
-
-        if (!container)
-            return;
-
-        this._canvas = document.createElement("canvas") as HTMLCanvasElement;
-        this._canvas.id = 'minesweeperCanvas';
-        this._canvas.width = Minesweeper.MinWidth;
-        this._canvas.height = Minesweeper.MinHeight;
-        container.appendChild(this._canvas);
-
+        this._canvas = document.getElementById('minesweeperCanvas') as HTMLCanvasElement;
         this._context = this._canvas.getContext('2d') as CanvasRenderingContext2D;
 
         this._timersManager = new TimersManager();
@@ -419,8 +409,11 @@ export class Minesweeper {
     }
 
     private setCanvasCoordinates(event: MouseEvent): void {
-        this._currenPointerPossision.x = Math.floor(event.pageX - this._canvas.offsetLeft);
-        this._currenPointerPossision.y = Math.floor(event.pageY - this._canvas.offsetTop);
+        let rect = this._canvas.getBoundingClientRect();
+        let scaleX = this._canvas.width / rect.width;
+        let scaleY = this._canvas.height / rect.height;
+        this._currenPointerPossision.x = (event.pageX - rect.left) * scaleX;
+        this._currenPointerPossision.y = (event.pageY - rect.top) * scaleY;
     }
 
     private addAssets(): void {

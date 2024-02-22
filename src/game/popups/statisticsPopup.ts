@@ -7,7 +7,6 @@ import { Settings, StatisticsRecord } from "../services/settings";
 import { SettingsService } from "../services/settingsService";
 
 export class StatisticsPopup extends Popup {
-    private _settingsService: SettingsService;
     private _settings: Settings;
 
     public onClose: Function = () => null;
@@ -21,7 +20,7 @@ export class StatisticsPopup extends Popup {
 
     public constructor(context: CanvasRenderingContext2D,
         settingsService: SettingsService) {
-        super(context);
+        super(context, settingsService);
 
         this._settingsService = settingsService;
         this._settings = this._settingsService.get();

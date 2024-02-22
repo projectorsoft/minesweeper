@@ -7,7 +7,6 @@ import { AlertType, Colors, GameMode } from "../enums";
 import { SettingsService } from "../services/settingsService";
 
 export class SettingsPopup extends Popup {
-    private _settingsService: SettingsService;
     private _mode: GameMode = GameMode.Easy;
     private _luckyGuess: boolean = false;
     private _allowQuestionMark: boolean = true;
@@ -18,7 +17,7 @@ export class SettingsPopup extends Popup {
 
     public constructor(context: CanvasRenderingContext2D,
         settingsService: SettingsService) {
-        super(context);
+        super(context, settingsService);
 
         this._settingsService = settingsService;
     }
