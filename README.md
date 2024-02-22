@@ -13,10 +13,10 @@ Features:
 - available on mobile devices
 
 Online version:
-[text](https://www.minesweeper-free.com/)
+[https://www.minesweeper-free.com](https://www.minesweeper-free.com/)
 
-![alt text](public/screenshots/won_game.png)
-![alt text](public/screenshots/settings.png)
+![alt won_game](public/screenshots/won_game.png)
+![alt settings](public/screenshots/settings.png)
 
 # How to run
 1. To start in dev mode:
