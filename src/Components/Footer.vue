@@ -8,6 +8,6 @@ export default defineComponent({
 
 <template>
 	<footer class="footer py-3 bg-body-tertiary mt-4">
-        <p class="text-center">Contact us at: contact@minesweeper-free.com</p>
+		<p class="text-center">© 2024 Konrad Łowczak Solutions, All Rights Reserved.</p>
 	</footer>
 </template>
